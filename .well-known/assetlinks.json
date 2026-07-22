@@ -94,5 +94,13 @@
       "package_name": "com.tigerbrandsglobal.weeks",
       "sha256_cert_fingerprints": ["62:5D:19:1D:45:6B:77:0C:B6:6F:2C:67:9D:9C:B9:97:D4:1F:19:EC:E5:BF:84:7C:D6:BE:98:7F:A8:62:A6:F8"]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tigerbrandsglobal.rebound",
+      "sha256_cert_fingerprints": ["01:12:47:0F:EF:BE:26:9A:4A:EA:AF:EF:CB:BD:83:91:97:5A:02:2B:0C:52:99:58:2F:61:58:4F:B8:8D:EC:32"]
+    }
   }
 ]
