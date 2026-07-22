@@ -70,5 +70,29 @@
       "package_name": "com.tigerbrandsglobal.later",
       "sha256_cert_fingerprints": ["BE:1C:23:25:69:47:62:CB:D3:EB:F1:82:9D:9E:69:CF:11:FF:CB:BC:BE:C5:9B:64:4B:B7:FF:E4:30:21:BA:1F"]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tigerbrandsglobal.shelfline",
+      "sha256_cert_fingerprints": ["61:73:90:30:40:4F:CE:A8:06:86:45:74:DC:53:22:6A:A1:21:D0:12:86:A1:29:30:3D:C5:D7:56:C5:3C:1D:BC"]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tigerbrandsglobal.nospend",
+      "sha256_cert_fingerprints": ["36:5D:04:35:61:86:97:AB:04:98:DA:24:CE:73:3F:43:D0:6B:0F:A8:16:B7:B3:AA:76:B6:DE:A7:E8:0D:0C:0A"]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tigerbrandsglobal.weeks",
+      "sha256_cert_fingerprints": ["62:5D:19:1D:45:6B:77:0C:B6:6F:2C:67:9D:9C:B9:97:D4:1F:19:EC:E5:BF:84:7C:D6:BE:98:7F:A8:62:A6:F8"]
+    }
   }
 ]
