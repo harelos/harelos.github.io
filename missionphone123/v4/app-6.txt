@@ -1,0 +1,23 @@
+// ---------- Navigation + startup ----------
+U.identity.onclick=()=>setView('agents');
+U.drawerNew.onclick=newChat;
+window.addEventListener('online',()=>toast('Back online'));window.addEventListener('offline',()=>toast('You are offline. Local history is still available.',4500));
+window.addEventListener('error',e=>{try{addActivity('UI error',e.message||'Unknown error','error')}catch{}});
+window.addEventListener('unhandledrejection',e=>{try{addActivity('Async error',e.reason?.message||String(e.reason||'Unknown'),'error')}catch{}});
+
+document.documentElement.dataset.accent=localStorage.getItem('ox_accent')||'purple';
+document.documentElement.dataset.density=localStorage.getItem('ox_density')||'comfortable';
+document.documentElement.classList.toggle('reduceMotion',localStorage.getItem('ox_reduce_motion')==='1'||matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+async function boot(){
+  if(!S.chatId)newChat();
+  renderRecent();renderAutomations();renderAgents();renderWorkspace();renderSettingsHome();updateTop();
+  await handleOpenRouterCallback();
+  if(S.or)loadModelCatalog().catch(()=>{});
+  if(S.gh)loadRepos().then(renderWorkspace).catch(()=>{S.gh='';sessionStorage.removeItem('ox_gh_token');renderWorkspace()});
+  if(S.foundryBase)refreshFoundry().then(()=>{renderWorkspace();renderAgents();renderAutomations()}).catch(()=>{});
+  if(!S.or&&!S.foundryBase&&!new URLSearchParams(location.search).get('code'))setView('workspaces');else setView('chat');
+  if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+boot();
+})();
