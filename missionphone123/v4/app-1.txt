@@ -1,0 +1,121 @@
+(()=>{
+'use strict';
+
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s)), enc=encodeURIComponent;
+const safeJSON=(s,f={})=>{try{return JSON.parse(s)}catch{return f}};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+const DEFAULTS={
+  runtime:localStorage.getItem('ox_runtime')||'direct',
+  accent:localStorage.getItem('ox_accent')||'purple',
+  density:localStorage.getItem('ox_density')||'comfortable',
+  reduceMotion:localStorage.getItem('ox_reduce_motion')==='1',
+  defaultMode:localStorage.getItem('ox_mode')||'quick',
+  web:localStorage.getItem('ox_web')==='1',
+  notifications:localStorage.getItem('ox_notifications')!=='0',
+  approval:localStorage.getItem('ox_approval')||'always',
+  maxToolLoops:Number(localStorage.getItem('ox_tool_loops')||16),
+};
+
+const S={
+  runtime:DEFAULTS.runtime,
+  or:sessionStorage.getItem('ox_or_key')||'',
+  gh:sessionStorage.getItem('ox_gh_token')||'',
+  foundryBase:sessionStorage.getItem('ox_foundry_base')||'',
+  foundryToken:sessionStorage.getItem('ox_foundry_token')||'',
+  foundryState:null,
+  activeFoundryAgent:null,
+  activeFoundryProject:null,
+  repos:[],repo:null,branch:'',tree:[],map:new Map(),baseCommit:'',stage:new Map(),
+  mode:DEFAULTS.defaultMode,web:DEFAULTS.web,busy:false,abort:null,providerSticky:null,maxToolLoops:DEFAULTS.maxToolLoops,activityMode:'activity',
+  model:'stealth/ox-alpha',modelCaps:{text:true,image:false,video:false,file:false,tools:true},modelCatalog:[],
+  attachments:[],activity:[],lastTask:'',chatId:null,
+  ocEnabled:localStorage.getItem('ox_oc_enabled')==='1',ocKey:sessionStorage.getItem('ox_oc_key')||'',ocModel:localStorage.getItem('ox_oc_model')||'x-preview-f-free',
+  nousEnabled:localStorage.getItem('ox_nous_enabled')==='1',nousKey:sessionStorage.getItem('ox_nous_key')||'',nousModel:localStorage.getItem('ox_nous_model')||'stealth/ox-alpha',
+};
+
+const U={
+  menu:$('#menuBtn'),newChat:$('#newChatBtn'),title:$('#topTitle'),subtitle:$('#topSubtitle'),identity:$('#chatIdentity'),
+  tabs:$$('.tab'),views:$$('.view'),drawer:$('#drawer'),scrim:$('#scrim'),closeDrawer:$('#closeDrawer'),drawerNew:$('#drawerNewChat'),drawerSettings:$('#drawerSettings'),recent:$('#recentChats'),skills:$('#skillsBtn'),
+  sheet:$('#sheet'),sheetContent:$('#sheetContent'),toast:$('#toast'),
+  chatScroll:$('#chatScroll'),chatEmpty:$('#chatEmpty'),chatMessages:$('#chatMessages'),emptyHint:$('#emptyHint'),prompt:$('#prompt'),send:$('#sendBtn'),attach:$('#attachBtn'),mode:$('#modeBtn'),web:$('#webBtn'),stop:$('#stopBtn'),activityPill:$('#activityPill'),activityText:$('#activityText'),attachmentTray:$('#attachmentTray'),composerContext:$('#composerContext'),capText:$('#capabilityText'),
+  agentList:$('#agentList'),refreshAgents:$('#refreshAgents'),
+  activeAutomations:$('#activeAutomations'),automationTemplates:$('#automationTemplates'),
+  runtimeButtons:$$('#runtimeSegment button'),directWorkspace:$('#directWorkspace'),foundryWorkspace:$('#foundryWorkspace'),openRouterRow:$('#openRouterRow'),openRouterSummary:$('#openRouterSummary'),openRouterStatus:$('#openRouterStatus'),githubRow:$('#githubRow'),githubSummary:$('#githubSummary'),githubStatus:$('#githubStatus'),repoSelect:$('#repoSelect'),branchSelect:$('#branchSelect'),startDirect:$('#startDirect'),foundryRow:$('#foundryRow'),foundrySummary:$('#foundrySummary'),foundryStatus:$('#foundryStatus'),foundryProject:$('#foundryProject'),foundryAgent:$('#foundryAgent'),startFoundry:$('#startFoundry'),
+  settingsHome:$('#settingsHome'),settingsDetail:$('#settingsDetail'),settingsBack:$('#settingsBack'),settingsTitle:$('#settingsTitle'),settingsSubtitle:$('#settingsSubtitle'),
+  imageInput:$('#imageInput'),videoInput:$('#videoInput'),fileInput:$('#fileInput')
+};
+
+function toast(text,ms=2800){U.toast.textContent=text;U.toast.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>U.toast.classList.remove('show'),ms)}
+function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function formatTime(ts=Date.now()){return new Date(ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+function openDrawer(){U.drawer.classList.add('open');U.scrim.classList.add('open')}
+function closeDrawer(){U.drawer.classList.remove('open');if(!U.sheet.classList.contains('open'))U.scrim.classList.remove('open')}
+function openSheet(html){U.sheetContent.innerHTML=html;U.sheet.classList.add('open');U.scrim.classList.add('open')}
+function closeSheet(){U.sheet.classList.remove('open');if(!U.drawer.classList.contains('open'))U.scrim.classList.remove('open')}
+U.scrim.onclick=()=>{closeDrawer();closeSheet()};U.menu.onclick=openDrawer;U.closeDrawer.onclick=closeDrawer;
+
+function setView(name){
+  U.tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));U.views.forEach(v=>v.classList.toggle('active',v.dataset.view===name));
+  const isChat=name==='chat';document.querySelector('.topbar').style.display=isChat?'grid':'none';document.querySelector('.views').classList.toggle('noTopbar',!isChat);
+  if(name==='agents')renderAgents();if(name==='automations')renderAutomations();if(name==='workspaces')renderWorkspace();if(name==='settings')renderSettingsHome();
+}
+U.tabs.forEach(t=>t.onclick=()=>setView(t.dataset.tab));
+
+function updateTop(){
+  if(S.runtime==='foundry'&&S.activeFoundryAgent){
+    U.title.textContent=S.activeFoundryAgent.name||S.activeFoundryAgent.role||'Agent';
+    U.subtitle.textContent='Foundry · '+(S.activeFoundryProject?.name||'project');
+    U.composerContext.textContent=(S.activeFoundryProject?.name||'Foundry')+' · '+(S.activeFoundryAgent.role||S.activeFoundryAgent.engine||'agent');
+  }else{
+    U.title.textContent='OX';
+    U.subtitle.textContent=S.repo?`${S.repo.name} · ${S.branch}`:(S.or?'Direct · '+S.model.split('/').pop():'Direct · not connected');
+    U.composerContext.textContent=S.repo?`${S.repo.name} · ${S.branch}`:(S.or?'General chat':'No model');
+  }
+  const caps=[];if(S.modelCaps.text)caps.push('Text');if(S.modelCaps.image)caps.push('Image');if(S.modelCaps.video)caps.push('Video');if(S.modelCaps.file)caps.push('Files');U.capText.textContent=caps.join(' · ')||'Text';
+  U.prompt.disabled=!canChat();U.send.disabled=!canChat()||S.busy;
+  U.mode.textContent=S.mode==='quick'?'Quick':'Plan + Review';U.mode.classList.toggle('active',S.mode!=='quick');
+  U.web.innerHTML=`<span class="statusMini"></span>Web ${S.web?'on':'off'}`;U.web.classList.toggle('active',S.web);
+}
+function canChat(){if(S.runtime==='foundry')return !!(S.foundryState&&S.activeFoundryAgent);return !!S.or}
+
+function setBusy(on,label='Working'){
+  S.busy=on;U.stop.classList.toggle('hidden',!on);U.send.disabled=on||!canChat();U.attach.disabled=on;
+  if(on){S.activityMode='activity';showActivity(label)}else if(!(S.runtime==='direct'&&S.stage.size)){U.activityPill.classList.add('hidden')}
+}
+function showActivity(label){S.activityMode='activity';U.activityText.textContent=label;U.activityPill.classList.remove('hidden')}
+function addActivity(title,detail='',kind='tool'){
+  S.activity.push({title,detail,kind,ts:Date.now()});if(S.activity.length>60)S.activity.shift();showActivity(title+(detail?' · '+String(detail).slice(0,38):''));
+}
+U.activityPill.onclick=()=>{
+  if(S.activityMode==='stage')return stagedSheet();
+  const rows=S.activity.slice().reverse().map(x=>`<div class="activityRow"><span class="activityIcon">${x.kind==='error'?'!':x.kind==='search'?'⌕':'↳'}</span><span><b>${escapeHtml(x.title)}</b><small>${escapeHtml(x.detail||'')}</small></span><span class="activityTime">${formatTime(x.ts)}</span></div>`).join('')||'<p>No activity yet.</p>';
+  openSheet(`<h2>Activity</h2><p>Planning, files, tools and web activity — without exposing private reasoning.</p><div class="activityList">${rows}</div><div class="sheetActions"><button class="sheetBtn full" id="closeActivity">Done</button></div>`);$('#closeActivity').onclick=closeSheet;
+};
+
+function currentChats(){return safeJSON(localStorage.getItem('ox_chats')||'[]',[])}
+function saveChats(chats){localStorage.setItem('ox_chats',JSON.stringify(chats.slice(0,20)))}
+function persistCurrentChat(){
+  if(!S.chatId)return;const chats=currentChats();const idx=chats.findIndex(c=>c.id===S.chatId);const messages=Array.from(U.chatMessages.querySelectorAll('.message')).map(el=>({kind:el.dataset.kind||'system',text:el.dataset.text||''}));
+  const first=messages.find(m=>m.kind==='user')?.text||'New chat';const item={id:S.chatId,title:first.slice(0,55),ts:Date.now(),messages};if(idx>=0)chats.splice(idx,1);chats.unshift(item);saveChats(chats);renderRecent();
+}
+function newChat(){persistCurrentChat();S.chatId='c-'+Date.now().toString(36);U.chatMessages.innerHTML='';U.chatEmpty.classList.remove('hidden');S.activity=[];S.attachments=[];renderAttachments();closeDrawer();setView('chat');}
+function loadChat(id){const c=currentChats().find(x=>x.id===id);if(!c)return;S.chatId=id;U.chatMessages.innerHTML='';U.chatEmpty.classList.add('hidden');for(const m of c.messages)addMessage(m.kind,m.text,false);closeDrawer();setView('chat')}
+function renderRecent(){const chats=currentChats();U.recent.innerHTML=chats.length?'':'<div style="padding:8px 11px;color:#736c79;font-size:9px">No saved chats yet.</div>';for(const c of chats.slice(0,8)){const b=document.createElement('button');b.className='recentChat';b.innerHTML=`<b>${escapeHtml(c.title||'Chat')}</b><small>${new Date(c.ts).toLocaleDateString()}</small>`;b.onclick=()=>loadChat(c.id);U.recent.append(b)}}
+U.newChat.onclick=newChat;U.drawerNew.onclick=newChat;
+
+function renderText(container,text){
+  const urlRe=/(https?:\/\/[^\s]+)/g;let last=0,m;while((m=urlRe.exec(text))){if(m.index>last)container.append(document.createTextNode(text.slice(last,m.index)));let raw=m[0],trail='';while(/[),.;!?]$/.test(raw)){trail=raw.slice(-1)+trail;raw=raw.slice(0,-1)}try{const u=new URL(raw),a=document.createElement('a');a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=raw;container.append(a)}catch{container.append(document.createTextNode(raw))}if(trail)container.append(document.createTextNode(trail));last=urlRe.lastIndex}if(last<text.length)container.append(document.createTextNode(text.slice(last)));
+}
+function renderAssistantContent(container,text){
+  const fence=/```([a-zA-Z0-9_+-]*)\n?([\s\S]*?)```/g;let last=0,m;
+  while((m=fence.exec(text))){if(m.index>last)renderText(container,text.slice(last,m.index));const lang=(m[1]||'code').toLowerCase(),code=m[2];const card=document.createElement('div');card.className='codeCard';const head=document.createElement('div');head.className='codeHead';const label=document.createElement('span');label.textContent=lang;const copy=document.createElement('button');copy.textContent='Copy';copy.onclick=async()=>{try{await navigator.clipboard.writeText(code);toast('Copied')}catch{toast('Copy unavailable')}};head.append(label,copy);const pre=document.createElement('pre');pre.textContent=code;card.append(head,pre);if(lang==='html'){const preview=document.createElement('button');preview.className='previewButton';preview.textContent='Preview';preview.onclick=()=>{const wrap=document.createElement('div');wrap.className='htmlPreview';const frame=document.createElement('iframe');frame.setAttribute('sandbox','');frame.referrerPolicy='no-referrer';frame.srcdoc=code;wrap.append(frame);card.append(wrap);preview.remove()};head.insertBefore(preview,copy)}container.append(card);last=fence.lastIndex}
+  if(last<text.length)renderText(container,text.slice(last));
+  const image=text.match(/https?:\/\/[^\s)]+\.(?:png|jpe?g|webp|gif)(?:\?[^\s)]*)?/i);if(image){const img=document.createElement('img');img.src=image[0];img.alt='Preview';img.loading='lazy';img.referrerPolicy='no-referrer';img.className='inlineMedia';container.append(img)}
+  const video=text.match(/https?:\/\/[^\s)]+\.(?:mp4|webm|mov)(?:\?[^\s)]*)?/i);if(video){const v=document.createElement('video');v.src=video[0];v.controls=true;v.playsInline=true;v.preload='metadata';v.className='inlineMedia';container.append(v)}
+}
+function addMessage(kind,text,persist=true){
+  U.chatEmpty.classList.add('hidden');const row=document.createElement('div');row.className='message '+(kind==='user'?'user':kind==='assistant'?'assistant':'system');row.dataset.kind=kind;row.dataset.text=text;
+  if(kind==='assistant'){const av=document.createElement('div');av.className='avatar';av.textContent='OX';row.append(av)}
+  const b=document.createElement('div');b.className='bubble';if(kind==='assistant')renderAssistantContent(b,text);else b.textContent=text;row.append(b);U.chatMessages.append(row);U.chatScroll.scrollTop=U.chatScroll.scrollHeight;if(persist)persistCurrentChat();return b;
+}
