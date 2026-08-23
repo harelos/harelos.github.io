@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b0b0c" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="OX" />
+<meta name="description" content="Phone-first mission control for coding agents" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon.svg" />
+<title>OX Mission Control</title>
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="mark">OX</div><div class="brandCopy"><b>Mission Control</b><span id="topStatus">Ready for setup</span></div></div>
+    <div style="display:flex;align-items:center;gap:5px"><span id="statusDot" class="statusDot"></span><button class="iconBtn" id="settingsBtn" aria-label="Settings">•••</button></div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Phone-first coding control</div>
+    <h1>Less dashboard.<br>More shipping.</h1>
+    <p>One calm place to connect a model, pick a repository, send a task, review what changed, and approve the commit — from your phone.</p>
+  </section>
+
+  <div class="navTabs" role="tablist">
+    <button class="navTab active" data-view="work">Work</button>
+    <button class="navTab" data-view="browser">Browser</button>
+    <button class="navTab" data-view="lab">QA Lab</button>
+  </div>
+
+  <main id="workView" class="view active">
+    <section class="section panel" id="connectionsPanel">
+      <div class="panelTitle"><h2>Connections</h2><span>only what you need</span></div>
+      <div class="connection">
+        <div class="provider"><div class="providerIcon openrouter">OR</div><div class="providerCopy"><b>OpenRouter</b><span id="orLine">Primary model connection</span></div></div>
+        <button class="btn small primary" id="connectOR">Connect</button>
+      </div>
+      <div class="connection">
+        <div class="provider"><div class="providerIcon github">GH</div><div class="providerCopy"><b>GitHub</b><span id="ghLine">Choose a repo after connecting</span></div></div>
+        <button class="btn small" id="connectGH">Connect</button>
+      </div>
+    </section>
+
+    <section class="section panel" id="workspacePanel">
+      <div class="panelTitle"><h2>Workspace</h2><span id="workspaceStatus">not selected</span></div>
+      <div class="workspaceGrid">
+        <div class="field"><label for="repoSelect">Repository</label><select id="repoSelect" disabled><option>Connect GitHub first</option></select></div>
+        <div class="field"><label for="branchSelect">Branch</label><select id="branchSelect" disabled><option>—</option></select></div>
+      </div>
+      <div class="actions"><button class="btn primary" id="startSession" disabled>Start session</button><button class="btn ghost" id="demoBtn">Try demo</button></div>
+    </section>
+
+    <section class="section panel" id="sessionPanel">
+      <div class="sessionHeader"><div class="sessionTitle"><b id="sessionName">No active session</b><span id="sessionMeta">Start a workspace or run the demo.</span></div><div class="modeToggle"><button class="active" data-mode="quick">Quick</button><button data-mode="review">Plan + Review</button></div></div>
+      <div id="chat" class="chat"><div class="msg system">When a session is active, the agent reads the repository first. File writes are staged. Commits always need your tap.</div></div>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="section panel">
+      <div class="panelTitle"><h2>Staged changes</h2><span id="stagedCount">0 files</span></div>
+      <div id="changes"><div class="empty"><div class="emptyGlyph">↗</div><h3>Nothing staged</h3><p>Changes will appear here before anything is written to GitHub.</p></div></div>
+      <div class="actions"><button class="btn ghost" id="clearStage" disabled>Clear</button><button class="btn primary" id="commitBtn" disabled>Commit approved changes</button></div>
+    </section>
+  </main>
+
+  <main id="browserView" class="view">
+    <section class="section panel"><div class="panelTitle"><h2>Private browser</h2><span>VPS-ready adapter</span></div><div class="browserCard"><div class="browserFrame"><div><b>Browser worker not connected</b>When a VPS worker is added, this tab can stream screenshots, links and browser state here.</div></div><div class="actions"><button class="btn" id="browserConnect">Configure worker</button><button class="btn ghost" id="browserDemo">Run browser demo</button></div></div></section>
+    <section class="section panel"><div class="panelTitle"><h2>Preview surface</h2><span>images · video · links · HTML</span></div><div class="msg agent">Paste or generate links in chat. Image URLs render inline, direct video URLs get a player, and fenced <code>html</code> blocks can be previewed in a sandboxed frame.</div></section>
+  </main>
+
+  <main id="labView" class="view">
+    <section class="section panel"><div class="panelTitle"><h2>QA Lab</h2><span>simulate failure before it happens</span></div><div class="workspaceGrid"><div class="field"><label>Scenario</label><select id="qaScenario"><option value="normal">Normal build</option><option value="fallback">OpenRouter fails → fallback</option><option value="approval">Agent needs approval</option><option value="commit">Commit + CI result</option><option value="preview">Image + HTML preview</option></select></div><div class="field"><label>Run</label><button class="btn primary" id="runQA" style="width:100%">Simulate</button></div></div><div id="qaOutput" class="timeline"></div></section>
+    <section class="section panel"><div class="panelTitle"><h2>Guardrails</h2><span>harness, not vibes</span></div><div class="pills"><span class="pill ok">read before write</span><span class="pill ok">stage before commit</span><span class="pill ok">default-branch warning</span><span class="pill ok">branch-drift block</span><span class="pill ok">secret-file block</span><span class="pill ok">provider timeout</span><span class="pill ok">tool-loop cap</span><span class="pill ok">reduced motion</span><span class="pill warn">shell requires VPS worker</span></div></section>
+  </main>
+</div>
+
+<div class="bottomComposer">
+  <div class="compose"><textarea id="prompt" placeholder="Tell OX what to build…" disabled></textarea><button class="send" id="sendBtn" disabled>↑</button></div>
+  <div class="composeMeta"><span id="composerLeft">No session</span><span id="composerRight">OpenRouter primary</span></div>
+</div>
+
+<div class="sheetBackdrop" id="sheetBackdrop"></div>
+<section class="sheet" id="settingsSheet" aria-modal="true" role="dialog">
+  <div class="handle"></div><h2>Settings</h2><p class="sheetIntro">The everyday screen stays simple. Provider fallbacks, tokens and infrastructure live here.</p>
+  <div class="sheetSection"><div class="sheetRow"><div><b>OpenCode fallback</b><span>Off by default · used only after OpenRouter fails</span></div><label class="toggle"><input id="ocEnabled" type="checkbox"><span class="toggleTrack"></span></label></div><div id="ocAdvanced" class="advanced"><div class="field"><label>OpenCode API key</label><input id="ocKey" type="password" autocomplete="off" placeholder="Optional"></div><div class="field" style="margin-top:7px"><label>Model</label><input id="ocModel" value="x-preview-f-free"></div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>Nous fallback</b><span>Off by default · third route</span></div><label class="toggle"><input id="nousEnabled" type="checkbox"><span class="toggleTrack"></span></label></div><div id="nousAdvanced" class="advanced"><div class="field"><label>Nous API key</label><input id="nousKey" type="password" autocomplete="off" placeholder="Optional"></div><div class="field" style="margin-top:7px"><label>Model</label><input id="nousModel" value="stealth/ox-alpha"></div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>GitHub token fallback</b><span>Temporary bridge until GitHub App OAuth is configured</span></div><button class="btn small" id="showToken">Open</button></div><div id="tokenAdvanced" class="advanced"><div class="field"><label>Fine-grained token</label><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…"></div><div class="actions"><button class="btn small primary" id="saveToken">Connect with token</button></div><div class="note">Keep this repo-scoped. The production path is a GitHub App with short-lived user tokens and repository selection.</div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>Browser / VPS worker</b><span>SSE + terminal + browser control later</span></div><button class="btn small" id="showWorker">Configure</button></div><div id="workerAdvanced" class="advanced"><div class="field"><label>Worker base URL</label><input id="workerUrl" placeholder="https://your-vps.example.com"></div><div class="field" style="margin-top:7px"><label>Worker token</label><input id="workerToken" type="password" autocomplete="off" placeholder="Optional"></div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>Model</b><span>OpenRouter primary</span></div><span class="pill">stealth/ox-alpha</span></div></div>
+  <div class="actions"><button class="btn primary" id="closeSettings">Done</button></div>
+</section>
+<div class="toast" id="toast"></div>
+<script src="./app.js" defer></script>
+</body>
+</html>
