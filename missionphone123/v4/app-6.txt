@@ -1,6 +1,16 @@
 // ---------- Navigation + startup ----------
 U.identity.onclick=()=>setView('agents');
-U.drawerNew.onclick=newChat;
+const baseNewChat=newChat;
+newChat=async function(){
+  if(S.busy){
+    if(!confirm('Stop the current task and start a new chat?'))return;
+    try{if(S.abort)S.abort.abort()}catch{}
+    if(S.runtime==='foundry'&&S.activeFoundryAgent)try{await foundryFetch(`/api/agents/${S.activeFoundryAgent.id}/stop`,{method:'POST'})}catch{}
+    setBusy(false);
+  }
+  baseNewChat();
+};
+U.newChat.onclick=newChat;U.drawerNew.onclick=newChat;
 window.addEventListener('online',()=>toast('Back online'));window.addEventListener('offline',()=>toast('You are offline. Local history is still available.',4500));
 window.addEventListener('error',e=>{try{addActivity('UI error',e.message||'Unknown error','error')}catch{}});
 window.addEventListener('unhandledrejection',e=>{try{addActivity('Async error',e.reason?.message||String(e.reason||'Unknown'),'error')}catch{}});
@@ -10,7 +20,7 @@ document.documentElement.dataset.density=localStorage.getItem('ox_density')||'co
 document.documentElement.classList.toggle('reduceMotion',localStorage.getItem('ox_reduce_motion')==='1'||matchMedia('(prefers-reduced-motion: reduce)').matches);
 
 async function boot(){
-  if(!S.chatId)newChat();
+  if(!S.chatId)await newChat();
   renderRecent();renderAutomations();renderAgents();renderWorkspace();renderSettingsHome();updateTop();
   await handleOpenRouterCallback();
   if(S.or)loadModelCatalog().catch(()=>{});
