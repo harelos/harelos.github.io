@@ -11,88 +11,158 @@
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="icon" href="./icon.svg" />
 <title>OX Mission Control</title>
-<link rel="stylesheet" href="./app.css">
+<link rel="stylesheet" href="./app.css" />
 </head>
 <body>
+<div id="offlineBanner" class="offlineBanner" hidden>You’re offline. Existing UI still works; network tasks are paused.</div>
 <div class="app">
   <header class="topbar">
-    <div class="brand"><div class="mark">OX</div><div class="brandCopy"><b>Mission Control</b><span id="topStatus">Ready for setup</span></div></div>
-    <div style="display:flex;align-items:center;gap:5px"><span id="statusDot" class="statusDot"></span><button class="iconBtn" id="settingsBtn" aria-label="Settings">•••</button></div>
+    <div class="brand">
+      <div class="mark">OX</div>
+      <div class="brandCopy"><b>Mission Control</b><span id="topStatus">Ready for setup</span></div>
+    </div>
+    <div class="topActions">
+      <span id="statusDot" class="statusDot" aria-hidden="true"></span>
+      <button class="iconBtn" id="settingsBtn" aria-label="Settings">•••</button>
+    </div>
   </header>
 
-  <section class="hero">
-    <div class="eyebrow">Phone-first coding control</div>
-    <h1>Less dashboard.<br>More shipping.</h1>
-    <p>One calm place to connect a model, pick a repository, send a task, review what changed, and approve the commit — from your phone.</p>
-  </section>
+  <main>
+    <section id="setupArea">
+      <section class="hero">
+        <div class="eyebrow">Phone-first coding control</div>
+        <h1>Ship from your phone.<br>Stay in control.</h1>
+        <p>Connect once, pick a repository, then work like a chat — with visible activity, staged edits, and an approval gate before GitHub changes.</p>
+      </section>
 
-  <div class="navTabs" role="tablist">
-    <button class="navTab active" data-view="work">Work</button>
-    <button class="navTab" data-view="browser">Browser</button>
-    <button class="navTab" data-view="lab">QA Lab</button>
-  </div>
+      <section class="panel section" id="connectionsPanel">
+        <div class="panelTitle"><h2>Connections</h2><span>2 taps, then work</span></div>
+        <div class="connection">
+          <div class="provider"><div class="providerIcon openrouter">OR</div><div class="providerCopy"><b>OpenRouter</b><span id="orLine">Primary model · Ox Alpha</span></div></div>
+          <button class="btn small primary" id="connectOR">Connect</button>
+        </div>
+        <div class="connection">
+          <div class="provider"><div class="providerIcon github">GH</div><div class="providerCopy"><b>GitHub</b><span id="ghLine">Choose a repository after connecting</span></div></div>
+          <button class="btn small" id="connectGH">Connect</button>
+        </div>
+      </section>
 
-  <main id="workView" class="view active">
-    <section class="section panel" id="connectionsPanel">
-      <div class="panelTitle"><h2>Connections</h2><span>only what you need</span></div>
-      <div class="connection">
-        <div class="provider"><div class="providerIcon openrouter">OR</div><div class="providerCopy"><b>OpenRouter</b><span id="orLine">Primary model connection</span></div></div>
-        <button class="btn small primary" id="connectOR">Connect</button>
-      </div>
-      <div class="connection">
-        <div class="provider"><div class="providerIcon github">GH</div><div class="providerCopy"><b>GitHub</b><span id="ghLine">Choose a repo after connecting</span></div></div>
-        <button class="btn small" id="connectGH">Connect</button>
-      </div>
+      <section class="panel section" id="workspacePanel">
+        <div class="panelTitle"><h2>Workspace</h2><span id="workspaceStatus">not selected</span></div>
+        <div class="workspaceGrid">
+          <div class="field"><label for="repoSelect">Repository</label><select id="repoSelect" disabled><option>Connect GitHub first</option></select></div>
+          <div class="field"><label for="branchSelect">Branch</label><select id="branchSelect" disabled><option>—</option></select></div>
+        </div>
+        <div class="actions"><button class="btn primary" id="startSession" disabled>Start session</button><button class="btn ghost" id="demoBtn">Try full demo</button></div>
+      </section>
     </section>
 
-    <section class="section panel" id="workspacePanel">
-      <div class="panelTitle"><h2>Workspace</h2><span id="workspaceStatus">not selected</span></div>
-      <div class="workspaceGrid">
-        <div class="field"><label for="repoSelect">Repository</label><select id="repoSelect" disabled><option>Connect GitHub first</option></select></div>
-        <div class="field"><label for="branchSelect">Branch</label><select id="branchSelect" disabled><option>—</option></select></div>
+    <section class="sessionShell section" id="sessionShell">
+      <div class="sessionHeader">
+        <div class="sessionTitle"><b id="sessionName">No active session</b><span id="sessionMeta">Connect a workspace or run the demo.</span></div>
+        <button class="quietBtn" id="collapseSetupBtn" aria-label="Toggle setup">Hide setup</button>
       </div>
-      <div class="actions"><button class="btn primary" id="startSession" disabled>Start session</button><button class="btn ghost" id="demoBtn">Try demo</button></div>
+
+      <div class="modeRow">
+        <div class="segmented" aria-label="Agent mode">
+          <button class="active" data-mode="quick">Quick</button>
+          <button data-mode="review">Plan + Review</button>
+        </div>
+        <div class="sessionControls">
+          <button class="chip" id="webToggle" aria-pressed="false">Web off</button>
+          <button class="chip" id="retryBtn" disabled>Retry</button>
+        </div>
+      </div>
+
+      <div id="activeStatus" class="activeStatus" hidden>
+        <span class="pulse"></span>
+        <div><b id="activePhase">Working</b><span id="activeDetail">Starting…</span></div>
+        <button class="textBtn" id="stopBtn">Stop</button>
+      </div>
+
+      <div id="chat" class="chat" aria-live="polite">
+        <div class="msg system">OX shows actions and progress, not private chain-of-thought. You’ll see what it is doing: planning, reading files, searching, editing, reviewing, and waiting for approval.</div>
+      </div>
+
+      <details class="activityDisclosure" id="activityDisclosure">
+        <summary><span>Activity</span><span id="activitySummary">No activity yet</span></summary>
+        <div id="timeline" class="timeline"></div>
+      </details>
     </section>
 
-    <section class="section panel" id="sessionPanel">
-      <div class="sessionHeader"><div class="sessionTitle"><b id="sessionName">No active session</b><span id="sessionMeta">Start a workspace or run the demo.</span></div><div class="modeToggle"><button class="active" data-mode="quick">Quick</button><button data-mode="review">Plan + Review</button></div></div>
-      <div id="chat" class="chat"><div class="msg system">When a session is active, the agent reads the repository first. File writes are staged. Commits always need your tap.</div></div>
-      <div id="timeline" class="timeline"></div>
-    </section>
-
-    <section class="section panel">
+    <section class="panel section">
       <div class="panelTitle"><h2>Staged changes</h2><span id="stagedCount">0 files</span></div>
-      <div id="changes"><div class="empty"><div class="emptyGlyph">↗</div><h3>Nothing staged</h3><p>Changes will appear here before anything is written to GitHub.</p></div></div>
-      <div class="actions"><button class="btn ghost" id="clearStage" disabled>Clear</button><button class="btn primary" id="commitBtn" disabled>Commit approved changes</button></div>
+      <div id="changes"><div class="empty"><div class="emptyGlyph">↗</div><h3>Nothing staged</h3><p>Edits appear here before anything is written to GitHub.</p></div></div>
+      <div class="actions"><button class="btn ghost" id="clearStage" disabled>Clear all</button><button class="btn primary" id="commitBtn" disabled>Commit approved changes</button></div>
     </section>
-  </main>
 
-  <main id="browserView" class="view">
-    <section class="section panel"><div class="panelTitle"><h2>Private browser</h2><span>VPS-ready adapter</span></div><div class="browserCard"><div class="browserFrame"><div><b>Browser worker not connected</b>When a VPS worker is added, this tab can stream screenshots, links and browser state here.</div></div><div class="actions"><button class="btn" id="browserConnect">Configure worker</button><button class="btn ghost" id="browserDemo">Run browser demo</button></div></div></section>
-    <section class="section panel"><div class="panelTitle"><h2>Preview surface</h2><span>images · video · links · HTML</span></div><div class="msg agent">Paste or generate links in chat. Image URLs render inline, direct video URLs get a player, and fenced <code>html</code> blocks can be previewed in a sandboxed frame.</div></section>
-  </main>
+    <section class="panel section compactPanel">
+      <div class="panelTitle"><h2>Recent missions</h2><span>stored locally, no secrets</span></div>
+      <div id="recentMissions" class="recentList"><div class="mutedSmall">No recent missions yet.</div></div>
+    </section>
 
-  <main id="labView" class="view">
-    <section class="section panel"><div class="panelTitle"><h2>QA Lab</h2><span>simulate failure before it happens</span></div><div class="workspaceGrid"><div class="field"><label>Scenario</label><select id="qaScenario"><option value="normal">Normal build</option><option value="fallback">OpenRouter fails → fallback</option><option value="approval">Agent needs approval</option><option value="commit">Commit + CI result</option><option value="preview">Image + HTML preview</option></select></div><div class="field"><label>Run</label><button class="btn primary" id="runQA" style="width:100%">Simulate</button></div></div><div id="qaOutput" class="timeline"></div></section>
-    <section class="section panel"><div class="panelTitle"><h2>Guardrails</h2><span>harness, not vibes</span></div><div class="pills"><span class="pill ok">read before write</span><span class="pill ok">stage before commit</span><span class="pill ok">default-branch warning</span><span class="pill ok">branch-drift block</span><span class="pill ok">secret-file block</span><span class="pill ok">provider timeout</span><span class="pill ok">tool-loop cap</span><span class="pill ok">reduced motion</span><span class="pill warn">shell requires VPS worker</span></div></section>
+    <section class="panel section" id="qaPanel">
+      <div class="panelTitle"><h2>QA Lab</h2><span>break it before real work does</span></div>
+      <div class="qaGrid">
+        <button class="qaCard" data-qa="mock"><b>Full mock mission</b><span>No API key. Exercises chat, activity and staging.</span></button>
+        <button class="qaCard" data-qa="fallback"><b>Provider failover</b><span>Simulates timeout → OpenCode → Nous.</span></button>
+        <button class="qaCard" data-qa="drift"><b>Branch drift</b><span>Tests commit protection after a remote change.</span></button>
+        <button class="qaCard" data-qa="malformed"><b>Malformed tool call</b><span>Bad JSON must fail safely and recover.</span></button>
+        <button class="qaCard" data-qa="offline"><b>Offline / reconnect</b><span>Checks the PWA state and retry path.</span></button>
+        <button class="qaCard" data-qa="xss"><b>Hostile model output</b><span>Ensures text/links/previews stay sandboxed.</span></button>
+      </div>
+      <div class="actions"><button class="btn" id="freeSmokeBtn" disabled>Run free API smoke test</button><button class="btn ghost" id="clearQABtn">Clear QA log</button></div>
+      <div id="qaOutput" class="timeline"></div>
+    </section>
+
+    <section class="panel section">
+      <div class="panelTitle"><h2>Future adapters</h2><span>VPS-ready, not faked</span></div>
+      <div class="futureGrid">
+        <div class="futureCard"><b>Terminal worker</b><span>Persistent shell, tests, builds, worktrees, background sessions.</span></div>
+        <div class="futureCard"><b>Private browser</b><span>Playwright/CDP screenshots + DOM through the worker.</span></div>
+        <div class="futureCard"><b>Notifications</b><span>Alert when an agent needs approval or CI fails.</span></div>
+      </div>
+    </section>
   </main>
 </div>
 
+<div class="quickBar" id="quickBar">
+  <button data-prompt="Inspect the relevant files first, then make the smallest safe fix.">Fix</button>
+  <button data-prompt="Explain this codebase area clearly before changing anything.">Explain</button>
+  <button data-prompt="Review the relevant implementation for bugs, regressions, and edge cases. Do not change anything unless I ask.">Review</button>
+  <button data-prompt="Create a concise implementation plan after inspecting the repository. Do not edit yet.">Plan</button>
+</div>
+
 <div class="bottomComposer">
-  <div class="compose"><textarea id="prompt" placeholder="Tell OX what to build…" disabled></textarea><button class="send" id="sendBtn" disabled>↑</button></div>
+  <div id="attachmentTray" class="attachmentTray" hidden></div>
+  <div class="compose">
+    <button class="attachBtn" id="attachBtn" aria-label="Attach image">＋</button>
+    <textarea id="prompt" placeholder="Tell OX what to build…" disabled></textarea>
+    <button class="send" id="sendBtn" disabled>↑</button>
+  </div>
+  <input id="imageInput" type="file" accept="image/*" hidden />
   <div class="composeMeta"><span id="composerLeft">No session</span><span id="composerRight">OpenRouter primary</span></div>
 </div>
 
 <div class="sheetBackdrop" id="sheetBackdrop"></div>
 <section class="sheet" id="settingsSheet" aria-modal="true" role="dialog">
-  <div class="handle"></div><h2>Settings</h2><p class="sheetIntro">The everyday screen stays simple. Provider fallbacks, tokens and infrastructure live here.</p>
-  <div class="sheetSection"><div class="sheetRow"><div><b>OpenCode fallback</b><span>Off by default · used only after OpenRouter fails</span></div><label class="toggle"><input id="ocEnabled" type="checkbox"><span class="toggleTrack"></span></label></div><div id="ocAdvanced" class="advanced"><div class="field"><label>OpenCode API key</label><input id="ocKey" type="password" autocomplete="off" placeholder="Optional"></div><div class="field" style="margin-top:7px"><label>Model</label><input id="ocModel" value="x-preview-f-free"></div></div></div>
-  <div class="sheetSection"><div class="sheetRow"><div><b>Nous fallback</b><span>Off by default · third route</span></div><label class="toggle"><input id="nousEnabled" type="checkbox"><span class="toggleTrack"></span></label></div><div id="nousAdvanced" class="advanced"><div class="field"><label>Nous API key</label><input id="nousKey" type="password" autocomplete="off" placeholder="Optional"></div><div class="field" style="margin-top:7px"><label>Model</label><input id="nousModel" value="stealth/ox-alpha"></div></div></div>
-  <div class="sheetSection"><div class="sheetRow"><div><b>GitHub token fallback</b><span>Temporary bridge until GitHub App OAuth is configured</span></div><button class="btn small" id="showToken">Open</button></div><div id="tokenAdvanced" class="advanced"><div class="field"><label>Fine-grained token</label><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…"></div><div class="actions"><button class="btn small primary" id="saveToken">Connect with token</button></div><div class="note">Keep this repo-scoped. The production path is a GitHub App with short-lived user tokens and repository selection.</div></div></div>
-  <div class="sheetSection"><div class="sheetRow"><div><b>Browser / VPS worker</b><span>SSE + terminal + browser control later</span></div><button class="btn small" id="showWorker">Configure</button></div><div id="workerAdvanced" class="advanced"><div class="field"><label>Worker base URL</label><input id="workerUrl" placeholder="https://your-vps.example.com"></div><div class="field" style="margin-top:7px"><label>Worker token</label><input id="workerToken" type="password" autocomplete="off" placeholder="Optional"></div></div></div>
-  <div class="sheetSection"><div class="sheetRow"><div><b>Model</b><span>OpenRouter primary</span></div><span class="pill">stealth/ox-alpha</span></div></div>
+  <div class="handle"></div><h2>Settings</h2><p class="sheetIntro">The everyday screen stays simple. Fallbacks and infrastructure live here.</p>
+  <div class="sheetSection"><div class="sheetRow"><div><b>OpenCode fallback</b><span>Off by default · used only if OpenRouter fails</span></div><label class="toggle"><input id="ocEnabled" type="checkbox"><span class="toggleTrack"></span></label></div><div id="ocAdvanced" class="advanced"><div class="field"><label>OpenCode API key</label><input id="ocKey" type="password" autocomplete="off" placeholder="Optional"></div><div class="field topGap"><label>Model</label><input id="ocModel" value="x-preview-f-free"></div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>Nous fallback</b><span>Off by default · third route</span></div><label class="toggle"><input id="nousEnabled" type="checkbox"><span class="toggleTrack"></span></label></div><div id="nousAdvanced" class="advanced"><div class="field"><label>Nous API key</label><input id="nousKey" type="password" autocomplete="off" placeholder="Optional"></div><div class="field topGap"><label>Model</label><input id="nousModel" value="stealth/ox-alpha"></div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>GitHub token bridge</b><span>Temporary until GitHub App OAuth is configured</span></div><button class="btn small" id="showToken">Open</button></div><div id="tokenAdvanced" class="advanced"><div class="field"><label>Fine-grained token</label><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…"></div><div class="actions"><button class="btn small primary" id="saveToken">Connect with token</button></div><div class="note">Use a repo-scoped token. It stays in sessionStorage only.</div></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>Primary model</b><span>OAuth account · default</span></div><span class="pill">stealth/ox-alpha</span></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>Free test route</b><span>Used only by QA smoke test</span></div><span class="pill">openrouter/free</span></div></div>
+  <div class="sheetSection"><div class="sheetRow"><div><b>VPS worker</b><span>Shell/browser adapter later</span></div><button class="btn small" id="showWorker">Configure</button></div><div id="workerAdvanced" class="advanced"><div class="field"><label>Worker base URL</label><input id="workerUrl" placeholder="https://your-vps.example.com"></div><div class="field topGap"><label>Worker token</label><input id="workerToken" type="password" autocomplete="off" placeholder="Optional"></div></div></div>
   <div class="actions"><button class="btn primary" id="closeSettings">Done</button></div>
 </section>
+
+<div class="sheet" id="previewSheet" aria-modal="true" role="dialog">
+  <div class="handle"></div>
+  <div class="previewHead"><div><h2 id="previewTitle">File preview</h2><p id="previewMeta">Staged version</p></div><button class="iconBtn" id="closePreview" aria-label="Close preview">×</button></div>
+  <div class="previewTabs"><button class="active" data-preview="staged">Staged</button><button data-preview="original">Original</button></div>
+  <pre class="codeBox" id="previewCode"></pre>
+</section>
+
 <div class="toast" id="toast"></div>
 <script src="./app.js" defer></script>
 </body>
