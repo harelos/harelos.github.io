@@ -1,0 +1,40 @@
+{
+  "version": "2026-08-29-v1",
+  "purpose": "Compact persistent business context for the future AI advisor. This is not the raw history database.",
+  "account": {
+    "market": "Israel",
+    "currency": "USD",
+    "reportingTimezone": "Asia/Jerusalem",
+    "primaryStore": "TigerBrandsGlobal"
+  },
+  "operatingPrinciples": [
+    "0 changes is a valid daily decision.",
+    "Do not restructure winners because of one weak day when the rolling window remains healthy.",
+    "Separate testing from scaling/winner delivery.",
+    "Use funnel evidence to distinguish ad problems from landing/cart/checkout problems.",
+    "Budget cuts change pacing; pause is the hard stop when spend must stop.",
+    "Prefer one interpretable experiment over several simultaneous structural changes.",
+    "Every recommendation must include the strongest counterargument before approval."
+  ],
+  "strategy": {
+    "winnerTestingSplitTargetPct": {"winner":80,"testing":20,"status":"configurable target"},
+    "winnerScalingStructure": "CBO can become the scaling home for proven winners when budget is sufficient.",
+    "cboDuplicateTarget": 5,
+    "minimumCboBudget": null,
+    "minimumCboBudgetNote": "Intentionally unset. Do not invent a minimum before enough account-specific evidence is available.",
+    "winnerDecisionWindow": "rolling_3_day",
+    "testDecisionUnit": "individual test/creative/ad set before account-wide restructure"
+  },
+  "reviewWindowsIsrael": ["15:00","22:00","03:00","06:00"],
+  "alertPolicy": {
+    "outsideReviewWindows": "Only hard alerts should interrupt: spend ceiling, tracking failure, checkout/payment failure, or extreme deviation.",
+    "humanApprovalRequiredForWrites": true
+  },
+  "contextBuilder": {
+    "alwaysInclude": ["goals","unit_economics_summary","current_state","active_campaigns","hard_rules"],
+    "rollingWindows": [3,7],
+    "recentDecisionLimit": 20,
+    "retrieveHistoricalAnalogs": true,
+    "neverSendFullRawDatabase": true
+  }
+}
