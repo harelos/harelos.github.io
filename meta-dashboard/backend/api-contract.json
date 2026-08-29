@@ -1,0 +1,26 @@
+{
+  "version": "0.1",
+  "baseUrl": "/api",
+  "endpoints": {
+    "state": {"method":"GET","path":"/state","auth":"admin"},
+    "sync": {"method":"POST","path":"/sync","auth":"admin","body":{"sources":["meta","shopify"]}},
+    "campaigns": {"method":"GET","path":"/campaigns","auth":"admin"},
+    "metaAction": {"method":"POST","path":"/meta/action","auth":"admin","body":{"action":"pause|enable|set_budget","scope":"campaign|adset|ad","id":"string","amount":"number|null","approvalId":"string"}},
+    "advisor": {"method":"POST","path":"/advisor","auth":"admin","body":{"mode":"today|proposal_review","proposal":"string|null"}},
+    "decisions": {"method":"GET","path":"/decisions","auth":"admin"},
+    "recordDecision": {"method":"POST","path":"/decisions","auth":"admin"},
+    "goals": {"method":"GET|PUT","path":"/goals","auth":"admin"},
+    "unitEconomics": {"method":"GET|PUT","path":"/unit-economics","auth":"admin"}
+  },
+  "advisorResponse": {
+    "verdict": "KEEP|CHANGE|STOP|INVESTIGATE",
+    "confidence": 0,
+    "primary_reason": "",
+    "evidence": [],
+    "counterargument": "",
+    "recommended_actions": [],
+    "non_ads_actions": [],
+    "do_not_touch": [],
+    "next_review_at": "ISO-8601"
+  }
+}
