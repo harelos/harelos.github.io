@@ -1,0 +1,30 @@
+{
+  "version": "2.0",
+  "generatedAt": "2026-08-29T21:30:00Z",
+  "period": {"since":"2023-08-29","until":"2026-08-29"},
+  "scope": "חשבונות איקומרס/ביוטי מאומתים בלבד. 99Jersey, מוצרי מערכות יחסים, חשבונות לא מזוהים ו-JacobNew8 המזוהם באטריביושן אינם נכנסים למודל.",
+  "verifiedPurchaseEvents": 5104,
+  "accounts": [
+    {"id":"act_3887802441433954","name":"Celestiva Limited 1","currency":"HKD","spend":155204.23,"purchases":1333,"purchaseValue":347194.68,"roas":2.237018,"coverage":"חלקי היסטורית; קמפייני ביוטי מאומתים כגון ElasticDream/OceAura"},
+    {"id":"act_1485755002230457","name":"JacobNew4","currency":"USD","spend":14484.09,"purchases":421,"purchaseValue":39749.07,"roas":2.744326,"coverage":"מאומת ביוטי/שיער"},
+    {"id":"act_1717853958667676","name":"JacobNew5","currency":"USD","spend":4161.12,"purchases":106,"purchaseValue":9119.29,"roas":2.191547,"coverage":"מאומת היסטורית NovaHair/ביוטי"},
+    {"id":"act_289731960246927","name":"JacobNew6","currency":"USD","spend":39486.90,"purchases":2371,"purchaseValue":91687.93,"roas":2.321983,"coverage":"חלקי היסטורית; ביוטי/ElasticDream/MadamBeauty/NovaHair"},
+    {"id":"act_906835510448247","name":"Shopify Store — Legacy","currency":"HKD","spend":148685.29,"purchases":800,"purchaseValue":310834.11,"roas":2.090551,"coverage":"מאומת ביוטי: NovaHair, Lash Serum, ElasticDream"},
+    {"id":"act_8852331774866389","name":"Shopify Store 3","currency":"USD","spend":1115.34,"purchases":73,"purchaseValue":5106.55,"roas":4.578469,"coverage":"החשבון הנוכחי; NovaHair/ElasticDream/OceAura"}
+  ],
+  "currencyCohorts": {
+    "USD":{"spend":59247.45,"purchaseValue":145662.84,"purchases":2971,"roas":2.4585},
+    "HKD":{"spend":303889.52,"purchaseValue":658028.79,"purchases":2133,"roas":2.1657}
+  },
+  "excluded": [
+    {"name":"99Jersey","id":"act_318205675437886","reason":"לא רלוונטי לפורטפוליו ביוטי"},
+    {"name":"JacobNew8","id":"act_1431223877625963","reason":"אטריביושן מזוהם; לא משמש benchmark"},
+    {"name":"מוצרי מערכות יחסים / דיגיטל","reason":"הוחרגו לפי הוראה"},
+    {"name":"חשבונות לא מזוהים/ללא הוכחת ביוטי","reason":"לא נכנסים עד שיש מיפוי ודאי"}
+  ],
+  "weekdayBackfill": {
+    "status":"pending",
+    "reason":"החיבור הנוכחי מחזיר היסטוריית חשבון מצטברת אך לא breakdown ישיר לפי יום-בשבוע. אין להמציא ROAS לפי יום בלי שורות Meta יומיות.",
+    "future":"ה-backend ישמור snapshot יומי לכל חשבון ויבצע backfill של שורות יומיות; אז רכיב החזר הפרסום (25%) ייכנס לנוסחת יום-השבוע ללא שינוי UI."
+  }
+}
