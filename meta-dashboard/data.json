@@ -1,7 +1,6 @@
 {
   "meta": {
     "dashboardTitle": "TigerBrands — Meta & Shopify Control Room",
-    "date": "2026-08-29",
     "accountTimezone": "Asia/Jerusalem",
     "currency": "USD",
     "lastUpdated": "2026-08-29T22:36:00+03:00",
@@ -9,201 +8,113 @@
     "refreshSeconds": 30,
     "accountId": "act_8852331774866389"
   },
-  "today": {
-    "metaAds": {
-      "spend": 35.29,
-      "impressions": 1327,
-      "reach": 1043,
-      "frequency": 1.2723,
-      "clicks": 53,
-      "ctr": 3.994,
-      "cpc": 0.6658,
-      "cpm": 26.5938,
-      "landingPageViews": 29,
-      "addToCarts": 6,
-      "initiateCheckouts": 2,
-      "purchases": 1,
-      "purchaseValue": 63.36,
-      "roas": 1.7954,
-      "costPerLandingPageView": 1.2169,
-      "costPerAddToCart": 5.8817,
-      "costPerCheckout": 17.645,
-      "costPerPurchase": 35.29
+  "operatingThresholds": {
+    "note": "Internal decision thresholds for this account — not universal ecommerce benchmarks. They are calibrated from recent TigerBrands data and should be replaced by margin-based targets once break-even CPA/ROAS are locked.",
+    "lpvToAtc": {"strong": 20, "watch": 12, "label": "LPV → ATC"},
+    "atcToCheckout": {"strong": 40, "watch": 25, "label": "ATC → Checkout"},
+    "checkoutToPurchase": {"strong": 30, "watch": 15, "label": "Checkout → Purchase"},
+    "lpvToPurchase": {"strong": 4, "watch": 2, "label": "LPV → Purchase"},
+    "roasSignal": {"strong": 3, "watch": 2, "label": "ROAS signal"}
+  },
+  "financialTargets": {
+    "targetCPA": null,
+    "breakEvenROAS": null,
+    "note": "Profitability verdict stays provisional until contribution margin gives us a hard target CPA and break-even ROAS."
+  },
+  "days": {
+    "2026-08-27": {
+      "date": "2026-08-27",
+      "metaAds": {
+        "spend": 55.40, "impressions": 2450, "reach": 1739, "clicks": 110, "ctr": 4.4898, "cpc": 0.5036, "cpm": 22.6122,
+        "landingPageViews": 56, "addToCarts": 20, "initiateCheckouts": 8, "purchases": 3, "purchaseValue": 266.14,
+        "roas": 4.8040, "costPerLandingPageView": 0.9893, "costPerAddToCart": 2.77, "costPerCheckout": 6.925, "costPerPurchase": 18.4667
+      },
+      "shopify": {
+        "sessions": 92, "sessionsWithCartAdditions": 16, "sessionsReachedCheckout": 7, "sessionsCompletedCheckout": 3,
+        "conversionRate": 3.2609, "cartRate": 17.3913, "checkoutRate": 7.6087,
+        "orders": 3, "totalSales": 268.47, "aov": 89.49
+      },
+      "campaigns": [
+        {"shortName":"ABO Main Delivery","name":"NOVA | ABO | CREATIVE TESTING | NEW CUSTOMERS | IL","status":"ACTIVE_THEN","dailyBudget":null,"spend":47.58,"landingPageViews":53,"addToCarts":20,"checkouts":8,"purchases":3,"roas":5.5935,"cpc":0.4711,"costPerAddToCart":2.379,"costPerPurchase":15.86,"advisor":"KEEP — this was a strong reference day. No structural intervention justified."},
+        {"shortName":"New Concepts Test","name":"TEST | NovaHair | New Creative Concepts | IL | $7","status":"ACTIVE_THEN","dailyBudget":7,"spend":7.82,"landingPageViews":3,"addToCarts":0,"checkouts":0,"purchases":0,"roas":0,"cpc":0.8689,"costPerAddToCart":null,"costPerPurchase":null,"advisor":"WATCH/STOP TEST — weak early signal, but this is a test unit, not a reason to restructure winners."}
+      ],
+      "advisor": {
+        "headline": "Reference day: leave the winning system alone",
+        "verdict": "NO STRUCTURAL CHANGE",
+        "body": "This day establishes why the next weak day should have been treated as variance first, not as proof the delivery structure stopped working."
+      }
     },
-    "shopify": {
-      "sessions": 83,
-      "sessionsWithCartAdditions": 13,
-      "sessionsReachedCheckout": 5,
-      "sessionsCompletedCheckout": 1,
-      "conversionRate": 1.2048,
-      "cartRate": 15.6627,
-      "checkoutRate": 6.0241,
-      "orders": 1,
-      "grossSales": 63.02,
-      "netSales": 63.02,
-      "totalSales": 63.02,
-      "aov": 63.02
+    "2026-08-28": {
+      "date": "2026-08-28",
+      "metaAds": {
+        "spend": 53.62, "impressions": 2261, "reach": 1639, "clicks": 98, "ctr": 4.3344, "cpc": 0.5471, "cpm": 23.7152,
+        "landingPageViews": 47, "addToCarts": 7, "initiateCheckouts": 6, "purchases": 1, "purchaseValue": 80.13,
+        "roas": 1.4944, "costPerLandingPageView": 1.1409, "costPerAddToCart": 7.66, "costPerCheckout": 8.9367, "costPerPurchase": 53.62
+      },
+      "shopify": {
+        "sessions": 104, "sessionsWithCartAdditions": 7, "sessionsReachedCheckout": 3, "sessionsCompletedCheckout": 1,
+        "conversionRate": 0.9615, "cartRate": 6.7308, "checkoutRate": 2.8846,
+        "orders": 1, "totalSales": 80.43, "aov": 80.43
+      },
+      "campaigns": [
+        {"shortName":"ABO Main Delivery","name":"NOVA | ABO | CREATIVE TESTING | NEW CUSTOMERS | IL","status":"ACTIVE_THEN","dailyBudget":null,"spend":48.45,"landingPageViews":42,"addToCarts":7,"checkouts":6,"purchases":1,"roas":1.6539,"cpc":0.5324,"costPerAddToCart":6.9214,"costPerPurchase":48.45,"advisor":"HOLD — weak purchase result, but one day after a very strong day and with downstream checkout intent. Do not rebuild the account from this alone."},
+        {"shortName":"New Concepts Test","name":"TEST | NovaHair | New Creative Concepts | IL | $7","status":"ACTIVE_THEN","dailyBudget":7,"spend":1.00,"landingPageViews":1,"addToCarts":0,"checkouts":0,"purchases":0,"roas":0,"cpc":null,"costPerAddToCart":null,"costPerPurchase":null,"advisor":"INSUFFICIENT SAMPLE — no decision from a one-dollar slice."},
+        {"shortName":"Winner CBO","name":"NOVA | CBO | WINNERS | NEW CUSTOMERS | IL","status":"STARTED_LATE","dailyBudget":30,"spend":4.17,"landingPageViews":4,"addToCarts":0,"checkouts":0,"purchases":0,"roas":0,"cpc":0.5957,"costPerAddToCart":null,"costPerPurchase":null,"advisor":"THIS WAS THE STRUCTURAL EXPERIMENT. If you choose it, it should be the only structural change for the day — no old CBO activation on top."}
+      ],
+      "advisor": {
+        "headline": "Hindsight: I would have made zero structural changes",
+        "verdict": "HOLD STRUCTURE",
+        "body": "The prior day was strong. The main delivery campaign had a bad purchase day, but the funnel still produced meaningful checkout intent. My preferred action would have been: keep the existing winner delivery unchanged, keep the small test budget separate, and review again on a rolling 3-day view. If cash protection was essential, make one budget reduction only — not a migration to a new CBO plus an old-CBO reactivation."
+      }
+    },
+    "2026-08-29": {
+      "date": "2026-08-29",
+      "metaAds": {
+        "spend": 35.29, "impressions": 1327, "reach": 1043, "clicks": 53, "ctr": 3.9940, "cpc": 0.6658, "cpm": 26.5938,
+        "landingPageViews": 29, "addToCarts": 6, "initiateCheckouts": 2, "purchases": 1, "purchaseValue": 63.36,
+        "roas": 1.7954, "costPerLandingPageView": 1.2169, "costPerAddToCart": 5.8817, "costPerCheckout": 17.645, "costPerPurchase": 35.29
+      },
+      "shopify": {
+        "sessions": 83, "sessionsWithCartAdditions": 13, "sessionsReachedCheckout": 5, "sessionsCompletedCheckout": 1,
+        "conversionRate": 1.2048, "cartRate": 15.6627, "checkoutRate": 6.0241,
+        "orders": 1, "totalSales": 63.02, "aov": 63.02
+      },
+      "campaigns": [
+        {"shortName":"Winner CBO","name":"NOVA | CBO | WINNERS | NEW CUSTOMERS | IL","status":"PAUSED","dailyBudget":15,"spend":22.56,"landingPageViews":23,"addToCarts":5,"checkouts":2,"purchases":1,"roas":2.8085,"cpc":0.5247,"costPerAddToCart":4.512,"costPerPurchase":22.56,"advisor":"FUNNEL HEALTHY ENOUGH TO KEEP. The campaign was the strongest paid unit today. Its pause is a cash-protection decision, not evidence that the CBO failed."},
+        {"shortName":"ABO Testing","name":"NOVA | ABO | CREATIVE TESTING | NEW CUSTOMERS | IL","status":"ACTIVE","dailyBudget":5,"spend":4.92,"landingPageViews":2,"addToCarts":1,"checkouts":0,"purchases":0,"roas":0,"cpc":2.46,"costPerAddToCart":4.92,"costPerPurchase":null,"advisor":"TOO SMALL TO JUDGE. Keep only as a controlled test; do not use it to infer account-wide health."},
+        {"shortName":"Historical CBO","name":"CBO - Nova","status":"PAUSED","dailyBudget":5,"spend":7.81,"landingPageViews":4,"addToCarts":0,"checkouts":0,"purchases":0,"roas":0,"cpc":0.9763,"costPerAddToCart":null,"costPerPurchase":null,"advisor":"PAUSE WAS REASONABLE FOR CASH CONTROL, but four LPVs are not enough to statistically prove the old CBO is bad."}
+      ],
+      "advisor": {
+        "headline": "Today: stop changing variables",
+        "verdict": "FREEZE",
+        "body": "The Winner CBO itself has an acceptable-to-strong funnel signal. The bigger problem is change density. Preserve the current state until the next planned review instead of trying another structure today."
+      }
     }
   },
-  "yesterday": {
-    "date": "2026-08-28",
-    "metaAds": {
-      "spend": 53.62,
-      "impressions": 2261,
-      "reach": 1639,
-      "frequency": 1.3795,
-      "clicks": 98,
-      "ctr": 4.3344,
-      "cpc": 0.5471,
-      "cpm": 23.7152,
-      "landingPageViews": 47,
-      "addToCarts": 7,
-      "initiateCheckouts": 6,
-      "purchases": 1,
-      "purchaseValue": 80.13,
-      "roas": 1.4944,
-      "costPerLandingPageView": 1.1409,
-      "costPerAddToCart": 7.66,
-      "costPerCheckout": 8.9367,
-      "costPerPurchase": 53.62
-    },
-    "shopify": {
-      "sessions": 104,
-      "sessionsWithCartAdditions": 7,
-      "sessionsReachedCheckout": 3,
-      "sessionsCompletedCheckout": 1,
-      "conversionRate": 0.9615,
-      "cartRate": 6.7308,
-      "checkoutRate": 2.8846,
-      "orders": 1,
-      "grossSales": 80.43,
-      "totalSales": 80.43,
-      "aov": 80.43
-    }
-  },
-  "campaigns": [
-    {
-      "id": "120248420474480135",
-      "name": "NOVA | CBO | WINNERS | NEW CUSTOMERS | IL",
-      "shortName": "Winner CBO",
-      "status": "PAUSED",
-      "dailyBudget": 15,
-      "spend": 22.56,
-      "impressions": 923,
-      "clicks": 43,
-      "ctr": 4.6587,
-      "cpc": 0.5247,
-      "landingPageViews": 23,
-      "addToCarts": 5,
-      "checkouts": 2,
-      "purchases": 1,
-      "purchaseValue": 63.36,
-      "roas": 2.8085,
-      "costPerAddToCart": 4.512,
-      "costPerPurchase": 22.56,
-      "note": "Best-performing paid campaign today. Current account state shows it paused after the budget was reduced from $30 → $25 → $15."
-    },
-    {
-      "id": "120248307316790135",
-      "name": "NOVA | ABO | CREATIVE TESTING | NEW CUSTOMERS | IL",
-      "shortName": "ABO Testing",
-      "status": "ACTIVE",
-      "dailyBudget": 5,
-      "spend": 4.92,
-      "impressions": 158,
-      "clicks": 2,
-      "ctr": 1.2658,
-      "cpc": 2.46,
-      "landingPageViews": 2,
-      "addToCarts": 1,
-      "checkouts": 0,
-      "purchases": 0,
-      "purchaseValue": 0,
-      "roas": 0,
-      "costPerAddToCart": 4.92,
-      "costPerPurchase": null,
-      "note": "Campaign is active. Current active $5 ad set is TEST | Direct Offer Statics; the challenger ad set is paused."
-    },
-    {
-      "id": "120234432398300135",
-      "name": "CBO - Nova",
-      "shortName": "Historical CBO",
-      "status": "PAUSED",
-      "dailyBudget": 5,
-      "spend": 7.81,
-      "impressions": 246,
-      "clicks": 8,
-      "ctr": 3.252,
-      "cpc": 0.9763,
-      "landingPageViews": 4,
-      "addToCarts": 0,
-      "checkouts": 0,
-      "purchases": 0,
-      "purchaseValue": 0,
-      "roas": 0,
-      "costPerAddToCart": null,
-      "costPerPurchase": null,
-      "note": "Reactivated briefly, spent without downstream funnel events, then paused as a stop-loss action."
-    }
-  ],
-  "conclusions": [
-    {
-      "level": "purple",
-      "title": "The page/funnel does not look broken",
-      "body": "Shopify cart and checkout progression is materially stronger than yesterday. The main problem today is not lack of intent at the top/middle of the funnel; it is insufficient purchase volume relative to paid spend."
-    },
-    {
-      "level": "red",
-      "title": "Too many account changes made the signal harder to read",
-      "body": "Budget changes, moving winners into a CBO, turning on an old CBO, then pausing it compressed several experiments into one day. The issue is change density: when several variables move together, it becomes difficult to know what actually caused performance to move."
-    },
-    {
-      "level": "purple",
-      "title": "Winner CBO was still the strongest paid unit",
-      "body": "Among the campaigns that spent today, the Winner CBO produced the purchase and the strongest paid funnel. Its current state is paused, so tomorrow should start from a written plan rather than another chain of reactive edits."
-    },
-    {
-      "level": "red",
-      "title": "Do not make another structural change tonight",
-      "body": "The account has already been changed several times today and the Meta reporting day is nearly over. Preserve the current state, document it, and make the next decision only in the scheduled review window."
-    }
-  ],
-  "guardrails": {
-    "title": "Decision Guard — anti-impulse operating rules",
+  "decisionPolicy": {
+    "headline": "Decision Guard v2 — advisor has veto, not validation",
     "rules": [
-      "No Meta budget/status changes immediately after waking. Use the dashboard only; decisions wait for the first scheduled review window.",
-      "Review windows: 12:00 and 18:00 Israel time. Outside those windows, no changes unless there is a confirmed technical failure (checkout, tracking, broken page, payment issue).",
-      "One structural change per campaign per review window. Do not change budget + structure + creatives at the same time.",
-      "After a structural change, wait until the next review window before making another structural change to the same campaign.",
-      "Separate diagnosis: traffic quality → landing-page engagement → add to cart → checkout → purchase. Never kill a campaign solely because total store CVR moved if the paid funnel is still healthy.",
-      "Every change gets written into the Decision Log with the reason, expected outcome and next review time.",
-      "Exact break-even ROAS / CPA should be added as the hard financial kill-switch once contribution margin is locked."
+      "Default change budget: maximum 2 meaningful account-level interventions per day, and maximum 1 budget/status/structure change per campaign in any 24-hour period.",
+      "Normal budget adjustment: 20–30% at most, once per 24 hours. Do not staircase $30 → $25 → $15 in the same day unless the goal is simply emergency cash protection.",
+      "If you need spend to stop now, PAUSE. A lower daily budget is not a hard stop and Meta can continue spending after the edit.",
+      "Never launch a new winner structure and reactivate an old structure on the same day. Pick one experiment so the result is interpretable.",
+      "Use a rolling 3-day view for winner decisions. One weak day after a strong day is a warning, not a verdict.",
+      "For low-budget campaigns, avoid judging before roughly 15–25 LPVs or the financial stop-loss is reached, unless there is a confirmed technical failure.",
+      "Review windows: 12:00 and 18:00 Israel time. Outside them, no discretionary account changes.",
+      "When you propose a change, ChatGPT must first classify it KEEP / CHANGE / STOP and give the strongest argument against your proposal. Agreement is not the default.",
+      "If a requested action breaks these guardrails, ChatGPT should say so and require an explicit OVERRIDE before executing the write action."
+    ],
+    "stopLossLogic": [
+      "Hard financial stop-loss should be based on target CPA / break-even ROAS once contribution margin is entered.",
+      "If 0 purchases AND mid-funnel is weak, stop earlier when spend reaches the financial threshold.",
+      "If 0 purchases BUT LPV→ATC and ATC→Checkout are healthy, allow more time / the next review window because purchase conversion can lag.",
+      "If there is already a purchase and the funnel is healthy, do not kill solely because same-day ROAS is below target; check rolling 3-day performance first."
     ]
   },
   "decisionLog": [
-    {
-      "date": "2026-08-29",
-      "action": "Historical CBO paused",
-      "reason": "Spend accumulated with no add-to-cart, checkout or purchase signal.",
-      "source": "Windsor write action"
-    },
-    {
-      "date": "2026-08-29",
-      "action": "Winner CBO budget reduced from $30 to $25",
-      "reason": "Cash-preservation / stop-loss mode while retaining the strongest campaign.",
-      "source": "Windsor write action"
-    },
-    {
-      "date": "2026-08-29",
-      "action": "Winner CBO budget reduced from $25 to $15",
-      "reason": "More aggressive cash preservation while keeping a controlled path to continue testing.",
-      "source": "Windsor write action"
-    },
-    {
-      "date": "2026-08-29",
-      "action": "Winner CBO currently detected as PAUSED",
-      "reason": "Current Meta account state; pause occurred after the budget reductions.",
-      "source": "Meta current state"
-    }
+    {"date":"2026-08-28","action":"Winner CBO built/started late in the day","assessment":"Understandable experiment, but should have been the only structural experiment if kept."},
+    {"date":"2026-08-29","action":"Historical CBO activated, then paused","assessment":"Defensive pause was reasonable; activation added an unnecessary second structural variable."},
+    {"date":"2026-08-29","action":"Winner CBO budget reduced $30 → $25 → $15","assessment":"Too many same-day budget edits. In future choose one cut, or pause if a hard stop is needed."},
+    {"date":"2026-08-29","action":"Winner CBO detected paused","assessment":"Do not toggle it again without a scheduled review and written reason."}
   ]
 }
