@@ -1,0 +1,6 @@
+{
+  "date": "2026-08-28",
+  "meta": {"spend":53.62,"landingPageViews":47,"addToCarts":7,"checkouts":6,"purchases":1,"roas":1.4944,"costPerPurchase":53.62},
+  "shopify": {"sessions":104,"cartSessions":7,"checkoutSessions":3,"completedCheckout":1,"conversionRate":0.9615,"totalSales":80.43,"aov":80.43},
+  "decisionContext": "Weak purchase day immediately after a strong day. Hindsight recommendation: hold the existing winner structure, keep testing separate, and avoid stacking a new Winner CBO plus an old-CBO reactivation in the same day."
+}
