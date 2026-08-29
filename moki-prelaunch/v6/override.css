@@ -1,0 +1,27 @@
+/* MOKI v6 — mobile QA + motion overrides */
+:root{--moki-card-max:360px}
+.heroBg,.questMedia img,.finalBg,.momentMedia img,.memory img{will-change:transform;backface-visibility:hidden}
+.howStep{transition:transform .4s ease,box-shadow .4s ease}.howStep:hover{transform:translateY(-2px)}
+.questCard,.finalCard,.heroCard{transform:translateZ(0)}
+@media(max-width:720px){
+  .heroCard{min-height:680px}
+  .heroBg{object-position:62% 48%}
+  .heroJoin input{height:60px!important;font-size:18px!important}
+  .heroJoin button{height:66px!important;font-size:22px!important;letter-spacing:-.01em}
+  .moments{scroll-padding-left:16px;overscroll-behavior-x:contain}
+  .moment{flex:0 0 min(84vw,var(--moki-card-max))!important;display:grid!important;grid-template-columns:46% 54%!important;min-height:176px!important;scroll-snap-align:start!important}
+  .momentMedia{height:176px!important;min-height:176px!important}
+  .momentCopy{display:flex;flex-direction:column;justify-content:center;padding:15px!important}
+  .momentCopy b{font-size:18px!important;line-height:1.08}.momentCopy p{font-size:11.5px!important;line-height:1.45}
+  .swipeHint{display:block!important;margin-top:3px;color:#7d8981}
+  .howRail{grid-template-columns:1fr 1fr!important;gap:8px!important;padding:11px!important}
+  .railLine{display:none!important}.howStep{background:#fffdf7;border:1px solid rgba(15,53,39,.08);border-radius:17px;padding:12px 8px;min-height:148px}
+  .questCard{grid-template-columns:1fr!important}.questMedia{min-height:225px!important;order:-1}.questMedia img{object-position:67% 50%!important}.questMedia:after{background:linear-gradient(180deg,transparent 56%,var(--forest))!important}
+  .questCopy{padding:18px 18px 20px!important;margin-top:-28px;position:relative;z-index:2}.tryQuest{width:100%;min-height:54px;font-size:14px}
+  .memories{display:flex!important;overflow-x:auto!important;gap:10px!important;margin-left:-16px;margin-right:-16px;padding:0 16px 11px!important;scroll-snap-type:x mandatory;scroll-padding-left:16px;scrollbar-width:none}.memories::-webkit-scrollbar{display:none}.memory{flex:0 0 46vw!important;scroll-snap-align:start;aspect-ratio:.78!important}
+  .finalCard{min-height:625px!important}.finalBg{object-position:72% 50%!important}.finalShade{background:linear-gradient(180deg,rgba(5,24,17,.05) 20%,rgba(5,24,17,.34) 54%,rgba(5,24,17,.96) 78%,rgba(5,24,17,.98) 100%)!important}
+  .finalCopy{left:18px!important;right:18px!important;bottom:22px!important;top:auto!important;transform:none!important;width:auto!important}.finalCopy h2{font-size:34px!important}.finalJoin{display:grid!important;gap:9px!important;max-width:none!important}.finalJoin input{height:57px!important;font-size:17px!important}.finalJoin button{height:62px!important;font-size:20px!important}
+  .stickyJoin button{min-height:58px;font-size:17px}
+}
+@media(max-width:380px){.heroCard{min-height:650px}.moment{flex-basis:87vw!important}.memory{flex-basis:52vw!important}.finalCard{min-height:590px!important}}
+@media(prefers-reduced-motion:reduce){.heroBg,.questMedia img,.finalBg{transform:none!important}.howStep{transition:none!important}}
