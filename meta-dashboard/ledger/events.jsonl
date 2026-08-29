@@ -1,0 +1,4 @@
+{"ts":"2026-08-28","type":"structure_change","scope":"account","action":"Winner CBO built/started late","assessment":"Understandable experiment; should have been the only structural experiment if kept.","source":"reconstructed"}
+{"ts":"2026-08-29","type":"campaign_status","scope":"campaign","campaign":"Historical CBO","action":"enabled_then_paused","assessment":"Activation added a second structural variable; pause was reasonable for cash control.","source":"reconstructed"}
+{"ts":"2026-08-29","type":"budget_change","scope":"campaign","campaign":"Winner CBO","action":"budget staircase","before":30,"steps":[25,15],"assessment":"Too many same-day budget edits; future policy is one cut or one pause.","source":"reconstructed"}
+{"ts":"2026-08-29","type":"campaign_status","scope":"campaign","campaign":"Winner CBO","action":"paused","assessment":"Treat as cash-protection action, not proof the campaign failed.","source":"reconstructed"}
