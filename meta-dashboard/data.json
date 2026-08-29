@@ -21,6 +21,21 @@
     "breakEvenROAS": null,
     "note": "Profitability verdict stays provisional until contribution margin gives us a hard target CPA and break-even ROAS."
   },
+  "metricGoals": {
+    "roas": {"label":"ROAS","direction":"higher","target":3.0,"watch":2.0,"format":"number","basis":"יעד תפעולי שכבר שימש אותנו: 3+ נחשב סיגנל חזק. זה עדיין לא break-even ROAS עד שנכניס מרווח תרומה אמיתי."},
+    "shopifyCvr": {"label":"Shopify CVR","direction":"higher","target":3.0,"watch":1.5,"format":"percent","basis":"3% הוא יעד עבודה כי יום הייחוס החזק האחרון היה 3.26%. מתחת ל-1.5% דורש בדיקה לפני שמאשימים את המדיה."},
+    "ctr": {"label":"CTR","direction":"higher","target":4.3,"watch":3.5,"format":"percent","basis":"היעד יושב סביב רמת הימים הטובים האחרונים בחשבון, שבהם CTR היה בערך 4.3%–4.5%."},
+    "cpc": {"label":"CPC","direction":"lower","target":0.55,"watch":0.75,"format":"money","basis":"בימים הטובים האחרונים ה-CPC היה סביב $0.47–$0.55. לכן ≤$0.55 הוא יעד, ועד $0.75 עדיין טווח מעקב."},
+    "costPerLpv": {"label":"Cost / LPV","direction":"lower","target":1.05,"watch":1.30,"format":"money","basis":"יום הייחוס החזק היה סביב $0.99 ל-LPV. היעד $1.05 שומר אותנו קרוב לרמה שכבר הוכחנו שאפשר להשיג."},
+    "lpvToAtc": {"label":"LPV → ATC","direction":"higher","target":20,"watch":12,"format":"percent","basis":"20% הוא סף כוונת קנייה בריא לחשבון הזה. הוא שמרני ביחס ליום הייחוס החזק, שבו היחס היה גבוה משמעותית."},
+    "costPerAtc": {"label":"Cost / ATC","direction":"lower","target":4.50,"watch":6.50,"format":"money","basis":"יום הייחוס החזק היה $2.77 ל-ATC, וה-Winner CBO הנוכחי סביב $4.51. לכן $4.50 הוא יעד תפעולי סביר ולא תיאורטי."},
+    "atcToCheckout": {"label":"ATC → Checkout","direction":"higher","target":40,"watch":25,"format":"percent","basis":"40% הוא יעד מעבר מסל ל-checkout: יום הייחוס החזק היה בדיוק סביב הרמה הזו. מתחת ל-25% כבר מצביע על חיכוך משמעותי."},
+    "costPerCheckout": {"label":"Cost / Checkout","direction":"lower","target":8.00,"watch":12.00,"format":"money","basis":"יום הייחוס החזק היה בערך $6.93 ל-checkout והיום החלש הבא היה סביב $8.94. לכן $8 הוא יעד עבודה ברור."},
+    "checkoutToPurchase": {"label":"Checkout → Purchase","direction":"higher","target":30,"watch":15,"format":"percent","basis":"30% הוא יעד סגירת checkout. ביום הייחוס החזק היינו 37.5%, ולכן זה יעד שכבר הוכחנו שאפשר לעבור."},
+    "lpvToPurchase": {"label":"LPV → Purchase","direction":"higher","target":4,"watch":2,"format":"percent","basis":"4% מ-paid LPV לרכישה הוא יעד הסיגנל שלנו. 2%–4% הוא ביניים; מתחת ל-2% חלש עד שיוכח אחרת במדגם גדול יותר."},
+    "cpa": {"label":"CPA","direction":"lower","target":22.50,"watch":35.00,"format":"money","basis":"זה יעד ביצועים זמני, לא יעד רווחיות. יום הייחוס החזק היה $18.47 CPA וה-Winner CBO הגיע בערך ל-$22.56. נחליף אותו ברגע שנחשב break-even CPA אמיתי."},
+    "cpm": {"label":"CPM","direction":"lower","target":24,"watch":28,"format":"money","basis":"הימים הטובים האחרונים היו באזור $22.6–$23.7 CPM. לכן ≤$24 הוא יעד; $24–$28 הוא טווח מעקב, לא סיבה לכבות קמפיין לבד."}
+  },
   "days": {
     "2026-08-27": {
       "date": "2026-08-27",
