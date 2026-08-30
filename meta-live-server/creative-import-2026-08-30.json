@@ -1,0 +1,143 @@
+{
+  "runId": "drive-statics-2026-08-30",
+  "accountId": "676516688178386",
+  "campaignId": "120247751164360077",
+  "templateAdsetId": "120247751170250077",
+  "templateAdId": "120247751174890077",
+  "dailyBudgetMinor": 500,
+  "status": "PAUSED",
+  "sourceFolder": "1TwpIKrE_Awa0uVTsM89clwxvkjid4JLP",
+  "excludedFolders": ["ZZ | DUPLICATE | DO NOT USE"],
+  "folders": [
+    {
+      "name": "jakes",
+      "files": [
+        {"driveFileId":"1YENvTnQ4cmNwUlMxtvG_TkgneP1J5ZUw","name":"watermark-removed-81e27cac-da20-41ff-8689-de08c64c57e3.jfif"},
+        {"driveFileId":"135nJTXC2n9fs7eJj_BH_zpoCkPY3Swij","name":"watermark-removed-Gemini_Generated_Image_bobba6bobba6bobb.jfif"},
+        {"driveFileId":"1FTvd4ddrx0hAuzR0Q7eBCz9bFHu-4RoZ","name":"watermark-removed-Gemini_Generated_Image_kh9i4skh9i4skh9i.jfif"},
+        {"driveFileId":"1lirk9TEdaUza4mr76c8QFUj0ZzUPJDmS","name":"watermark-removed-grok-image-9cf9d69c-2729-4bc7-a92f-d6d83b2b5493.jpg"},
+        {"driveFileId":"1aKx2t9y4mxjLV4HMadD84wlEuxlO5Mt-","name":"watermark-removed-watermarked_img_117743565633879132.jpg"}
+      ]
+    },
+    {
+      "name": "P0-01 | SC-CORE | Salon Cost Core",
+      "files": [
+        {"driveFileId":"12QfLn64JZcepMjJ0gRZuIfL44oFtjC5L","name":"P0-01 | SC-CORE-C | ONE-VS-FOUR | 1787917993543.png"},
+        {"driveFileId":"1NOibAXAFY1vVHfyTePscgYt6eBLJzOvX","name":"P0-01 | SC-CORE-B | GIANT350 | 1787918760227.png"},
+        {"driveFileId":"1_9pqqYaEBxAjYiLwRbWh47kQGODIzEv2","name":"P0-01 | SC-CORE-A | UNDER60 | 1787918432015.png"}
+      ]
+    },
+    {
+      "name": "P0-02 | SC-319 | Salon Cost x 6-Pack",
+      "files": [
+        {"driveFileId":"10Ioh-svhr6Ctv3AImQnlidmq55C0vxTO","name":"P0-02 | SC-319-C | PLUS40 | 1787919952852.png"},
+        {"driveFileId":"1sJXcayKNrN1UVoLqaOCnFuc2WB8jCsXG","name":"P0-02 | SC-319-B | PLUS-TWO | 1787919899901.png"},
+        {"driveFileId":"173U1MJJZWB_HM3M7vktFRwOrjjawr2DR","name":"P0-02 | SC-319-A | ONE-VS-SIX | 1787921200158.png"}
+      ]
+    },
+    {
+      "name": "P0-03 | SC-RECUR | Recurring Root Cost",
+      "files": [
+        {"driveFileId":"1Mv1na_u0PLmZoAYUprU2k6LZPUXAlF48","name":"P0-03 | SC-RECUR-C | RECURRING-CHARGE | 1787920436567.png"},
+        {"driveFileId":"10j3blbLQJgAFmwQVfDmHsFRBKj182XIU","name":"P0-03 | SC-RECUR-B | BILL-EVERY-ROOT | 1787921269683.png"},
+        {"driveFileId":"1w9CBkBF33oQYQt9YbZhJUX7wddA9YjLk","name":"P0-03 | SC-RECUR-A | RECEIPT-LIGHT | 1787917904079.png"}
+      ]
+    },
+    {
+      "name": "P0-04 | CTRL-SLOT | No Appointment",
+      "files": [
+        {"driveFileId":"1hq8JxYwzCnm38XKhnIgk-jUnPYoVzfOK","name":"P0-04 | CTRL-SLOT-C | STOCKED-NO-SLOT | 1787922785313.png"},
+        {"driveFileId":"1jRwFattfXzwp2sCIvi_KVYHSTgJm0A9V","name":"P0-04 | CTRL-SLOT-B | GIANT-PHONE | 1787922748703.png"},
+        {"driveFileId":"1E5Zo1zpUCz6awINqXfeFAq_QoXMv_IE0","name":"P0-04 | CTRL-SLOT-A | NO-SLOTS | 1787921488171.png"}
+      ]
+    },
+    {
+      "name": "P0-05 | EVENT-NOW | Event Pressure",
+      "files": [
+        {"driveFileId":"1TahW5o7FdvKXTY4bKt1PrNIw3o-vi-lS","name":"P0-05 | EVENT-NOW-C | BAD-TIMING-B | 1787921374135.png"},
+        {"driveFileId":"1RfZn3uG87-NeXSC9egjZRikQBxfT7RXu","name":"P0-05 | EVENT-NOW-B | BAD-TIMING-A | 1787921797057.png"},
+        {"driveFileId":"1889wYzjJ7fe_WlPy546HNVcRzIaND0xb","name":"P0-05 | EVENT-NOW-A | EVENT-NO-SLOT | 1787922535412.png"}
+      ]
+    },
+    {
+      "name": "P1-01 | SC-REPEAT | Recurring Frustration",
+      "files": [
+        {"driveFileId":"1JTONRqK3Rkj9TdRIJtzyHqbaB-pIAoMp","name":"P1-01 | SC-REPEAT-C | ROOTS-CALENDAR | 1787918703129.png"},
+        {"driveFileId":"1-a4eMTMK35SuYVGV8z195sTm6gFjKEmP","name":"P1-01 | SC-REPEAT-B | REPEAT-EXPENSE | 1787919488424.png"},
+        {"driveFileId":"15wVSWEsdrMJVRDVic_bVQmrFuPRuzV7w","name":"P1-01 | SC-REPEAT-A | JUST-DYED | 1787922697101.png"}
+      ]
+    },
+    {
+      "name": "P1-02 | READY-HOME | Prepared at Home",
+      "files": [
+        {"driveFileId":"1yfWP731YRykfuQQ7-g8klulsJdrA0qua","name":"P1-02 | READY-HOME-C | SALON-OR-HOME | 1787918678167.png"},
+        {"driveFileId":"1_SoCbC8SYeqrYTjydwR02p55RLNJBdSC","name":"P1-02 | READY-HOME-B | ALREADY-WAITING | 1787919234979.png"},
+        {"driveFileId":"1pa7SVz_O3w_lUbDQ_WQ_JiBZTaupvtkh","name":"P1-02 | READY-HOME-A | STOCKED-CABINET | 1787922312695.png"}
+      ]
+    },
+    {
+      "name": "P1-03 | MENTAL-TAX | Mental Load",
+      "files": [
+        {"driveFileId":"1uNv8f7UEQ_3M2S3UziCqIR0yqo4sK13r","name":"P1-03 | MENTAL-TAX-C | ALL-THIS-FOR-ROOTS | 1787921579213.png"},
+        {"driveFileId":"1Ndm3uxjHQl3R3fOtAE_zfapgPld2JOgF","name":"P1-03 | MENTAL-TAX-B | TASK-STORM-B | 1787921882757.png"},
+        {"driveFileId":"1M5g3kTfBeo3EPve13R94YgzVEfLc6dV8","name":"P1-03 | MENTAL-TAX-A | TASK-STORM-A | 1787922630149.png"}
+      ]
+    },
+    {
+      "name": "P1-04 | CHECK-LOOP | Self-Monitoring",
+      "files": [
+        {"driveFileId":"1qj75jx0lerzAJz2_wsvYvTTUl-afnZ27","name":"P1-04 | CHECK-LOOP-C | EVENING-PRESENCE | 1787922367649.png"},
+        {"driveFileId":"1augPVeVMLQY7zZUJR_QqU7_Kd0b1l5bR","name":"P1-04 | CHECK-LOOP-B | TINY-ROOT-BIG-PROBLEM | 1787921415244.png"},
+        {"driveFileId":"1uK0bwMU3b6Xna-ExvzoWFAlQw9UhiNu7","name":"P1-04 | CHECK-LOOP-A | CHECKING-LOOP | 1787922577150.png"}
+      ]
+    },
+    {
+      "name": "P1-05 | OWN-TIME | Freedom & Convenience",
+      "files": [
+        {"driveFileId":"1DhFSJbYuVa88Rm3CAmeDc79093hdw6V-","name":"P1-05 | OWN-TIME-C | CALENDAR-HOSTAGE | 1787921455845.png"},
+        {"driveFileId":"1IPSIUEbra1bdyXfBuR2FuJeqWDIfTki-","name":"P1-05 | OWN-TIME-B | SALON-VS-HOME-TIME | 1787918473720.png"},
+        {"driveFileId":"19NYu2VLVCACys3j6b_JLfpSycghcEuLJ","name":"P1-05 | OWN-TIME-A | YOU-RUN-CALENDAR | 1787921904732.png"}
+      ]
+    },
+    {
+      "name": "P2-01 | BUNDLE-MATH | Offer Economics",
+      "files": [
+        {"driveFileId":"1sjA0hMZwRbY_KWcoaPSV3M8AUbokm73E","name":"P2-01 | BUNDLE-MATH-C | EXPENSIVE-CALENDAR | 1787919423796.png"},
+        {"driveFileId":"1oYwmrLx5iYN8587TL9-CerQ87UIG-kDf","name":"P2-01 | BUNDLE-MATH-B | PRICE-LADDER-DARK | 1787920132735.png"},
+        {"driveFileId":"1yFxdVaCE7eNBqGKpTcYkUhkfRj0nXmuz","name":"P2-01 | BUNDLE-MATH-A | PRICE-LADDER-LIGHT | 1787920043657.png"}
+      ]
+    },
+    {
+      "name": "P2-02 | HIDDEN-COST | Hidden Salon Cost",
+      "files": [
+        {"driveFileId":"1nE1gifMwnUK0BbrrgZ5-LAURwDSgK_QS","name":"P2-02 | HIDDEN-COST-C | PRICE-MAGNET | 1787921160464.png"},
+        {"driveFileId":"10OVok7ZPdAQFPn8OxAVIHVJuvnje5UNX","name":"P2-02 | HIDDEN-COST-B | WHAT-ARE-YOU-PAYING-FOR | 1787918829164.png"},
+        {"driveFileId":"1iHAWv9flSGzcYfBGSSg6D3DFQ-DzjzEc","name":"P2-02 | HIDDEN-COST-A | ICEBERG | 1787919346292.png"}
+      ]
+    },
+    {
+      "name": "P2-03 | RECEIPT-VAR | Receipt Variations",
+      "files": [
+        {"driveFileId":"1t_Pye4YM68KbcsczCkP_ydjyHKNqAfRu","name":"P2-03 | RECEIPT-VAR-C | RECEIPT-BRUSH | 1787920876030.jpg"},
+        {"driveFileId":"1Hg7LLW3VC6CIjsYAH25VpF4YwdXxeMLt","name":"P2-03 | RECEIPT-VAR-B | RECEIPT-BLACK-B | 1787917719627.png"},
+        {"driveFileId":"1mfZO6RvItka2F_5TNlKKgc6ODtWAMuVG","name":"P2-03 | RECEIPT-VAR-A | RECEIPT-BLACK-A | 1787917732558.png"}
+      ]
+    },
+    {
+      "name": "P2-04 | PAY-MACHINE-A | Cost Metaphors",
+      "files": [
+        {"driveFileId":"1anlOqUCAZ3oOniL1ME_1K3NdLc-v466S","name":"P2-04 | PAYMACH-C | VENDING-A | 1787920712252.jpg"},
+        {"driveFileId":"1UiCmJhyk2HVVrmil8vfTBrF2K_rwHtcV","name":"P2-04 | PAYMACH-B | SLOT-MACHINE | 1787921099278.png"},
+        {"driveFileId":"1UkL71UGoZvsKmM7wXX6XpOUxBwvwuLIJ","name":"P2-04 | PAYMACH-A | TAXI-METER | 1787920320423.png"}
+      ]
+    },
+    {
+      "name": "P2-05 | PAY-MACHINE-B | Cost Metaphors II",
+      "files": [
+        {"driveFileId":"1ViAIUjRp2NOdTlOlkvJpjyP6rIZyGHB4","name":"P2-05 | PAYMACH2-C | VENDING-V2 | 1787920807935.jpg"},
+        {"driveFileId":"1jPGerV28KW0grpsivhK-oPpKLa2ze2PK","name":"P2-05 | PAYMACH2-B | SLOT-MACHINE-V2 | 1787920863743.jpg"},
+        {"driveFileId":"1KxFWAs9ZgBMYg9jtSZZiz6A5jjb8zFtL","name":"P2-05 | PAYMACH2-A | TOLL-BOOTH | 1787920389753.png"}
+      ]
+    }
+  ]
+}
