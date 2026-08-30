@@ -4,19 +4,27 @@ const PORT = process.env.PORT || 10000;
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN || '';
 const META_AD_ACCOUNT_ID = String(process.env.META_AD_ACCOUNT_ID || '').replace(/^act_/, '');
 const META_API_VERSION = process.env.META_API_VERSION || 'v23.0';
-const DASHBOARD_SOURCE = process.env.DASHBOARD_SOURCE || 'https://harelos.github.io/meta-dashboard/hebrew/';
-const HKD_TO_USD = Number(process.env.HKD_TO_USD || '0.127496');
-const TARGET_CURRENCY = process.env.TARGET_CURRENCY || 'USD';
-const CACHE_MS = 30_000;
+const DASHBOARD_SOURCE = process.env.DASHBOARD_SOURCE || 'https://raw.githubusercontent.com/harelos/harelos.github.io/main/meta-dashboard/hebrew/';
+const CACHE_MS = Number(process.env.META_CACHE_MS || 60_000);
+const FORCE_MIN_MS = Number(process.env.META_FORCE_MIN_MS || 15_000);
+const RATE_LIMIT_BACKOFF_MS = Number(process.env.META_RATE_LIMIT_BACKOFF_MS || 120_000);
 
 let metaCache = null;
 let metaCacheAt = 0;
+let inFlight = null;
 let lastError = null;
+let lastForceAt = 0;
+let backoffUntil = 0;
+let usageHeaders = {};
 
 function json(res, status, body, extraHeaders = {}) {
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
+    'Cache-Control': 'no-store, no-cache, must-revalidate',
+    'Pragma': 'no-cache',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
     'X-Content-Type-Options': 'nosniff',
     ...extraHeaders,
   });
@@ -26,45 +34,54 @@ function json(res, status, body, extraHeaders = {}) {
 function text(res, status, body, contentType = 'text/plain; charset=utf-8') {
   res.writeHead(status, {
     'Content-Type': contentType,
-    'Cache-Control': 'no-store',
+    'Cache-Control': 'no-store, no-cache, must-revalidate',
+    'Pragma': 'no-cache',
     'X-Content-Type-Options': 'nosniff',
   });
   res.end(body);
 }
 
-function jerusalemDate() {
+function dateInZone(zone = 'Asia/Jerusalem') {
   const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit'
+    timeZone: zone,
+    year: 'numeric', month: '2-digit', day: '2-digit'
   }).formatToParts(new Date());
   const get = t => parts.find(p => p.type === t)?.value;
   return `${get('year')}-${get('month')}-${get('day')}`;
 }
 
+function n(v) {
+  const x = Number(v);
+  return Number.isFinite(x) ? x : 0;
+}
+
 function actionValue(list, type, fallbackType = null) {
   if (!Array.isArray(list)) return 0;
   const hit = list.find(x => x.action_type === type) || (fallbackType ? list.find(x => x.action_type === fallbackType) : null);
-  return Number(hit?.value || 0);
+  return n(hit?.value);
 }
 
 function parseInsight(row = {}) {
-  const spend = Number(row.spend || 0);
-  const impressions = Number(row.impressions || 0);
-  const clicks = Number(row.clicks || 0);
+  const spend = n(row.spend);
+  const impressions = n(row.impressions);
+  const clicks = n(row.clicks);
   const lpv = actionValue(row.actions, 'landing_page_view', 'omni_landing_page_view');
   const atc = actionValue(row.actions, 'add_to_cart', 'omni_add_to_cart');
   const checkout = actionValue(row.actions, 'initiate_checkout', 'omni_initiated_checkout');
   const addPayment = actionValue(row.actions, 'add_payment_info');
   const purchases = actionValue(row.actions, 'omni_purchase', 'purchase');
   const purchaseValue = actionValue(row.action_values, 'omni_purchase', 'purchase');
+  const linkClicks = actionValue(row.actions, 'link_click');
+  const videoViews = actionValue(row.actions, 'video_view');
   return {
     spend,
     impressions,
-    reach: Number(row.reach || 0),
+    reach: n(row.reach),
     clicks,
-    ctr: impressions ? clicks / impressions * 100 : Number(row.ctr || 0),
-    cpc: clicks ? spend / clicks : Number(row.cpc || 0),
-    cpm: impressions ? spend / impressions * 1000 : Number(row.cpm || 0),
-    linkClicks: actionValue(row.actions, 'link_click'),
+    linkClicks,
+    ctr: impressions ? clicks / impressions * 100 : n(row.ctr),
+    cpc: clicks ? spend / clicks : (row.cpc == null ? null : n(row.cpc)),
+    cpm: impressions ? spend / impressions * 1000 : (row.cpm == null ? null : n(row.cpm)),
     landingPageViews: lpv,
     addToCarts: atc,
     initiateCheckouts: checkout,
@@ -76,21 +93,32 @@ function parseInsight(row = {}) {
     costPerAddToCart: atc ? spend / atc : null,
     costPerCheckout: checkout ? spend / checkout : null,
     costPerPurchase: purchases ? spend / purchases : null,
+    lpvToAtc: lpv ? atc / lpv * 100 : null,
+    atcToCheckout: atc ? checkout / atc * 100 : null,
+    checkoutToPurchase: checkout ? purchases / checkout * 100 : null,
+    lpvToPurchase: lpv ? purchases / lpv * 100 : null,
+    videoViews,
+    videoViewRate: impressions ? videoViews / impressions * 100 : null,
+    costPerVideoView: videoViews ? spend / videoViews : null,
   };
 }
 
-function moneyFactor(currency) {
-  if (currency === TARGET_CURRENCY) return 1;
-  if (currency === 'HKD' && TARGET_CURRENCY === 'USD') return HKD_TO_USD;
-  return 1;
+function emptyMetrics() {
+  return parseInsight({});
 }
 
-function convertMoneyMetrics(metrics, factor) {
-  const out = { ...metrics };
-  for (const key of ['spend', 'cpc', 'cpm', 'purchaseValue', 'costPerLandingPageView', 'costPerAddToCart', 'costPerCheckout', 'costPerPurchase']) {
-    if (out[key] != null && Number.isFinite(Number(out[key]))) out[key] = Number(out[key]) * factor;
+function isRateLimitMessage(msg = '') {
+  return /too many api calls|request limit|rate limit|user request limit/i.test(msg);
+}
+
+function extractUsage(headers) {
+  const out = {};
+  for (const key of ['x-app-usage', 'x-ad-account-usage', 'x-business-use-case-usage']) {
+    const v = headers.get(key);
+    if (!v) continue;
+    try { out[key] = JSON.parse(v); } catch { out[key] = v; }
   }
-  return out;
+  if (Object.keys(out).length) usageHeaders = out;
 }
 
 async function graph(path, params = {}) {
@@ -102,82 +130,196 @@ async function graph(path, params = {}) {
   }
   const r = await fetch(u, {
     headers: { Authorization: `Bearer ${META_ACCESS_TOKEN}` },
-    signal: AbortSignal.timeout(15_000),
+    signal: AbortSignal.timeout(20_000),
   });
+  extractUsage(r.headers);
   const body = await r.json().catch(() => ({}));
   if (!r.ok || body.error) {
-    const err = body?.error?.message || `Meta API HTTP ${r.status}`;
-    throw new Error(err);
+    const message = body?.error?.message || `Meta API HTTP ${r.status}`;
+    const e = new Error(message);
+    e.code = body?.error?.code;
+    e.subcode = body?.error?.error_subcode;
+    e.status = r.status;
+    throw e;
   }
   return body;
 }
 
-async function fetchMetaLive(date = jerusalemDate()) {
+async function graphList(path, params = {}, maxPages = 3) {
+  const first = await graph(path, params);
+  const out = [...(first.data || [])];
+  let next = first?.paging?.next || null;
+  let pages = 1;
+  while (next && pages < maxPages) {
+    const r = await fetch(next, { signal: AbortSignal.timeout(20_000) });
+    extractUsage(r.headers);
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok || body.error) throw new Error(body?.error?.message || `Meta paging HTTP ${r.status}`);
+    out.push(...(body.data || []));
+    next = body?.paging?.next || null;
+    pages += 1;
+  }
+  return out;
+}
+
+function rowIdentity(row, level) {
+  if (level === 'ad') return row.ad_id;
+  if (level === 'adset') return row.adset_id;
+  if (level === 'campaign') return row.campaign_id;
+  return null;
+}
+
+function rowName(row, level) {
+  if (level === 'ad') return row.ad_name;
+  if (level === 'adset') return row.adset_name;
+  if (level === 'campaign') return row.campaign_name;
+  return null;
+}
+
+function insightMap(rows, level) {
+  return new Map((rows || []).map(r => [rowIdentity(r, level), { name: rowName(r, level), raw: r, metrics: parseInsight(r) }]));
+}
+
+function sumMetrics(rows) {
+  let spend = 0, impressions = 0, clicks = 0, linkClicks = 0, lpv = 0, atc = 0, checkout = 0, addPayment = 0, purchases = 0, purchaseValue = 0, videoViews = 0;
+  for (const m of rows) {
+    spend += n(m.spend); impressions += n(m.impressions); clicks += n(m.clicks); linkClicks += n(m.linkClicks);
+    lpv += n(m.landingPageViews); atc += n(m.addToCarts); checkout += n(m.initiateCheckouts); addPayment += n(m.addPaymentInfo);
+    purchases += n(m.purchases); purchaseValue += n(m.purchaseValue); videoViews += n(m.videoViews);
+  }
+  return {
+    spend, impressions, reach: null, clicks, linkClicks,
+    ctr: impressions ? clicks / impressions * 100 : 0,
+    cpc: clicks ? spend / clicks : null,
+    cpm: impressions ? spend / impressions * 1000 : null,
+    landingPageViews: lpv, addToCarts: atc, initiateCheckouts: checkout, addPaymentInfo: addPayment,
+    purchases, purchaseValue, roas: spend ? purchaseValue / spend : 0,
+    costPerLandingPageView: lpv ? spend / lpv : null,
+    costPerAddToCart: atc ? spend / atc : null,
+    costPerCheckout: checkout ? spend / checkout : null,
+    costPerPurchase: purchases ? spend / purchases : null,
+    lpvToAtc: lpv ? atc / lpv * 100 : null,
+    atcToCheckout: atc ? checkout / atc * 100 : null,
+    checkoutToPurchase: checkout ? purchases / checkout * 100 : null,
+    lpvToPurchase: lpv ? purchases / lpv * 100 : null,
+    videoViews,
+    videoViewRate: impressions ? videoViews / impressions * 100 : null,
+    costPerVideoView: videoViews ? spend / videoViews : null,
+  };
+}
+
+async function fetchMetaLive(requestedDate = null) {
   const accountPath = `act_${META_AD_ACCOUNT_ID}`;
-  const timeRange = { since: date, until: date };
+  const account = await graph(accountPath, { fields: 'id,name,currency,timezone_name,account_status' });
+  const reportingDate = requestedDate || dateInZone(account.timezone_name || 'Asia/Jerusalem');
+  const timeRange = { since: reportingDate, until: reportingDate };
   const insightFields = 'spend,impressions,reach,clicks,ctr,cpc,cpm,actions,action_values,purchase_roas';
 
-  const [account, accountInsights, campaignInsights, campaigns, adsets] = await Promise.all([
-    graph(accountPath, { fields: 'id,name,currency,timezone_name,account_status' }),
-    graph(`${accountPath}/insights`, { level: 'account', time_range: timeRange, fields: insightFields, limit: 50 }),
-    graph(`${accountPath}/insights`, { level: 'campaign', time_range: timeRange, fields: `campaign_id,campaign_name,${insightFields}`, limit: 100 }),
-    graph(`${accountPath}/campaigns`, { fields: 'id,name,status,effective_status,daily_budget,lifetime_budget,objective', limit: 100 }),
-    graph(`${accountPath}/adsets`, { fields: 'id,name,status,effective_status,daily_budget,campaign_id,optimization_goal,promoted_object', limit: 100 }),
-  ]);
+  // Sequential reads on purpose: less bursty and kinder to Meta's account request budget.
+  const campaigns = await graphList(`${accountPath}/campaigns`, {
+    fields: 'id,name,status,effective_status,daily_budget,lifetime_budget,objective', limit: 200
+  });
+  const adsets = await graphList(`${accountPath}/adsets`, {
+    fields: 'id,name,status,effective_status,daily_budget,campaign_id,optimization_goal,promoted_object,bid_strategy', limit: 200
+  });
+  const ads = await graphList(`${accountPath}/ads`, {
+    fields: 'id,name,status,effective_status,adset_id,campaign_id,creative{id}', limit: 300
+  });
+  const accountInsights = await graphList(`${accountPath}/insights`, {
+    level: 'account', time_range: timeRange, fields: insightFields, limit: 10
+  });
+  const adsetInsights = await graphList(`${accountPath}/insights`, {
+    level: 'adset', time_range: timeRange,
+    fields: `campaign_id,campaign_name,adset_id,adset_name,${insightFields}`, limit: 200
+  });
+  const adInsights = await graphList(`${accountPath}/insights`, {
+    level: 'ad', time_range: timeRange,
+    fields: `campaign_id,campaign_name,adset_id,adset_name,ad_id,ad_name,${insightFields}`, limit: 300
+  });
 
-  const currency = account.currency || 'USD';
-  const factor = moneyFactor(currency);
-  const totalsNative = parseInsight(accountInsights.data?.[0] || {});
-  const totals = convertMoneyMetrics(totalsNative, factor);
-  const campaignStatus = new Map((campaigns.data || []).map(c => [c.id, c]));
-  const insightByCampaign = new Map((campaignInsights.data || []).map(r => [r.campaign_id, r]));
+  const adsetPerf = insightMap(adsetInsights, 'adset');
+  const adPerf = insightMap(adInsights, 'ad');
+  const campaignMetrics = new Map();
+  for (const a of adsets) {
+    const m = adsetPerf.get(a.id)?.metrics;
+    if (!m) continue;
+    if (!campaignMetrics.has(a.campaign_id)) campaignMetrics.set(a.campaign_id, []);
+    campaignMetrics.get(a.campaign_id).push(m);
+  }
 
-  const campaignRows = (campaigns.data || []).map(c => {
-    const native = parseInsight(insightByCampaign.get(c.id) || {});
-    const m = convertMoneyMetrics(native, factor);
-    const dailyBudgetNative = c.daily_budget != null ? Number(c.daily_budget) / 100 : null;
+  const adRows = ads.map(a => {
+    const perf = adPerf.get(a.id)?.metrics || emptyMetrics();
     return {
-      id: c.id,
-      name: c.name,
+      type: 'ad', id: a.id, name: a.name,
+      status: a.effective_status || a.status,
+      configuredStatus: a.status,
+      campaignId: a.campaign_id,
+      adsetId: a.adset_id,
+      creativeId: a.creative?.id || null,
+      ...perf,
+    };
+  });
+
+  const adsetRows = adsets.map(a => {
+    const perf = adsetPerf.get(a.id)?.metrics || emptyMetrics();
+    const adsInside = adRows.filter(x => x.adsetId === a.id);
+    return {
+      type: 'adset', id: a.id, name: a.name,
+      status: a.effective_status || a.status,
+      configuredStatus: a.status,
+      campaignId: a.campaign_id,
+      dailyBudget: a.daily_budget != null ? n(a.daily_budget) / 100 : null,
+      optimizationGoal: a.optimization_goal || null,
+      promotedObject: a.promoted_object || null,
+      bidStrategy: a.bid_strategy || null,
+      activeAds: adsInside.filter(x => x.status === 'ACTIVE').length,
+      visibleAds: adsInside.length,
+      ...perf,
+    };
+  });
+
+  const campaignRows = campaigns.map(c => {
+    const perf = sumMetrics(campaignMetrics.get(c.id) || []);
+    const setsInside = adsetRows.filter(x => x.campaignId === c.id);
+    return {
+      type: 'campaign', id: c.id, name: c.name,
       status: c.effective_status || c.status,
       configuredStatus: c.status,
-      objective: c.objective,
-      dailyBudgetNative,
-      dailyBudget: dailyBudgetNative == null ? null : dailyBudgetNative * factor,
-      ...m,
-      checkouts: m.initiateCheckouts,
-      advisor: (c.effective_status || c.status) === 'ACTIVE' ? 'KEEP / LIVE META' : 'WATCH / LIVE META',
+      objective: c.objective || null,
+      dailyBudget: c.daily_budget != null ? n(c.daily_budget) / 100 : null,
+      activeAdsets: setsInside.filter(x => x.status === 'ACTIVE').length,
+      visibleAdsets: setsInside.length,
+      ...perf,
     };
-  }).filter(c => c.status === 'ACTIVE' || c.spend > 0 || c.purchases > 0);
+  });
 
-  const adsetRows = (adsets.data || []).map(a => ({
-    id: a.id,
-    name: a.name,
-    status: a.effective_status || a.status,
-    campaignId: a.campaign_id,
-    dailyBudgetNative: a.daily_budget != null ? Number(a.daily_budget) / 100 : null,
-    dailyBudget: a.daily_budget != null ? Number(a.daily_budget) / 100 * factor : null,
-    optimizationGoal: a.optimization_goal,
-    promotedObject: a.promoted_object || null,
-  })).filter(a => a.status === 'ACTIVE');
-
+  const totals = parseInsight(accountInsights[0] || {});
   const live = {
     ok: true,
+    source: 'Meta Graph API (server-side)',
     generatedAt: new Date().toISOString(),
-    date,
+    date: reportingDate,
+    stale: false,
+    rateLimited: false,
+    lastError: null,
+    cacheTtlSeconds: Math.round(CACHE_MS / 1000),
     account: {
       id: account.id,
       name: account.name,
-      currency,
-      timezone: account.timezone_name,
+      currency: account.currency || 'USD',
+      timezone: account.timezone_name || null,
       status: account.account_status,
-      displayCurrency: TARGET_CURRENCY,
-      fxFactor: factor,
     },
     totals,
-    totalsNative,
     campaigns: campaignRows,
-    activeAdsets: adsetRows,
+    adsets: adsetRows,
+    ads: adRows,
+    counts: {
+      activeCampaigns: campaignRows.filter(x => x.status === 'ACTIVE').length,
+      activeAdsets: adsetRows.filter(x => x.status === 'ACTIVE').length,
+      activeAds: adRows.filter(x => x.status === 'ACTIVE').length,
+    },
+    apiUsage: usageHeaders,
   };
 
   metaCache = live;
@@ -186,115 +328,111 @@ async function fetchMetaLive(date = jerusalemDate()) {
   return live;
 }
 
-async function getMetaLive(force = false, date = jerusalemDate()) {
-  if (!force && metaCache && metaCache.date === date && Date.now() - metaCacheAt < CACHE_MS) return metaCache;
-  try {
-    return await fetchMetaLive(date);
-  } catch (e) {
-    lastError = { at: new Date().toISOString(), message: e.message };
-    if (metaCache && metaCache.date === date) return metaCache;
+function staleCopy(reason = null) {
+  if (!metaCache) return null;
+  return {
+    ...metaCache,
+    stale: true,
+    rateLimited: reason ? isRateLimitMessage(reason.message || '') : false,
+    cacheAgeSeconds: Math.floor((Date.now() - metaCacheAt) / 1000),
+    lastError: reason || lastError,
+  };
+}
+
+async function getMetaLive({ force = false, date = null } = {}) {
+  const now = Date.now();
+  if (now < backoffUntil) {
+    const cached = staleCopy(lastError || { at: new Date().toISOString(), message: 'Meta rate-limit backoff active' });
+    if (cached) return cached;
+    const e = new Error('Meta rate-limit backoff active');
+    e.status = 429;
     throw e;
   }
+
+  if (!force && metaCache && (!date || metaCache.date === date) && now - metaCacheAt < CACHE_MS) {
+    return { ...metaCache, cacheAgeSeconds: Math.floor((now - metaCacheAt) / 1000) };
+  }
+  if (force && now - lastForceAt < FORCE_MIN_MS && metaCache) {
+    return { ...metaCache, cacheAgeSeconds: Math.floor((now - metaCacheAt) / 1000), forceThrottled: true };
+  }
+  if (inFlight) return inFlight;
+  if (force) lastForceAt = now;
+
+  inFlight = (async () => {
+    try {
+      return await fetchMetaLive(date);
+    } catch (e) {
+      lastError = { at: new Date().toISOString(), message: e.message, code: e.code || null, subcode: e.subcode || null };
+      if (isRateLimitMessage(e.message)) backoffUntil = Date.now() + RATE_LIMIT_BACKOFF_MS;
+      const cached = staleCopy(lastError);
+      if (cached) return cached;
+      throw e;
+    } finally {
+      inFlight = null;
+    }
+  })();
+  return inFlight;
 }
 
-async function fetchGitHub(path) {
+async function fetchDashboardAsset(path) {
   const base = DASHBOARD_SOURCE.endsWith('/') ? DASHBOARD_SOURCE : DASHBOARD_SOURCE + '/';
-  const r = await fetch(new URL(path, base), { cache: 'no-store', signal: AbortSignal.timeout(12_000) });
-  if (!r.ok) throw new Error(`Dashboard source HTTP ${r.status}`);
+  const u = new URL(path.replace(/^\//, ''), base);
+  if (u.hostname === 'raw.githubusercontent.com') u.searchParams.set('_', String(Date.now()));
+  const r = await fetch(u, { cache: 'no-store', signal: AbortSignal.timeout(15_000) });
+  if (!r.ok) throw new Error(`Dashboard source HTTP ${r.status}: ${u.pathname}`);
   return r;
-}
-
-function mergeLiveIntoData(base, live) {
-  const out = structuredClone(base);
-  out.meta = out.meta || {};
-  out.meta.lastUpdated = live.generatedAt;
-  out.meta.liveSource = 'Meta Graph API via secure server';
-  out.meta.liveAccountId = live.account.id;
-  out.meta.liveAccountName = live.account.name;
-  out.meta.liveAccountCurrency = live.account.currency;
-  out.meta.displayCurrency = live.account.displayCurrency;
-  out.meta.fxFactor = live.account.fxFactor;
-  out.meta.live = true;
-  out.days = out.days || {};
-  const day = out.days[live.date] || { date: live.date, shopify: {}, campaigns: [], advisor: {} };
-  day.metaAds = live.totals;
-  day.campaigns = live.campaigns;
-  day.activeStructure = {
-    account: live.account.name,
-    accountId: live.account.id,
-    activeAdsets: live.activeAdsets,
-  };
-  day.advisor = {
-    ...(day.advisor || {}),
-    verdict: live.totals.purchases > 0 ? 'KEEP / VERIFY' : 'KEEP / WAIT',
-    body: `Meta live connected. ${live.totals.purchases || 0} purchases attributed today. Account native currency is ${live.account.currency}; dashboard money metrics are normalized to ${live.account.displayCurrency}.`,
-  };
-  out.days[live.date] = day;
-  return out;
-}
-
-function patchDashboardHtml(html) {
-  // Same UI, but it is now served from this backend so /api/state and /api/sync become real.
-  const marker = '<meta name="theme-color" content="#050507">';
-  const liveMeta = '<meta name="x-meta-live" content="secure-server">';
-  if (!html.includes(liveMeta)) html = html.replace(marker, `${marker}\n${liveMeta}`);
-  return html;
 }
 
 async function handler(req, res) {
   const u = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  if (req.method === 'OPTIONS') return json(res, 200, { ok: true });
   try {
     if (u.pathname === '/health') {
-      return json(res, 200, { ok: true, service: 'meta-live-dashboard', now: new Date().toISOString() });
+      return json(res, 200, {
+        ok: true,
+        service: 'meta-live-dashboard-v3',
+        now: new Date().toISOString(),
+        hasMetaToken: Boolean(META_ACCESS_TOKEN),
+        accountId: META_AD_ACCOUNT_ID || null,
+        cacheAgeSeconds: metaCache ? Math.floor((Date.now() - metaCacheAt) / 1000) : null,
+        backoffUntil: backoffUntil || null,
+        lastError,
+      });
     }
 
     if (u.pathname === '/api/state') {
-      let live = null;
-      try { live = await getMetaLive(false); } catch {}
+      const live = await getMetaLive({ force: false }).catch(() => null);
       return json(res, 200, {
         ok: true,
         backend: true,
         metaConnected: Boolean(live),
         lastSync: live?.generatedAt || null,
-        account: live ? { id: live.account.id, name: live.account.name, currency: live.account.currency, timezone: live.account.timezone } : null,
-        lastError,
+        stale: live?.stale || false,
+        rateLimited: live?.rateLimited || false,
+        account: live?.account || null,
+        lastError: live?.lastError || lastError,
       });
     }
 
     if (u.pathname === '/api/sync' && req.method === 'POST') {
-      const live = await getMetaLive(true);
-      return json(res, 200, { ok: true, syncedAt: live.generatedAt, date: live.date });
-    }
-
-    if (u.pathname === '/api/meta') {
-      const date = /^\d{4}-\d{2}-\d{2}$/.test(u.searchParams.get('date') || '') ? u.searchParams.get('date') : jerusalemDate();
-      const live = await getMetaLive(u.searchParams.get('force') === '1', date);
+      const live = await getMetaLive({ force: true });
       return json(res, 200, live);
     }
 
-    if (u.pathname === '/data.json') {
-      const baseRes = await fetchGitHub('data.json?ts=' + Date.now());
-      const base = await baseRes.json();
-      try {
-        const live = await getMetaLive(false);
-        return json(res, 200, mergeLiveIntoData(base, live));
-      } catch (e) {
-        base.meta = base.meta || {};
-        base.meta.live = false;
-        base.meta.liveError = e.message;
-        return json(res, 200, base);
-      }
+    if (u.pathname === '/api/meta') {
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(u.searchParams.get('date') || '') ? u.searchParams.get('date') : null;
+      const live = await getMetaLive({ force: u.searchParams.get('force') === '1', date });
+      return json(res, 200, live);
     }
 
     if (u.pathname === '/' || u.pathname === '/index.html') {
-      const r = await fetchGitHub('index.html?ts=' + Date.now());
-      const html = patchDashboardHtml(await r.text());
-      return text(res, 200, html, 'text/html; charset=utf-8');
+      const r = await fetchDashboardAsset('index.html');
+      return text(res, 200, await r.text(), 'text/html; charset=utf-8');
     }
 
     const safePath = u.pathname.replace(/^\/+/, '');
-    if (!safePath.includes('..')) {
-      const r = await fetchGitHub(safePath + (u.search || ''));
+    if (safePath && !safePath.includes('..')) {
+      const r = await fetchDashboardAsset(safePath);
       const contentType = r.headers.get('content-type') || 'application/octet-stream';
       const buf = Buffer.from(await r.arrayBuffer());
       res.writeHead(200, { 'Content-Type': contentType, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
@@ -304,10 +442,10 @@ async function handler(req, res) {
     return json(res, 404, { ok: false, error: 'Not found' });
   } catch (e) {
     console.error('[meta-live-dashboard]', e.message);
-    return json(res, 500, { ok: false, error: e.message });
+    return json(res, e.status === 429 ? 429 : 500, { ok: false, error: e.message, lastError });
   }
 }
 
 http.createServer(handler).listen(PORT, () => {
-  console.log(`meta-live-dashboard listening on ${PORT}`);
+  console.log(`meta-live-dashboard-v3 listening on ${PORT}`);
 });
