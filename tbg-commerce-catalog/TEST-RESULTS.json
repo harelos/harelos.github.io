@@ -1,0 +1,17 @@
+{
+  "passed": 11,
+  "tests": [
+    "34 cards and 7 category filters render",
+    "Cart quantity and total update locally",
+    "Mix-and-match rejects a fourth unit",
+    "Shipping threshold and bump simulation update",
+    "Comparison slider and two-step quiz work",
+    "Email demo validates/reset; no delivery endpoint",
+    "Synthetic cash and inventory formulas match expected values",
+    "Category/search filters, in-page shortlist and file export work (persistence not tested on opaque origin)",
+    "Detail dialog, source links and Escape close work",
+    "Desktop 1440px and mobile 390px have no horizontal overflow",
+    "No browser JavaScript exceptions during smoke tests"
+  ],
+  "external_images": "Network deliberately blocked for fallback testing. Real CDN image availability not tested in browser."
+}
