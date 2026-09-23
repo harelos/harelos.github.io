@@ -1,0 +1,229 @@
+{
+  "updatedAt": "2026-09-23T13:19:00-03:00",
+  "title": "NovaHair Supplier Sourcing",
+  "subtitle": "Live sourcing & fulfillment pipeline",
+  "benchmarks": {
+    "currentDelivered4PackUsd": 34.13,
+    "currentShippingUsd": 28.07,
+    "targetShippingUsd": "20–25 or less",
+    "typicalOrder": "4 × 200ml",
+    "workingPackedWeight": "1.1–1.2 kg"
+  },
+  "scoreMethod": {
+    "label": "Score /100",
+    "note": "Weighted for NovaHair's primary Israel objective: economics 35%, Israel shipping fit 20%, MOQ/prestock flexibility 15%, product/shade fit 15%, integration/fulfillment 10%, responsiveness 5%."
+  },
+  "waitingOnHarel": [
+    {
+      "supplier": "EcomPrep Hub",
+      "priority": "P2",
+      "title": "Decide whether a Netherlands pilot is worth pursuing",
+      "detail": "France → Netherlands economics are now roughly €13.18–€13.38/order before storage (€11.08 UPS + €1.50 fulfillment + €0.60–€0.80 carton). This does not solve Israel, but it is a credible EU expansion route.",
+      "action": "If Netherlands is a near-term market, move to a small operational test. Also correct their mistaken assumption that billing would be to an Estonian company before onboarding."
+    }
+  ],
+  "suppliers": [
+    {
+      "name": "BODA Haircare",
+      "kind": "Manufacturer + can DTC ship",
+      "market": "Israel",
+      "score": 72,
+      "priority": "P1",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "High potential if shipping works",
+      "latest": "Factory offer: $1.50 per 200ml at 500 pcs/color; at least 6 colors. 12 shades available. They said they can ship directly to customers and are checking the 4-bottle DHL/air cost.",
+      "economics": "Product looks attractive; shipping still unknown.",
+      "moq": "500 pcs/color × at least 6 colors",
+      "prestock": "50% deposit; inventory can be split into 3 shipments over 6 months; warehousing otherwise",
+      "integration": "Direct customer shipping possible; Shopify/API not yet confirmed",
+      "next": "Get exact 4 × 200ml Israel shipping cost + transit time and confirm fulfillment workflow/API.",
+      "risk": "Large initial commitment and 50% deposit; no commitment has been made."
+    },
+    {
+      "name": "Yogi Cosmetics",
+      "kind": "Manufacturer",
+      "market": "Israel via China 3PL",
+      "score": 66,
+      "priority": "P1",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Good manufacturing lead; needs 3PL",
+      "latest": "Professional China hair-color manufacturer. They do not do one-piece fulfillment but can manufacture and send bulk inventory to a China fulfillment warehouse.",
+      "economics": "Awaiting 500 / 1,000 bottle mixed-shade quote.",
+      "moq": "Quote requested for 500 and 1,000 total with mixed shades if possible",
+      "prestock": "Asked whether ~30% partial deposit / prestock is possible",
+      "integration": "Would rely on external China 3PL for Shopify orders, packing and shipping",
+      "next": "Wait for manufacturing price, mixed-shade MOQ, lead time and recommended fulfillment partner.",
+      "risk": "Two-vendor setup adds operational complexity."
+    },
+    {
+      "name": "EcomPrep Hub",
+      "kind": "EU Fulfillment",
+      "market": "Netherlands / EU",
+      "score": 62,
+      "priority": "P2",
+      "status": "Actionable EU option",
+      "owner": "Harel",
+      "verdict": "Strong Netherlands economics, not Israel",
+      "latest": "France → Netherlands UPS shown around €11.08 for ~1kg. Fulfillment €1.50/order, carton €0.60–€0.80, receiving free, storage €15/m³/month. No platform fee or minimum commitment. Shopify + tracking sync supported.",
+      "economics": "Approx. €13.18–€13.38/order + storage for Netherlands, before any entity-specific tax treatment.",
+      "moq": "No minimum order commitment",
+      "prestock": "Storage €15/m³/month",
+      "integration": "Shopify integration + order processing + tracking sync",
+      "next": "Only pursue if Netherlands/EU is a real near-term market; Israel route is not competitive.",
+      "risk": "Supplier assumed an Estonian billing company; correct entity before onboarding. Israel outside their normal network."
+    },
+    {
+      "name": "Packstack",
+      "kind": "EU Fulfillment",
+      "market": "Germany → Israel / Netherlands",
+      "score": 56,
+      "priority": "P2",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Worth checking for EU; Israel uncertain",
+      "latest": "Shopify setup fits. They can work with stock from China/Turkey but do not source product. Israel is not a core market and they warned shipping may be expensive.",
+      "economics": "Awaiting quote using ~1.1–1.2 kg / 25×20×10 cm.",
+      "moq": "Not yet stated",
+      "prestock": "Can hold supplied inventory; fees pending",
+      "integration": "Shopify supported",
+      "next": "Wait for Israel and Netherlands shipping + pick/pack quote.",
+      "risk": "May require HS code/SDS before final Israel assessment."
+    },
+    {
+      "name": "ASG Dropshipping",
+      "kind": "Sourcing + Fulfillment",
+      "market": "Israel",
+      "score": 48,
+      "priority": "P2",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Workflow fit, current shipping fails economics",
+      "latest": "Quoted $7 product cost for 4 bottles + $68.01 all-in shipping, based on 2kg gross, 6–10 working days. Shopify/order/tracking sync is available.",
+      "economics": "$75.01 quoted delivered for 4 bottles — far above current ~$34.13.",
+      "moq": "Bulk/prestock could improve pricing; exact revised terms pending",
+      "prestock": "Small China warehouse prestock discussed; asked them to quote 300–700 bottles",
+      "integration": "Order + tracking sync through their OMS; API details can be confirmed",
+      "next": "Wait for reweighed parcel, cheapest reliable Israel line and prestock economics.",
+      "risk": "Their 2kg weight assumption appears high for 800ml net."
+    },
+    {
+      "name": "Private Labels Hair Products",
+      "kind": "Manufacturer",
+      "market": "Israel / EU",
+      "score": 45,
+      "priority": "P3",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "MOQ currently too high",
+      "latest": "MOQ stated as 1,000 units per reference/shade. Asked whether 1,000 can be mixed across shades or whether an existing-stock formula has a lower MOQ.",
+      "economics": "Unit price and shipping still pending.",
+      "moq": "1,000 units per reference",
+      "prestock": "Partial-deposit/prestock requested; pending",
+      "integration": "Direct-to-customer / Shopify support pending",
+      "next": "Wait for mixed-color MOQ, 200ml price, shades, lead time and Israel fulfillment answer.",
+      "risk": "Per-shade MOQ could make a multi-color launch uneconomic."
+    },
+    {
+      "name": "Versandmanufaktur",
+      "kind": "EU Fulfillment",
+      "market": "Israel",
+      "score": 44,
+      "priority": "P3",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Quote still unresolved",
+      "latest": "Their helpdesk auto-closed the ticket while the request was under internal review. It was reopened/contested and the full quote request was repeated.",
+      "economics": "Pending",
+      "moq": "Pending",
+      "prestock": "Pending",
+      "integration": "Shopify/API + tracking requested",
+      "next": "Wait for actual Israel quote.",
+      "risk": "Slow/unclear support process."
+    },
+    {
+      "name": "HairODM / Yuki",
+      "kind": "Manufacturer / Wholesale",
+      "market": "China + external agent",
+      "score": 36,
+      "priority": "P3",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Not a NovaHair product fit today",
+      "latest": "No matching hair-dye shampoo project. Other haircare products are available. Wholesale MOQ can be 1 carton/SKU; private label typically 1,000 pcs/SKU. They do not dropship directly but can introduce an agent.",
+      "economics": "Haircare price list provided; NovaHair product not available.",
+      "moq": "Wholesale: 1 carton/SKU; private label: typically 1,000 pcs/SKU",
+      "prestock": "Via external agent if used",
+      "integration": "External dropshipping agent, not HairODM",
+      "next": "Waiting to see whether their agent can source an existing-stock hair-color/grey-coverage shampoo.",
+      "risk": "Does not currently solve the core product requirement."
+    },
+    {
+      "name": "WAPI",
+      "kind": "EU Fulfillment",
+      "market": "EU only",
+      "score": 30,
+      "priority": "P4",
+      "status": "Closed for Israel",
+      "owner": "None",
+      "verdict": "Not usable for Israel",
+      "latest": "Confirmed they do not deliver to Israel and ship exclusively across the EU.",
+      "economics": "No Israel quote",
+      "moq": "N/A",
+      "prestock": "Potentially relevant only for future EU expansion",
+      "integration": "Fulfillment platform, but Israel unsupported",
+      "next": "No Israel action. Revisit only if EU expansion becomes active.",
+      "risk": "Does not serve the current core market."
+    },
+    {
+      "name": "BFF Cosmetics",
+      "kind": "Manufacturer",
+      "market": "Israel",
+      "score": 22,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "Not compatible",
+      "latest": "Confirmed they cannot support the required manufacturing + DTC fulfillment / Shopify workflow.",
+      "economics": "N/A",
+      "moq": "N/A",
+      "prestock": "N/A",
+      "integration": "No suitable DTC/Shopify fulfillment",
+      "next": "No action.",
+      "risk": "No fit."
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-09-23",
+      "supplier": "EcomPrep Hub",
+      "event": "Netherlands economics clarified",
+      "detail": "€11.08 UPS + €1.50 fulfillment + €0.60–€0.80 carton; no platform fee/minimum."
+    },
+    {
+      "date": "2026-09-23",
+      "supplier": "Private Labels Hair Products",
+      "event": "MOQ received",
+      "detail": "1,000 units per reference; mixed-color/lower-MOQ option requested."
+    },
+    {
+      "date": "2026-09-23",
+      "supplier": "WAPI",
+      "event": "Israel declined",
+      "detail": "They ship exclusively within the EU."
+    },
+    {
+      "date": "2026-09-23",
+      "supplier": "BODA Haircare",
+      "event": "Direct fulfillment confirmed",
+      "detail": "Can ship to end customer; 4-bottle shipping quote still pending."
+    },
+    {
+      "date": "2026-09-23",
+      "supplier": "ASG Dropshipping",
+      "event": "First quote received",
+      "detail": "$7 product + $68.01 shipping; requested reweigh and prestock quote."
+    }
+  ]
+}
