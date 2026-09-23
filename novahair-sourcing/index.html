@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>NovaHair Supplier Sourcing</title>
+  <style>
+    :root{--bg:#0b0d10;--panel:#13171d;--panel2:#181d24;--text:#f2f4f7;--muted:#98a2b3;--line:#29313b;--gold:#d9a441;--green:#35c48d;--red:#f06a6a;--blue:#5ea7ff;--amber:#f1b64a}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#090b0e 0%,#0e1116 100%);color:var(--text)}
+    .wrap{max-width:1280px;margin:auto;padding:28px 18px 70px}.top{display:flex;gap:20px;justify-content:space-between;align-items:flex-end;margin-bottom:22px}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:800}.h1{font-size:clamp(30px,5vw,52px);font-weight:900;letter-spacing:-.04em;margin:5px 0}.sub{color:var(--muted);max-width:700px}
+    .updated{font-size:12px;color:var(--muted);text-align:right}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.metric,.section,.supplier{background:rgba(19,23,29,.92);border:1px solid var(--line);border-radius:16px}
+    .metric{padding:16px}.metric b{display:block;font-size:24px;margin-top:4px}.metric span{font-size:12px;color:var(--muted)}
+    .section{padding:18px;margin-top:16px}.section h2{font-size:17px;margin:0 0 14px}.attention{border-color:#5a431a;background:linear-gradient(180deg,rgba(217,164,65,.08),rgba(19,23,29,.95))}
+    .wait{padding:14px 0;border-top:1px solid var(--line)}.wait:first-of-type{border-top:0;padding-top:0}.wait-title{font-weight:800}.wait-detail,.wait-action{color:var(--muted);font-size:13px;margin-top:5px}.wait-action b{color:var(--text)}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 12px}.btn{border:1px solid var(--line);background:#11151a;color:var(--muted);padding:8px 11px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px}.btn.active{background:var(--text);color:#111;border-color:var(--text)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.supplier{padding:17px;position:relative;overflow:hidden}.supplier:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line)}.supplier.p1:before{background:var(--green)}.supplier.p2:before{background:var(--blue)}.supplier.p3:before{background:var(--amber)}.supplier.p4:before{background:#69717c}
+    .supplier-head{display:flex;justify-content:space-between;gap:14px}.supplier h3{margin:0;font-size:18px}.meta{font-size:12px;color:var(--muted);margin-top:4px}.badges{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.badge{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;border:1px solid var(--line);color:#cbd2dc}.score{font-size:28px;font-weight:900;line-height:1}.score small{font-size:11px;color:var(--muted);font-weight:700}.bar{height:5px;background:#252c34;border-radius:999px;margin:8px 0 13px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#f2d18c);border-radius:999px}
+    .verdict{font-weight:800;margin-bottom:8px}.latest{font-size:13px;line-height:1.5;color:#d7dce3}.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.fact{padding:10px;background:var(--panel2);border-radius:10px}.fact label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}.fact div{font-size:12px;line-height:1.4}
+    .next{margin-top:10px;padding:11px;border-radius:10px;background:#0d1116;border:1px solid var(--line);font-size:12px}.next b{color:var(--green)}.risk{margin-top:7px;color:#d8b071;font-size:11px}
+    .activity{width:100%;border-collapse:collapse}.activity td,.activity th{padding:10px 8px;border-top:1px solid var(--line);font-size:12px;text-align:left}.activity th{color:var(--muted);font-weight:700}.activity tr:first-child td{border-top:0}
+    .foot{margin-top:22px;color:var(--muted);font-size:11px;line-height:1.5}.empty{display:none;padding:30px;color:var(--muted);text-align:center}
+    @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.updated{text-align:left}}@media(max-width:520px){.cards{grid-template-columns:1fr 1fr}.facts{grid-template-columns:1fr}.wrap{padding:20px 12px 50px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><div class="eyebrow">TigerBestBrands · NovaHair</div><div class="h1">Supplier Sourcing</div><div class="sub">A decision dashboard for manufacturing, fulfillment, Israel shipping, EU expansion, and what needs attention next.</div></div>
+    <div class="updated" id="updated">Loading…</div>
+  </div>
+  <div class="cards" id="metrics"></div>
+  <div class="section attention"><h2>⚡ Waiting on Harel</h2><div id="waiting"></div></div>
+  <div class="section">
+    <h2>Supplier pipeline</h2>
+    <div class="toolbar" id="filters"></div>
+    <div class="grid" id="suppliers"></div><div class="empty" id="empty">No suppliers in this filter.</div>
+  </div>
+  <div class="section"><h2>Recent activity</h2><div style="overflow:auto"><table class="activity"><thead><tr><th>Date</th><th>Supplier</th><th>Update</th><th>Detail</th></tr></thead><tbody id="activity"></tbody></table></div></div>
+  <div class="foot" id="method"></div>
+</div>
+<script>
+let DATA, filter='ALL';
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function render(){
+  const b=DATA.benchmarks;
+  document.getElementById('updated').innerHTML='Last updated<br><b>'+new Date(DATA.updatedAt).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})+'</b>';
+  const active=DATA.suppliers.filter(s=>!['Closed','Closed for Israel'].includes(s.status)).length;
+  const p1=DATA.suppliers.filter(s=>s.priority==='P1').length;
+  const waiting=DATA.suppliers.filter(s=>s.owner==='Supplier').length;
+  document.getElementById('metrics').innerHTML=[
+    ['Current 4-pack','~$'+b.currentDelivered4PackUsd.toFixed(2)],
+    ['Current shipping','~$'+b.currentShippingUsd.toFixed(2)],
+    ['Target shipping','$'+b.targetShippingUsd],
+    ['Active / P1',active+' / '+p1]
+  ].map(x=>'<div class="metric"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('');
+  document.getElementById('waiting').innerHTML=DATA.waitingOnHarel.length?DATA.waitingOnHarel.map(w=>'<div class="wait"><div class="wait-title"><span class="badge">'+esc(w.priority)+'</span> '+esc(w.supplier)+' — '+esc(w.title)+'</div><div class="wait-detail">'+esc(w.detail)+'</div><div class="wait-action"><b>Action:</b> '+esc(w.action)+'</div></div>').join(''):'<div class="wait-detail">Nothing needs your decision right now.</div>';
+  const fs=['ALL','P1','P2','P3','WAITING','ISRAEL','EU'];
+  document.getElementById('filters').innerHTML=fs.map(f=>'<button class="btn '+(filter===f?'active':'')+'" onclick="filter=\''+f+'\';render()">'+f+'</button>').join('');
+  let list=DATA.suppliers.slice().sort((a,b)=>b.score-a.score);
+  list=list.filter(s=>filter==='ALL'||s.priority===filter||(filter==='WAITING'&&s.owner==='Supplier')||(filter==='ISRAEL'&&s.market.toLowerCase().includes('israel'))||(filter==='EU'&&(s.market.toLowerCase().includes('eu')||s.market.toLowerCase().includes('netherlands')||s.market.toLowerCase().includes('germany'))));
+  document.getElementById('empty').style.display=list.length?'none':'block';
+  document.getElementById('suppliers').innerHTML=list.map(s=>'<article class="supplier '+s.priority.toLowerCase()+'"><div class="supplier-head"><div><h3>'+esc(s.name)+'</h3><div class="meta">'+esc(s.kind)+' · '+esc(s.market)+'</div></div><div class="score">'+s.score+'<small>/100</small></div></div><div class="bar"><i style="width:'+s.score+'%"></i></div><div class="badges"><span class="badge">'+esc(s.priority)+'</span><span class="badge">'+esc(s.status)+'</span><span class="badge">Owner: '+esc(s.owner)+'</span></div><div class="verdict">'+esc(s.verdict)+'</div><div class="latest">'+esc(s.latest)+'</div><div class="facts"><div class="fact"><label>Economics</label><div>'+esc(s.economics)+'</div></div><div class="fact"><label>MOQ</label><div>'+esc(s.moq)+'</div></div><div class="fact"><label>Prestock</label><div>'+esc(s.prestock)+'</div></div><div class="fact"><label>Integration</label><div>'+esc(s.integration)+'</div></div></div><div class="next"><b>Next:</b> '+esc(s.next)+'</div><div class="risk">⚠ '+esc(s.risk)+'</div></article>').join('');
+  document.getElementById('activity').innerHTML=DATA.activity.map(a=>'<tr><td>'+esc(a.date)+'</td><td><b>'+esc(a.supplier)+'</b></td><td>'+esc(a.event)+'</td><td>'+esc(a.detail)+'</td></tr>').join('');
+  document.getElementById('method').textContent=DATA.scoreMethod.note+' Public dashboard intentionally excludes supplier email addresses, attachments, identity documents and other sensitive material.';
+}
+fetch('./data.json?v='+Date.now()).then(r=>r.json()).then(d=>{DATA=d;render()}).catch(()=>{document.getElementById('updated').textContent='Could not load data';});
+</script>
+</body></html>
