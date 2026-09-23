@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-23T13:19:00-03:00",
+  "updatedAt": "2026-09-23T14:49:00-03:00",
   "title": "NovaHair Supplier Sourcing",
   "subtitle": "Live sourcing & fulfillment pipeline",
   "benchmarks": {
@@ -197,6 +197,12 @@
   "activity": [
     {
       "date": "2026-09-23",
+      "supplier": "50-supplier expansion wave",
+      "event": "New outreach sent",
+      "detail": "7 Australia + 9 Israel + 11 Netherlands/Belgium + 6 multi-market exporters + 17 U.S./North America. Asked for NovaHair economics plus trending haircare/skincare/beauty intelligence."
+    },
+    {
+      "date": "2026-09-23",
       "supplier": "EcomPrep Hub",
       "event": "Netherlands economics clarified",
       "detail": "€11.08 UPS + €1.50 fulfillment + €0.60–€0.80 carton; no platform fee/minimum."
@@ -224,6 +230,39 @@
       "supplier": "ASG Dropshipping",
       "event": "First quote received",
       "detail": "$7 product + $68.01 shipping; requested reweigh and prestock quote."
+    }
+  ],
+  "outreachCampaigns": [
+    {
+      "date": "2026-09-23",
+      "name": "Expansion Wave 01",
+      "total": 50,
+      "status": "Awaiting replies",
+      "breakdown": [
+        {
+          "market": "Australia",
+          "count": 7
+        },
+        {
+          "market": "Israel",
+          "count": 9
+        },
+        {
+          "market": "Netherlands / Belgium",
+          "count": 11
+        },
+        {
+          "market": "Multi-market exporters",
+          "count": 6
+        },
+        {
+          "market": "U.S. / North America",
+          "count": 17
+        }
+      ],
+      "focus": "Hair-color / grey-coverage shampoo + haircare/skincare/beauty trend intelligence",
+      "asks": "Pricing, shades, MOQ, lead time, prestock/partial-deposit options, DTC fulfillment, Shopify/API, market-ready documentation and top 3–5 growing product categories.",
+      "result": "50 new suppliers contacted; no Gmail send failures. New suppliers will enter the scored pipeline after substantive replies arrive."
     }
   ]
 }
