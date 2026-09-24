@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-23T14:49:00-03:00",
+  "updatedAt": "2026-09-24T09:41:42-03:00",
   "title": "NovaHair Supplier Sourcing",
   "subtitle": "Live sourcing & fulfillment pipeline",
   "benchmarks": {
@@ -18,8 +18,22 @@
       "supplier": "EcomPrep Hub",
       "priority": "P2",
       "title": "Decide whether a Netherlands pilot is worth pursuing",
-      "detail": "France → Netherlands economics are now roughly €13.18–€13.38/order before storage (€11.08 UPS + €1.50 fulfillment + €0.60–€0.80 carton). This does not solve Israel, but it is a credible EU expansion route.",
-      "action": "If Netherlands is a near-term market, move to a small operational test. Also correct their mistaken assumption that billing would be to an Estonian company before onboarding."
+      "detail": "France → Netherlands economics are roughly €13.18–€13.38/order before storage (€11.08 UPS + €1.50 fulfillment + €0.60–€0.80 carton). This does not solve Israel, but it is a credible EU expansion route.",
+      "action": "If Netherlands is a near-term market, move to a small operational test. Correct their mistaken assumption about the billing entity before onboarding."
+    },
+    {
+      "supplier": "Packstack",
+      "priority": "P3",
+      "title": "Israel quote would require product/regulatory documents",
+      "detail": "Packstack says Israel is not a core market, requires at least 200 orders per market per month, and would need product details such as HS code/SDS before properly assessing Israel.",
+      "action": "Decide whether it is worth sharing the required product documentation later; otherwise park Israel and keep Packstack only as a possible EU option."
+    },
+    {
+      "supplier": "Private Label Dynamics",
+      "priority": "P4",
+      "title": "Decide whether to park the custom-development route",
+      "detail": "Their custom grey-coverage route is approximately $15,000–$20,000 for development plus the first 2,000-unit run, with full upfront payment and no DTC fulfillment or Shopify/API integration.",
+      "action": "No commitment has been made. Only continue if this budget and operating model are intentionally acceptable; otherwise close/park the lead."
     }
   ],
   "suppliers": [
@@ -72,24 +86,24 @@
       "prestock": "Storage €15/m³/month",
       "integration": "Shopify integration + order processing + tracking sync",
       "next": "Only pursue if Netherlands/EU is a real near-term market; Israel route is not competitive.",
-      "risk": "Supplier assumed an Estonian billing company; correct entity before onboarding. Israel outside their normal network."
+      "risk": "EU-only opportunity for now; supplier also assumed a different billing entity."
     },
     {
-      "name": "Packstack",
-      "kind": "EU Fulfillment",
-      "market": "Germany → Israel / Netherlands",
-      "score": 56,
+      "name": "LAEYO",
+      "kind": "Manufacturer",
+      "market": "Israel via bulk freight / external 3PL",
+      "score": 52,
       "priority": "P2",
       "status": "Waiting on supplier",
       "owner": "Supplier",
-      "verdict": "Worth checking for EU; Israel uncertain",
-      "latest": "Shopify setup fits. They can work with stock from China/Turkey but do not source product. Israel is not a core market and they warned shipping may be expensive.",
-      "economics": "Awaiting quote using ~1.1–1.2 kg / 25×20×10 cm.",
-      "moq": "Not yet stated",
-      "prestock": "Can hold supplied inventory; fees pending",
-      "integration": "Shopify supported",
-      "next": "Wait for Israel and Netherlands shipping + pick/pack quote.",
-      "risk": "May require HS code/SDS before final Israel assessment."
+      "verdict": "Product fit looks credible; operating model is less flexible",
+      "latest": "Stock-bottle MOQ is 2,000 bottles; custom bottles are 5,000–10,000. They do not provide Israel DTC fulfillment or Shopify integration. Exact EXW price, shade split and Israel freight are still pending.",
+      "economics": "Unit price not yet provided; bulk freight to Israel requested.",
+      "moq": "2,000 bottles using stock bottle; 5,000–10,000 for custom bottle",
+      "prestock": "Standard term stated as 50% deposit with balance before shipment; lower-deposit/prestock option requested",
+      "integration": "No direct Israel DTC fulfillment or Shopify integration",
+      "next": "Get actual EXW unit price, shade-split rule, bulk freight/transit time and any lower-MOQ/lower-deposit alternative.",
+      "risk": "MOQ and deposit structure are materially less flexible than the current dropship model."
     },
     {
       "name": "ASG Dropshipping",
@@ -99,14 +113,14 @@
       "priority": "P2",
       "status": "Waiting on supplier",
       "owner": "Supplier",
-      "verdict": "Workflow fit, current shipping fails economics",
-      "latest": "Quoted $7 product cost for 4 bottles + $68.01 all-in shipping, based on 2kg gross, 6–10 working days. Shopify/order/tracking sync is available.",
-      "economics": "$75.01 quoted delivered for 4 bottles — far above current ~$34.13.",
-      "moq": "Bulk/prestock could improve pricing; exact revised terms pending",
-      "prestock": "Small China warehouse prestock discussed; asked them to quote 300–700 bottles",
-      "integration": "Order + tracking sync through their OMS; API details can be confirmed",
-      "next": "Wait for reweighed parcel, cheapest reliable Israel line and prestock economics.",
-      "risk": "Their 2kg weight assumption appears high for 800ml net."
+      "verdict": "Workflow fit, current shipping still fails economics",
+      "latest": "Revised quote: $7 product + $53.64 shipping = $60.64 delivered for 4 bottles, based on 1.7kg, with 6–10 working days delivery. Shopify/order/tracking sync is available.",
+      "economics": "$60.64 delivered for 4 bottles — improved from the first quote, but still far above the current ~$34.13 benchmark.",
+      "moq": "No DTC MOQ stated; prestock proposal is based on 100 orders / 400 bottles",
+      "prestock": "They proposed prepaying 100 orders / 400 bottles; a partial-deposit alternative was requested and not accepted yet",
+      "integration": "Shopify/order/tracking sync through their OMS; API details requested",
+      "next": "Wait for a cheaper tracked Israel line, true packed-weight review, prestock pick/pack economics and partial-deposit alternative.",
+      "risk": "Shipping remains the economic blocker; prestock proposal requires too much prepayment."
     },
     {
       "name": "Private Labels Hair Products",
@@ -126,6 +140,23 @@
       "risk": "Per-shade MOQ could make a multi-color launch uneconomic."
     },
     {
+      "name": "Junchen Cosmetics / KertaineQueen",
+      "kind": "Manufacturer",
+      "market": "Israel via bulk freight / external 3PL",
+      "score": 44,
+      "priority": "P3",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Possible manufacturer; needs economics and external fulfillment",
+      "latest": "They manufacture hair-care and hair-color products but do not offer DTC dropshipping, individual-order inventory holding or Shopify/API synchronization. Quote requested for their closest existing true grey-coverage 200ml product.",
+      "economics": "Requested pricing at 500 / 1,000 / 2,000 bottles plus bulk freight to Israel.",
+      "moq": "Pending; tiered quote requested at 500 / 1,000 / 2,000 bottles",
+      "prestock": "Partial-deposit/prestock terms requested",
+      "integration": "No DTC or Shopify/API; would require an external Israeli or China 3PL",
+      "next": "Wait for unit prices, shades, mixed-shade MOQ, production time, freight and any 3PL introduction.",
+      "risk": "Bulk-only model adds a second operational partner and inventory commitment."
+    },
+    {
       "name": "Versandmanufaktur",
       "kind": "EU Fulfillment",
       "market": "Israel",
@@ -143,21 +174,55 @@
       "risk": "Slow/unclear support process."
     },
     {
-      "name": "HairODM / Yuki",
-      "kind": "Manufacturer / Wholesale",
-      "market": "China + external agent",
-      "score": 36,
+      "name": "Chantal",
+      "kind": "Manufacturer",
+      "market": "Israel via bulk freight / external 3PL",
+      "score": 42,
       "priority": "P3",
       "status": "Waiting on supplier",
       "owner": "Supplier",
-      "verdict": "Not a NovaHair product fit today",
-      "latest": "No matching hair-dye shampoo project. Other haircare products are available. Wholesale MOQ can be 1 carton/SKU; private label typically 1,000 pcs/SKU. They do not dropship directly but can introduce an agent.",
-      "economics": "Haircare price list provided; NovaHair product not available.",
-      "moq": "Wholesale: 1 carton/SKU; private label: typically 1,000 pcs/SKU",
-      "prestock": "Via external agent if used",
-      "integration": "External dropshipping agent, not HairODM",
-      "next": "Waiting to see whether their agent can source an existing-stock hair-color/grey-coverage shampoo.",
-      "risk": "Does not currently solve the core product requirement."
+      "verdict": "R&D quote pending; DTC model does not fit directly",
+      "latest": "They do not send small DTC parcels. Their R&D team is costing an existing dark-shade / grey-coverage route after clarification that true grey coverage is required. They said to allow about 2 working days for costing.",
+      "economics": "Pending R&D quotation and bulk freight economics.",
+      "moq": "Dosage service around 3,000 pcs; mixing MOQ depends on product, with hair-dye bulk figures much higher for custom work",
+      "prestock": "Partial-deposit/prestock terms requested; pending",
+      "integration": "No DTC fulfillment; external Israeli 3PL would be required",
+      "next": "Wait for R&D quote on an existing ready formula, lowest MOQ, shades and bulk freight to Israel.",
+      "risk": "Custom-development MOQs are too large; only an existing formula is potentially viable."
+    },
+    {
+      "name": "Packstack",
+      "kind": "EU Fulfillment",
+      "market": "EU first; Israel secondary",
+      "score": 38,
+      "priority": "P3",
+      "status": "Blocked for Israel pending documents / volume",
+      "owner": "Harel",
+      "verdict": "Possible EU partner; weak Israel fit",
+      "latest": "Netherlands fulfillment is possible, but they require at least 200 orders per market per month. Israel is not a core market and they indicated HS code/SDS would be needed before a proper assessment.",
+      "economics": "No usable Israel quote yet.",
+      "moq": "At least 200 orders per market per month",
+      "prestock": "Can hold supplied inventory; final fees not established",
+      "integration": "Shopify supported",
+      "next": "Only provide product documentation if the Israel route remains worth pursuing; otherwise keep for future EU expansion.",
+      "risk": "Israel is outside their core network and requires additional product/regulatory documentation."
+    },
+    {
+      "name": "B&W Co-Creations",
+      "kind": "Private-label manufacturer",
+      "market": "EU / potential Israel bulk",
+      "score": 34,
+      "priority": "P3",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Private label is acceptable; economics unknown",
+      "latest": "They initially declined because they only do private label rather than white label. We clarified that private label is acceptable and requested a rough quote. Their contact is out of office through 4 October and email is only being read sporadically.",
+      "economics": "Pending indicative 200ml quote and Israel freight.",
+      "moq": "Pending",
+      "prestock": "Pending",
+      "integration": "Fulfillment / Shopify/API support pending",
+      "next": "Wait for a substantive answer after 4 October; avoid duplicate follow-up before then unless necessary.",
+      "risk": "Slow timing due to vacation; product fit not yet confirmed."
     },
     {
       "name": "WAPI",
@@ -177,6 +242,40 @@
       "risk": "Does not serve the current core market."
     },
     {
+      "name": "Hongshin Cosmetics",
+      "kind": "Manufacturer",
+      "market": "Taiwan / South Korea export",
+      "score": 28,
+      "priority": "P4",
+      "status": "Low-priority lead",
+      "owner": "Supplier",
+      "verdict": "MOQ per SKU is high for a multi-shade launch",
+      "latest": "Their standard minimum is 1,500 units per SKU for Taiwan production and 3,000 units per SKU for South Korea, with each SKU carrying its own minimum.",
+      "economics": "No usable NovaHair delivered quote yet.",
+      "moq": "1,500 units/SKU Taiwan; 3,000 units/SKU South Korea",
+      "prestock": "Not established",
+      "integration": "Not established",
+      "next": "Only continue if they can offer an existing grey-coverage formula with mixed-shade economics materially below normal SKU minimums.",
+      "risk": "Per-shade MOQ is likely uneconomic for the current Israel launch model."
+    },
+    {
+      "name": "HairODM / Yuki",
+      "kind": "Manufacturer / Wholesale",
+      "market": "China",
+      "score": 24,
+      "priority": "P4",
+      "status": "Parked",
+      "owner": "None",
+      "verdict": "No current route to the required product",
+      "latest": "HairODM does not currently have the required NovaHair product. The external agent they suggested does not operate on a purchasing/sourcing model, so that route is also closed for now.",
+      "economics": "No matching NovaHair product quote.",
+      "moq": "Wholesale haircare can be 1 carton/SKU; private label typically 1,000 pcs/SKU, but not for the required product today",
+      "prestock": "No viable prestock route identified",
+      "integration": "No viable external sourcing/fulfillment route from the suggested agent",
+      "next": "No action; reopen only if they proactively confirm a true grey-coverage product becomes available.",
+      "risk": "Does not solve the core product requirement."
+    },
+    {
       "name": "BFF Cosmetics",
       "kind": "Manufacturer",
       "market": "Israel",
@@ -192,9 +291,210 @@
       "integration": "No suitable DTC/Shopify fulfillment",
       "next": "No action.",
       "risk": "No fit."
+    },
+    {
+      "name": "Private Label Dynamics",
+      "kind": "Custom manufacturer",
+      "market": "Australia / bulk export",
+      "score": 18,
+      "priority": "P4",
+      "status": "Waiting on Harel decision",
+      "owner": "Harel",
+      "verdict": "Technically possible but far from current operating model",
+      "latest": "No ready true grey-coverage shampoo. Custom development plus the first 2,000-unit run is estimated around $15,000–$20,000. They do not provide DTC fulfillment or Shopify/API integration.",
+      "economics": "Approximately $15,000–$20,000 total for development + first 2,000 units; exact unit price only after formulation.",
+      "moq": "2,000 units per custom product",
+      "prestock": "Full upfront payment required before production; no long-term finished-goods holding",
+      "integration": "No DTC fulfillment or Shopify/API integration",
+      "next": "Do not commit. Decide whether the custom-development budget is intentionally in scope; otherwise park the lead.",
+      "risk": "Large upfront commitment, custom-development risk and no fulfillment integration."
+    },
+    {
+      "name": "Girasol Natural Products",
+      "kind": "EU manufacturer",
+      "market": "Netherlands / Belgium / bulk export",
+      "score": 16,
+      "priority": "P4",
+      "status": "Waiting on supplier",
+      "owner": "Supplier",
+      "verdict": "Normal MOQ is far above current needs",
+      "latest": "Their normal production can start around 10,000 pieces / 100L / 210kg per SKU depending on the project. Custom development can cost up to about €5,000 for the base formula plus €1,000 per extra variant. We asked them to first confirm whether a ready/white-label true grey-coverage formula exists.",
+      "economics": "No viable ready-formula quote yet; custom development is expensive.",
+      "moq": "Typical minimums around 10,000 pieces or large bulk batches depending on format",
+      "prestock": "Pending; not relevant unless a lower-MOQ ready formula exists",
+      "integration": "DTC/Shopify capability not established",
+      "next": "Wait only for confirmation of an existing ready grey-coverage formula with materially lower MOQ.",
+      "risk": "Normal development route is too large and costly for the current objective."
+    },
+    {
+      "name": "Onoxa",
+      "kind": "Low-MOQ private label",
+      "market": "U.S. only",
+      "score": 12,
+      "priority": "P4",
+      "status": "Closed for NovaHair",
+      "owner": "None",
+      "verdict": "No product or market fit",
+      "latest": "They only ship within the U.S., customization is label-only, and they do not currently offer a grey-coverage product.",
+      "economics": "N/A for Israel",
+      "moq": "Low-MOQ model generally, but no suitable product",
+      "prestock": "U.S.-only model",
+      "integration": "Not relevant to Israel",
+      "next": "No action.",
+      "risk": "Does not offer the required product and does not ship to Israel."
+    },
+    {
+      "name": "Fulando",
+      "kind": "EU Fulfillment",
+      "market": "EU",
+      "score": 12,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "No capacity",
+      "latest": "They are currently at full capacity and cannot take on new clients.",
+      "economics": "No quote",
+      "moq": "N/A",
+      "prestock": "N/A",
+      "integration": "N/A",
+      "next": "No action unless capacity reopens later.",
+      "risk": "Unavailable operationally."
+    },
+    {
+      "name": "FULLY Cosmetics",
+      "kind": "Manufacturer",
+      "market": "Bulk production",
+      "score": 10,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "Current volume/model does not fit",
+      "latest": "They said their MOQ is significantly higher than the current requirement and they do not offer dropshipping, warehousing/prestock, direct-to-customer Israel fulfillment or Shopify/order sync, so they declined the project.",
+      "economics": "No quote",
+      "moq": "Above current requirement; exact usable level not offered",
+      "prestock": "No",
+      "integration": "No DTC / Shopify order sync",
+      "next": "No action.",
+      "risk": "No fit with current volume or fulfillment model."
+    },
+    {
+      "name": "MAG Cosmetics",
+      "kind": "Manufacturer",
+      "market": "Germany / bulk export",
+      "score": 10,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "MOQ and operating model do not fit",
+      "latest": "They declined the project. Existing formulations require 5,000 units per SKU and new formulations 20,000 units per SKU. They do not offer inventory holding, DTC fulfillment or Shopify/API order fulfillment and supply EXW Germany.",
+      "economics": "No quote; EXW-only model",
+      "moq": "5,000 units/SKU existing formula; 20,000 units/SKU new development",
+      "prestock": "No inventory holding",
+      "integration": "No DTC or Shopify/API fulfillment",
+      "next": "No action.",
+      "risk": "MOQ is far above current needs and there is no fulfillment layer."
+    },
+    {
+      "name": "Eurodor",
+      "kind": "Manufacturer / supplier",
+      "market": "EU",
+      "score": 8,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "Declined",
+      "latest": "They explicitly said they cannot provide the required hair-dye shampoo manufacturing or direct-to-customer Israel fulfillment services.",
+      "economics": "N/A",
+      "moq": "N/A",
+      "prestock": "N/A",
+      "integration": "No fit",
+      "next": "No action.",
+      "risk": "No fit."
+    },
+    {
+      "name": "RainShadow Labs",
+      "kind": "U.S. manufacturer",
+      "market": "U.S.",
+      "score": 8,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "Does not manufacture hair color",
+      "latest": "They clarified that they do not manufacture hair-color products.",
+      "economics": "N/A",
+      "moq": "N/A",
+      "prestock": "N/A",
+      "integration": "N/A",
+      "next": "No action for NovaHair.",
+      "risk": "Product-category mismatch."
+    },
+    {
+      "name": "ABBE Laboratories",
+      "kind": "U.S. manufacturer",
+      "market": "U.S.",
+      "score": 8,
+      "priority": "P4",
+      "status": "Closed",
+      "owner": "None",
+      "verdict": "Skin-care specialist, not hair color",
+      "latest": "They specialize in skin care and do not work with hair color.",
+      "economics": "N/A",
+      "moq": "N/A",
+      "prestock": "N/A",
+      "integration": "N/A",
+      "next": "No action for NovaHair.",
+      "risk": "Product-category mismatch."
     }
   ],
   "activity": [
+    {
+      "date": "2026-09-24",
+      "supplier": "MAG Cosmetics",
+      "event": "Declined",
+      "detail": "5,000 units/SKU for existing formulas, 20,000 for new formulas; EXW Germany only and no inventory/DTC/Shopify fulfillment."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "B&W Co-Creations",
+      "event": "Private-label route clarified",
+      "detail": "Private label is acceptable and a quote was requested; contact is away through 4 October."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "Chantal",
+      "event": "R&D costing started",
+      "detail": "Request sent to R&D for an existing true grey-coverage option; quotation expected after costing."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "LAEYO",
+      "event": "MOQ and operating terms clarified",
+      "detail": "2,000-bottle stock packaging MOQ; no Israel DTC or Shopify integration; price/freight still pending."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "ASG Dropshipping",
+      "event": "Revised Israel quote received",
+      "detail": "$7 product + $53.64 shipping = $60.64 for 4 bottles; 6–10 working days."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "Junchen Cosmetics / KertaineQueen",
+      "event": "Bulk-only route confirmed",
+      "detail": "No DTC, inventory holding or Shopify/API; tiered manufacturing + Israel freight quote requested."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "Packstack",
+      "event": "Israel constraints clarified",
+      "detail": "At least 200 orders per market/month; Israel is not core and product documentation would be needed for assessment."
+    },
+    {
+      "date": "2026-09-24",
+      "supplier": "Private Label Dynamics",
+      "event": "Custom route priced",
+      "detail": "Approx. $15k–$20k development + first 2,000 units; full upfront payment and no DTC/Shopify integration."
+    },
     {
       "date": "2026-09-23",
       "supplier": "50-supplier expansion wave",
@@ -224,12 +524,6 @@
       "supplier": "BODA Haircare",
       "event": "Direct fulfillment confirmed",
       "detail": "Can ship to end customer; 4-bottle shipping quote still pending."
-    },
-    {
-      "date": "2026-09-23",
-      "supplier": "ASG Dropshipping",
-      "event": "First quote received",
-      "detail": "$7 product + $68.01 shipping; requested reweigh and prestock quote."
     }
   ],
   "outreachCampaigns": [
@@ -262,7 +556,7 @@
       ],
       "focus": "Hair-color / grey-coverage shampoo + haircare/skincare/beauty trend intelligence",
       "asks": "Pricing, shades, MOQ, lead time, prestock/partial-deposit options, DTC fulfillment, Shopify/API, market-ready documentation and top 3–5 growing product categories.",
-      "result": "50 new suppliers contacted; no Gmail send failures. New suppliers will enter the scored pipeline after substantive replies arrive."
+      "result": "50 new suppliers contacted; replies are being scored into the pipeline as they arrive."
     }
   ]
 }
