@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17211c">
+<title>NovaHair — Concept Map</title>
+<style>
+:root{--ink:#17211c;--muted:#68716b;--line:#e6e9e7;--paper:#f6f7f5;--card:#fff;--brand:#195b45;--orange:#e35a10;--soft:#eef4f1;--amber:#fff3e7;--red:#fff0ef;--purple:#f6effc}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--paper)}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--paper);color:var(--ink);font-size:16px}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--paper);padding-bottom:52px}
+.hero{background:var(--ink);color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 20px;border-radius:0 0 28px 28px}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.08em;color:#bbd8ce;margin-bottom:8px}
+h1{font-size:28px;line-height:1.05;margin:0 0 10px;font-weight:900}
+.hero p{margin:0;color:#d9e2de;font-size:14px;line-height:1.45}
+.counts{display:flex;gap:8px;margin-top:16px}
+.count{background:#ffffff12;border:1px solid #ffffff1e;border-radius:14px;padding:10px 12px;flex:1}
+.count b{display:block;font-size:20px}.count span{font-size:11px;color:#cad6d1}
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(246,247,245,.92);backdrop-filter:blur(12px);padding:10px 12px 8px;border-bottom:1px solid var(--line)}
+.search{width:100%;height:44px;border:1px solid var(--line);border-radius:14px;padding:0 14px;background:#fff;font-size:16px;outline:none}
+.filters{display:flex;gap:6px;overflow-x:auto;padding-top:8px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filter{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;color:#59625d}
+.filter.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.wrap{padding:14px 12px}
+.sectionTitle{font-size:13px;font-weight:900;color:#667069;margin:7px 4px 10px}
+.map{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:18px}
+.mapNode{min-height:62px;border:1px solid var(--line);background:#fff;border-radius:16px;text-align:right;padding:9px 10px;color:var(--ink);font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+.mapNode .num{display:grid;place-items:center;min-width:30px;height:30px;border-radius:10px;background:var(--soft);font-size:11px;color:var(--brand)}
+.mapNode.tone-fresh{border-right:4px solid #e35a10}
+.mapNode.tone-covered{border-right:4px solid #195b45}
+.mapNode.tone-partial{border-right:4px solid #bd8425}
+.mapNode.tone-proof{border-right:4px solid #7b57a6}
+.mapNode.tone-hold{border-right:4px solid #858d88}
+.legend{display:flex;gap:6px;overflow:auto;margin:0 0 16px;padding:0 2px 2px;scrollbar-width:none}
+.legend span{font-size:11px;background:#fff;border:1px solid var(--line);padding:6px 8px;border-radius:999px;white-space:nowrap}
+.family{background:#fff;border:1px solid var(--line);border-radius:18px;margin:0 0 9px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,24,.03)}
+.family.tone-fresh{border-right:4px solid #e35a10}
+.family.tone-covered{border-right:4px solid #195b45}
+.family.tone-partial{border-right:4px solid #bd8425}
+.family.tone-proof{border-right:4px solid #7b57a6}
+.family.tone-hold{border-right:4px solid #858d88}
+.familyHead{width:100%;border:0;background:#fff;color:inherit;padding:13px 12px;display:flex;align-items:center;justify-content:space-between;text-align:right}
+.familyMeta{display:flex;gap:10px;align-items:flex-start}
+.bigNum{font-weight:900;font-size:11px;color:var(--brand);background:var(--soft);border-radius:9px;padding:7px 6px;margin-top:1px}
+h2{font-size:16px;line-height:1.25;margin:0 0 7px}
+.metaRow{display:flex;flex-wrap:wrap;gap:4px}
+.status,.chip{font-size:10px;border-radius:999px;padding:4px 7px;font-weight:800}
+.status{background:#fff2e8;color:#a9440d}.chip{background:#f0f2f1;color:#667069}
+.chev{font-size:23px;color:#89918d;font-weight:300;margin-right:8px}
+.familyBody{display:none;border-top:1px solid var(--line);padding:0 12px 13px}.familyBody.open{display:block}
+.desc{font-size:13px;line-height:1.5;color:#5f6863;margin:12px 1px}
+.subgrid{display:grid;gap:6px}
+.sub{display:flex;align-items:flex-start;gap:9px;background:#f8f9f8;border:1px solid #eef0ef;border-radius:13px;padding:10px 10px;font-size:14px;line-height:1.35}
+.subNum{flex:0 0 26px;height:26px;border-radius:9px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);font-size:10px;font-weight:900;color:#7c8580}
+.empty{display:none;text-align:center;color:#7b847f;padding:40px 20px}
+.foot{padding:18px 16px;color:#7a837e;font-size:11px;line-height:1.5;text-align:center}
+mark{background:#fff1a8;border-radius:3px;padding:0 1px}
+@media (max-width:360px){h1{font-size:25px}.mapNode{font-size:12px;min-height:58px}.wrap{padding-left:9px;padding-right:9px}.familyHead{padding:12px 10px}.sub{font-size:13px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="hero">
+    <div class="kicker">NOVAHAIR · CREATIVE MAP</div>
+    <h1>20 משפחות קונספטים</h1>
+    <p>מפת קריאייטיב למובייל: 200 תתי־זוויות מתוך היסטוריית החשבון, תגובות ושירות לקוחות. לחץ על משפחה כדי לפתוח.</p>
+    <div class="counts">
+      <div class="count"><b>20</b><span>משפחות</span></div>
+      <div class="count"><b>200</b><span>תתי־קונספטים</span></div>
+      <div class="count"><b>1</b><span>מסך קטן</span></div>
+    </div>
+  </header>
+  <div class="toolbar">
+    <input id="search" class="search" type="search" placeholder="חפש: משלוח, גוון, לבן, WhatsApp..." autocomplete="off">
+    <div class="filters">
+      <button class="filter active" data-filter="all">הכול</button>
+      <button class="filter" data-filter="fresh">חדש יחסית</button>
+      <button class="filter" data-filter="partial">כיסוי חלקי</button>
+      <button class="filter" data-filter="covered">כבר נוסה</button>
+      <button class="filter" data-filter="proof">דורש הוכחה</button>
+      <button class="filter" data-filter="hold">ממתין לחומר</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="sectionTitle">מפת המשפחות</div>
+    <nav class="map">
+  <button class="mapNode tone-partial" data-jump="roots">
+    <span class="num">01</span>
+    <span>שורשים לבנים</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="coverage">
+    <span class="num">02</span>
+    <span>כיסוי לבן</span>
+  </button>
+  <button class="mapNode tone-partial" data-jump="shade">
+    <span class="num">03</span>
+    <span>בחירת גוון</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="mechanism">
+    <span class="num">04</span>
+    <span>מה זה בכלל שמפו צבע?</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="usage">
+    <span class="num">05</span>
+    <span>שימוש נכון</span>
+  </button>
+  <button class="mapNode tone-proof" data-jump="durability">
+    <span class="num">06</span>
+    <span>עמידות</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="mess">
+    <span class="num">07</span>
+    <span>לכלוך וכתמים</span>
+  </button>
+  <button class="mapNode tone-hold" data-jump="formula">
+    <span class="num">08</span>
+    <span>פורמולה ורכיבים</span>
+  </button>
+  <button class="mapNode tone-covered" data-jump="social">
+    <span class="num">09</span>
+    <span>הוכחה חברתית</span>
+  </button>
+  <button class="mapNode tone-covered" data-jump="trust">
+    <span class="num">10</span>
+    <span>אמון</span>
+  </button>
+  <button class="mapNode tone-partial" data-jump="risk">
+    <span class="num">11</span>
+    <span>הורדת סיכון</span>
+  </button>
+  <button class="mapNode tone-covered" data-jump="time">
+    <span class="num">12</span>
+    <span>זמן ונוחות</span>
+  </button>
+  <button class="mapNode tone-covered" data-jump="economics">
+    <span class="num">13</span>
+    <span>כלכלת המספרה</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="occasion">
+    <span class="num">14</span>
+    <span>אירוע, צילום ויציאה</span>
+  </button>
+  <button class="mapNode tone-covered" data-jump="offer">
+    <span class="num">15</span>
+    <span>הצעה וערך</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="flex">
+    <span class="num">16</span>
+    <span>גמישות בקנייה</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="shipping">
+    <span class="num">17</span>
+    <span>משלוח ומעקב</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="checkout">
+    <span class="num">18</span>
+    <span>תשלום וקופה</span>
+  </button>
+  <button class="mapNode tone-partial" data-jump="service">
+    <span class="num">19</span>
+    <span>שירות אנושי</span>
+  </button>
+  <button class="mapNode tone-fresh" data-jump="honesty">
+    <span class="num">20</span>
+    <span>שקיפות בלי הייפ</span>
+  </button></nav>
+    <div class="legend">
+      <span>🟠 חדש יחסית</span><span>🟢 כבר נוסה</span><span>🟡 כיסוי חלקי</span><span>🟣 דורש הוכחה</span><span>⚪ ממתין לחומר</span>
+    </div>
+    <div id="families">
+  <section class="family tone-partial" id="roots" data-search="שורשים לבנים · הבעיה שרואים הכאב הוויזואלי עצמו: לא מחיר, לא אמון, לא גוון — אלא הרגע שבו הלבן חוזר ונראה. קו השביל הלבן שמופיע ראשון הרקות שמסגירות את הצמיחה השורש חוזר לפני התור הבא שיער אסוף שחושף יותר לבן אור יום שמבליט את השורשים הסנטימטר הקטן שמושך את כל העין שורש לבן מול אורך שעדיין נראה טוב הרגע שבו מפסיקים להרגיש מסודרת שורשים שנראים בתמונה לפני שמרגישים במראה רענון נקודתי במקום לצבוע את כל השיער">
+    <button class="familyHead" aria-expanded="true">
+      <div class="familyMeta">
+        <span class="bigNum">01</span>
+        <div>
+          <h2>שורשים לבנים · הבעיה שרואים</h2>
+          <div class="metaRow"><span class="status">כיסוי חלקי</span><span class="chip">חשבון</span><span class="chip">תגובות</span></div>
+        </div>
+      </div>
+      <span class="chev">−</span>
+    </button>
+    <div class="familyBody open">
+      <p class="desc">הכאב הוויזואלי עצמו: לא מחיר, לא אמון, לא גוון — אלא הרגע שבו הלבן חוזר ונראה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>קו השביל הלבן שמופיע ראשון</span></div><div class="sub"><span class="subNum">2</span><span>הרקות שמסגירות את הצמיחה</span></div><div class="sub"><span class="subNum">3</span><span>השורש חוזר לפני התור הבא</span></div><div class="sub"><span class="subNum">4</span><span>שיער אסוף שחושף יותר לבן</span></div><div class="sub"><span class="subNum">5</span><span>אור יום שמבליט את השורשים</span></div><div class="sub"><span class="subNum">6</span><span>הסנטימטר הקטן שמושך את כל העין</span></div><div class="sub"><span class="subNum">7</span><span>שורש לבן מול אורך שעדיין נראה טוב</span></div><div class="sub"><span class="subNum">8</span><span>הרגע שבו מפסיקים להרגיש מסודרת</span></div><div class="sub"><span class="subNum">9</span><span>שורשים שנראים בתמונה לפני שמרגישים במראה</span></div><div class="sub"><span class="subNum">10</span><span>רענון נקודתי במקום לצבוע את כל השיער</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="coverage" data-search="כיסוי לבן · הוכחת תוצאה עונה ישירות על 'זה בכלל מכסה לבן?' בלי להסתפק בהבטחה. תקריב שורש לבן לפני ואחרי כיסוי של שיער לבן עקשן אותו שיער, אותה תאורה, אותה זווית כיסוי באזור הרקות כיסוי באזור קו השביל שורש מול אורך: איפה באמת השתנה הצבע תוצאה ללא פילטר וללא אור סטודיו לקוחה ספקנית שהראתה את התוצאה כמה לבן היה לפני וכמה נשאר אחרי תוצאה על כמה סוגי שיער אמיתיים">
+    <button class="familyHead" aria-expanded="true">
+      <div class="familyMeta">
+        <span class="bigNum">02</span>
+        <div>
+          <h2>כיסוי לבן · הוכחת תוצאה</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תגובות</span><span class="chip">שירות</span></div>
+        </div>
+      </div>
+      <span class="chev">−</span>
+    </button>
+    <div class="familyBody open">
+      <p class="desc">עונה ישירות על 'זה בכלל מכסה לבן?' בלי להסתפק בהבטחה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>תקריב שורש לבן לפני ואחרי</span></div><div class="sub"><span class="subNum">2</span><span>כיסוי של שיער לבן עקשן</span></div><div class="sub"><span class="subNum">3</span><span>אותו שיער, אותה תאורה, אותה זווית</span></div><div class="sub"><span class="subNum">4</span><span>כיסוי באזור הרקות</span></div><div class="sub"><span class="subNum">5</span><span>כיסוי באזור קו השביל</span></div><div class="sub"><span class="subNum">6</span><span>שורש מול אורך: איפה באמת השתנה הצבע</span></div><div class="sub"><span class="subNum">7</span><span>תוצאה ללא פילטר וללא אור סטודיו</span></div><div class="sub"><span class="subNum">8</span><span>לקוחה ספקנית שהראתה את התוצאה</span></div><div class="sub"><span class="subNum">9</span><span>כמה לבן היה לפני וכמה נשאר אחרי</span></div><div class="sub"><span class="subNum">10</span><span>תוצאה על כמה סוגי שיער אמיתיים</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-partial" id="shade" data-search="בחירת גוון · פחד לטעות לא 'איזה צבע יפה', אלא להוריד את הסיכון בבחירה. כל 7 הגוונים במקום אחד זום על כל גוון השוואת שני גוונים זה לצד זה שליחת תמונה בוואטסאפ לעזרה שילוב כמה גוונים באותו מארז 60 יום להחליף אם הגוון לא התאים בחירה לפי אמצע אורך השיער התאמה לשיער שכבר צבוע התלבטות בין כהה לבהיר אל תנחשי את הגוון שלך">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">03</span>
+        <div>
+          <h2>בחירת גוון · פחד לטעות</h2>
+          <div class="metaRow"><span class="status">כיסוי חלקי</span><span class="chip">תגובות</span><span class="chip">R2</span><span class="chip">אתר</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">לא 'איזה צבע יפה', אלא להוריד את הסיכון בבחירה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>כל 7 הגוונים במקום אחד</span></div><div class="sub"><span class="subNum">2</span><span>זום על כל גוון</span></div><div class="sub"><span class="subNum">3</span><span>השוואת שני גוונים זה לצד זה</span></div><div class="sub"><span class="subNum">4</span><span>שליחת תמונה בוואטסאפ לעזרה</span></div><div class="sub"><span class="subNum">5</span><span>שילוב כמה גוונים באותו מארז</span></div><div class="sub"><span class="subNum">6</span><span>60 יום להחליף אם הגוון לא התאים</span></div><div class="sub"><span class="subNum">7</span><span>בחירה לפי אמצע אורך השיער</span></div><div class="sub"><span class="subNum">8</span><span>התאמה לשיער שכבר צבוע</span></div><div class="sub"><span class="subNum">9</span><span>התלבטות בין כהה לבהיר</span></div><div class="sub"><span class="subNum">10</span><span>אל תנחשי את הגוון שלך</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="mechanism" data-search="מה זה בכלל שמפו צבע? Education שמסביר את הקטגוריה עצמה ומוריד בלבול לפני הרכישה. שמפו צבע ≠ שמפו רגיל איך מוצר שנראה כמו שמפו נותן צבע למה משתמשים בו רק כשצריך לרענן צבע מה ההבדל בין שמפו צבע לצבע מסורתי למה הוא מיועד במיוחד לשורשים מה קורה בזמן ההשהיה למה לא מודדים אותו לפי כמות הקצף מתי הוא פתרון ומתי צריך צביעה מלאה למה התוצאה תלויה בגוון הבסיס 3 דברים שכדאי להבין לפני השימוש הראשון">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">04</span>
+        <div>
+          <h2>מה זה בכלל שמפו צבע?</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תגובות</span><span class="chip">שירות</span><span class="chip">מתחרים</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">Education שמסביר את הקטגוריה עצמה ומוריד בלבול לפני הרכישה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>שמפו צבע ≠ שמפו רגיל</span></div><div class="sub"><span class="subNum">2</span><span>איך מוצר שנראה כמו שמפו נותן צבע</span></div><div class="sub"><span class="subNum">3</span><span>למה משתמשים בו רק כשצריך לרענן צבע</span></div><div class="sub"><span class="subNum">4</span><span>מה ההבדל בין שמפו צבע לצבע מסורתי</span></div><div class="sub"><span class="subNum">5</span><span>למה הוא מיועד במיוחד לשורשים</span></div><div class="sub"><span class="subNum">6</span><span>מה קורה בזמן ההשהיה</span></div><div class="sub"><span class="subNum">7</span><span>למה לא מודדים אותו לפי כמות הקצף</span></div><div class="sub"><span class="subNum">8</span><span>מתי הוא פתרון ומתי צריך צביעה מלאה</span></div><div class="sub"><span class="subNum">9</span><span>למה התוצאה תלויה בגוון הבסיס</span></div><div class="sub"><span class="subNum">10</span><span>3 דברים שכדאי להבין לפני השימוש הראשון</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="usage" data-search="שימוש נכון · בלי לנחש משפחת 'איך משתמשים' שמטפלת בחוסר ודאות שיכול לגרום גם לתוצאה חלשה. כמה זמן להשאיר לפי ההוראות על שיער יבש או לח — לפי הגרסה המאומתת כמה חומר צריך על השורשים איפה מתחילים למרוח איך עובדים עם ערכת הצביעה איך שוטפים בסיום מה עושים אם לא התקבלה התוצאה שרצית איך לצבוע רק את השורשים 3 טעויות שימוש נפוצות המדריך הקצר לפעם הראשונה">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">05</span>
+        <div>
+          <h2>שימוש נכון · בלי לנחש</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תגובות</span><span class="chip">שירות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחת 'איך משתמשים' שמטפלת בחוסר ודאות שיכול לגרום גם לתוצאה חלשה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>כמה זמן להשאיר לפי ההוראות</span></div><div class="sub"><span class="subNum">2</span><span>על שיער יבש או לח — לפי הגרסה המאומתת</span></div><div class="sub"><span class="subNum">3</span><span>כמה חומר צריך על השורשים</span></div><div class="sub"><span class="subNum">4</span><span>איפה מתחילים למרוח</span></div><div class="sub"><span class="subNum">5</span><span>איך עובדים עם ערכת הצביעה</span></div><div class="sub"><span class="subNum">6</span><span>איך שוטפים בסיום</span></div><div class="sub"><span class="subNum">7</span><span>מה עושים אם לא התקבלה התוצאה שרצית</span></div><div class="sub"><span class="subNum">8</span><span>איך לצבוע רק את השורשים</span></div><div class="sub"><span class="subNum">9</span><span>3 טעויות שימוש נפוצות</span></div><div class="sub"><span class="subNum">10</span><span>המדריך הקצר לפעם הראשונה</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-proof" id="durability" data-search="עמידות · מה קורה אחרי החפיפות מטפל באחת ההתנגדויות החזקות ביותר: 'יפה עכשיו, אבל כמה זמן זה נשאר?' התוצאה אחרי חפיפה אחת התוצאה אחרי 3 חפיפות התוצאה אחרי שבוע התוצאה אחרי שבועיים אותה לקוחה לאורך זמן תדירות חפיפה מול קצב דהייה מה דוהה ומה פשוט צומח מחדש מתי יודעים שהגיע הזמן לרענן יומן צבע אמיתי של לקוחה לא רק היום הראשון: תוצאה מתועדת">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">06</span>
+        <div>
+          <h2>עמידות · מה קורה אחרי החפיפות</h2>
+          <div class="metaRow"><span class="status">דורש הוכחה</span><span class="chip">תגובות</span><span class="chip">שירות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">מטפל באחת ההתנגדויות החזקות ביותר: 'יפה עכשיו, אבל כמה זמן זה נשאר?'</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>התוצאה אחרי חפיפה אחת</span></div><div class="sub"><span class="subNum">2</span><span>התוצאה אחרי 3 חפיפות</span></div><div class="sub"><span class="subNum">3</span><span>התוצאה אחרי שבוע</span></div><div class="sub"><span class="subNum">4</span><span>התוצאה אחרי שבועיים</span></div><div class="sub"><span class="subNum">5</span><span>אותה לקוחה לאורך זמן</span></div><div class="sub"><span class="subNum">6</span><span>תדירות חפיפה מול קצב דהייה</span></div><div class="sub"><span class="subNum">7</span><span>מה דוהה ומה פשוט צומח מחדש</span></div><div class="sub"><span class="subNum">8</span><span>מתי יודעים שהגיע הזמן לרענן</span></div><div class="sub"><span class="subNum">9</span><span>יומן צבע אמיתי של לקוחה</span></div><div class="sub"><span class="subNum">10</span><span>לא רק היום הראשון: תוצאה מתועדת</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="mess" data-search="לכלוך וכתמים · פחד מהבית עונה על פחד מאוד פרקטי: 'אני לא רוצה לצבוע גם את העור, המגבת והמקלחת.' איך שומרים על קו שיער נקי מה מכינים לפני שמתחילים איך ערכת הצביעה עוזרת בדיוק מה עושים ליד האוזניים והרקות איך עובדים בצורה מסודרת בחדר האמבטיה מה לעשות אם חומר נגע בעור איך לצמצם לכלוך על הבגדים איך לשטוף את אזור העבודה צביעה ממוקדת במקום מריחה בכל הראש לפני שמתחילים: 30 שניות של הכנה">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">07</span>
+        <div>
+          <h2>לכלוך וכתמים · פחד מהבית</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תגובות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">עונה על פחד מאוד פרקטי: 'אני לא רוצה לצבוע גם את העור, המגבת והמקלחת.'</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>איך שומרים על קו שיער נקי</span></div><div class="sub"><span class="subNum">2</span><span>מה מכינים לפני שמתחילים</span></div><div class="sub"><span class="subNum">3</span><span>איך ערכת הצביעה עוזרת בדיוק</span></div><div class="sub"><span class="subNum">4</span><span>מה עושים ליד האוזניים והרקות</span></div><div class="sub"><span class="subNum">5</span><span>איך עובדים בצורה מסודרת בחדר האמבטיה</span></div><div class="sub"><span class="subNum">6</span><span>מה לעשות אם חומר נגע בעור</span></div><div class="sub"><span class="subNum">7</span><span>איך לצמצם לכלוך על הבגדים</span></div><div class="sub"><span class="subNum">8</span><span>איך לשטוף את אזור העבודה</span></div><div class="sub"><span class="subNum">9</span><span>צביעה ממוקדת במקום מריחה בכל הראש</span></div><div class="sub"><span class="subNum">10</span><span>לפני שמתחילים: 30 שניות של הכנה</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-hold" id="formula" data-search="פורמולה ורכיבים · מה יש בפנים משפחה לשלב שבו רשימת הרכיבים תהיה זמינה. בלי טענות בריאות שלא ניתן להוכיח. רשימת הרכיבים בצורה קריאה pH 5.5 ומה זה אומר — רק עם אסמכתה מה תפקיד קבוצות הרכיבים המרכזיות מה יש ומה אין בפורמולה — רק לפי התווית שקיפות מלאה של התווית האחורית תשובה מסודרת לשאלות PPD רגישות: מה חשוב לקרוא לפני שימוש הוראות ואזהרות במקום הבטחות כלליות למה הצבע עובד: הסבר מבוסס רכיבים שאלות נפוצות על הפורמולה">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">08</span>
+        <div>
+          <h2>פורמולה ורכיבים · מה יש בפנים</h2>
+          <div class="metaRow"><span class="status">ממתין לחומר</span><span class="chip">תגובות</span><span class="chip">שירות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחה לשלב שבו רשימת הרכיבים תהיה זמינה. בלי טענות בריאות שלא ניתן להוכיח.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>רשימת הרכיבים בצורה קריאה</span></div><div class="sub"><span class="subNum">2</span><span>pH 5.5 ומה זה אומר — רק עם אסמכתה</span></div><div class="sub"><span class="subNum">3</span><span>מה תפקיד קבוצות הרכיבים המרכזיות</span></div><div class="sub"><span class="subNum">4</span><span>מה יש ומה אין בפורמולה — רק לפי התווית</span></div><div class="sub"><span class="subNum">5</span><span>שקיפות מלאה של התווית האחורית</span></div><div class="sub"><span class="subNum">6</span><span>תשובה מסודרת לשאלות PPD</span></div><div class="sub"><span class="subNum">7</span><span>רגישות: מה חשוב לקרוא לפני שימוש</span></div><div class="sub"><span class="subNum">8</span><span>הוראות ואזהרות במקום הבטחות כלליות</span></div><div class="sub"><span class="subNum">9</span><span>למה הצבע עובד: הסבר מבוסס רכיבים</span></div><div class="sub"><span class="subNum">10</span><span>שאלות נפוצות על הפורמולה</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-covered" id="social" data-search="הוכחה חברתית · לקוחות מדברות לא רק 'מוצר מעולה', אלא הוכחות שונות: שירות, תוצאה, שימוש חוזר והתנגדות שהפכה לחוויה חיובית. שלוש הודעות WhatsApp אמיתיות לקוחה שאמרה 'צבע כמו מהמספרה' לקוחה שמדגישה את השירות תגובה חיובית מפייסבוק עם הקשר לקוחה שחזרה להזמין 3 לקוחות, 3 גוונים שונים לפני ואחרי של לקוחה אמיתית הודעת ספקנות ואז הודעת שביעות רצון צילום ביתי של לקוחה עם המוצר קולאז' קטן של הוכחות, בלי להעמיס">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">09</span>
+        <div>
+          <h2>הוכחה חברתית · לקוחות מדברות</h2>
+          <div class="metaRow"><span class="status">כבר נוסה/רץ</span><span class="chip">WhatsApp</span><span class="chip">תגובות</span><span class="chip">חשבון</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">לא רק 'מוצר מעולה', אלא הוכחות שונות: שירות, תוצאה, שימוש חוזר והתנגדות שהפכה לחוויה חיובית.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>שלוש הודעות WhatsApp אמיתיות</span></div><div class="sub"><span class="subNum">2</span><span>לקוחה שאמרה 'צבע כמו מהמספרה'</span></div><div class="sub"><span class="subNum">3</span><span>לקוחה שמדגישה את השירות</span></div><div class="sub"><span class="subNum">4</span><span>תגובה חיובית מפייסבוק עם הקשר</span></div><div class="sub"><span class="subNum">5</span><span>לקוחה שחזרה להזמין</span></div><div class="sub"><span class="subNum">6</span><span>3 לקוחות, 3 גוונים שונים</span></div><div class="sub"><span class="subNum">7</span><span>לפני ואחרי של לקוחה אמיתית</span></div><div class="sub"><span class="subNum">8</span><span>הודעת ספקנות ואז הודעת שביעות רצון</span></div><div class="sub"><span class="subNum">9</span><span>צילום ביתי של לקוחה עם המוצר</span></div><div class="sub"><span class="subNum">10</span><span>קולאז' קטן של הוכחות, בלי להעמיס</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-covered" id="trust" data-search="אמון · איך יודעים שזה אמיתי משפחת authenticity. הקריאייטיב החדש של AI נמצא כאן, אבל זו רק תת־זווית אחת. אפשר לייצר מודעה ב-AI — לא את חוויית הלקוחה איך יודעים שזה האתר הרשמי מי עומד מאחורי החנות צילום הבקבוק שנשלח בפועל אחריות כתובה וברורה שירות לקוחות בעברית מעקב הזמנה אמיתי כתובת עסק ופרטי קשר גלויים מה ההבדל בין מוכר אקראי לחנות עם שירות שאלה סקפטית אמיתית + תשובה עם הוכחה">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">10</span>
+        <div>
+          <h2>אמון · איך יודעים שזה אמיתי</h2>
+          <div class="metaRow"><span class="status">כבר נוסה/רץ</span><span class="chip">חשבון</span><span class="chip">תגובות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחת authenticity. הקריאייטיב החדש של AI נמצא כאן, אבל זו רק תת־זווית אחת.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>אפשר לייצר מודעה ב-AI — לא את חוויית הלקוחה</span></div><div class="sub"><span class="subNum">2</span><span>איך יודעים שזה האתר הרשמי</span></div><div class="sub"><span class="subNum">3</span><span>מי עומד מאחורי החנות</span></div><div class="sub"><span class="subNum">4</span><span>צילום הבקבוק שנשלח בפועל</span></div><div class="sub"><span class="subNum">5</span><span>אחריות כתובה וברורה</span></div><div class="sub"><span class="subNum">6</span><span>שירות לקוחות בעברית</span></div><div class="sub"><span class="subNum">7</span><span>מעקב הזמנה אמיתי</span></div><div class="sub"><span class="subNum">8</span><span>כתובת עסק ופרטי קשר גלויים</span></div><div class="sub"><span class="subNum">9</span><span>מה ההבדל בין מוכר אקראי לחנות עם שירות</span></div><div class="sub"><span class="subNum">10</span><span>שאלה סקפטית אמיתית + תשובה עם הוכחה</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-partial" id="risk" data-search="הורדת סיכון · 60 יום לא מדליה של '60 יום', אלא מה הסיכון שהלקוחה חוששת לקחת ומה קורה אם משהו לא הסתדר. הגוון לא התאים? יש דרך להחליף לא מרוצה? מה בדיוק עושים 60 יום: מה התנאים בפועל פחד לקנות מוצר שלא מכירים פחד לבחור צבע לא נכון פחד שתגיע חבילה שונה מהמודעה פחד מתוצאה לא מספקת פחד להתחייב למארז פחד שאין עם מי לדבר אחרי התשלום אחריות כגיבוי — לא כהבטחת קסם">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">11</span>
+        <div>
+          <h2>הורדת סיכון · 60 יום</h2>
+          <div class="metaRow"><span class="status">כיסוי חלקי</span><span class="chip">חשבון</span><span class="chip">אתר</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">לא מדליה של '60 יום', אלא מה הסיכון שהלקוחה חוששת לקחת ומה קורה אם משהו לא הסתדר.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>הגוון לא התאים? יש דרך להחליף</span></div><div class="sub"><span class="subNum">2</span><span>לא מרוצה? מה בדיוק עושים</span></div><div class="sub"><span class="subNum">3</span><span>60 יום: מה התנאים בפועל</span></div><div class="sub"><span class="subNum">4</span><span>פחד לקנות מוצר שלא מכירים</span></div><div class="sub"><span class="subNum">5</span><span>פחד לבחור צבע לא נכון</span></div><div class="sub"><span class="subNum">6</span><span>פחד שתגיע חבילה שונה מהמודעה</span></div><div class="sub"><span class="subNum">7</span><span>פחד מתוצאה לא מספקת</span></div><div class="sub"><span class="subNum">8</span><span>פחד להתחייב למארז</span></div><div class="sub"><span class="subNum">9</span><span>פחד שאין עם מי לדבר אחרי התשלום</span></div><div class="sub"><span class="subNum">10</span><span>אחריות כגיבוי — לא כהבטחת קסם</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-covered" id="time" data-search="זמן ונוחות · החיים לא מחכים לתור משפחת convenience הקיימת, עם תתי־זוויות מעבר ל'בלי מספרה'. בלי לתאם תור בלי נסיעה בלי לחפש חניה בלי לשבת שעות בכיסא צביעה בזמן שנוח לך ריענון בזמן שהבית שקט לא לתכנן יום שלם סביב שורשים המוצר מחכה בבית כשהשורש חוזר פתרון לשגרה עמוסה 10 דקות כחלק משגרת הטיפוח — רק אם ההוראות מאומתות">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">12</span>
+        <div>
+          <h2>זמן ונוחות · החיים לא מחכים לתור</h2>
+          <div class="metaRow"><span class="status">כבר נוסה/רץ</span><span class="chip">חשבון</span><span class="chip">מתחרים</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחת convenience הקיימת, עם תתי־זוויות מעבר ל'בלי מספרה'.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>בלי לתאם תור</span></div><div class="sub"><span class="subNum">2</span><span>בלי נסיעה</span></div><div class="sub"><span class="subNum">3</span><span>בלי לחפש חניה</span></div><div class="sub"><span class="subNum">4</span><span>בלי לשבת שעות בכיסא</span></div><div class="sub"><span class="subNum">5</span><span>צביעה בזמן שנוח לך</span></div><div class="sub"><span class="subNum">6</span><span>ריענון בזמן שהבית שקט</span></div><div class="sub"><span class="subNum">7</span><span>לא לתכנן יום שלם סביב שורשים</span></div><div class="sub"><span class="subNum">8</span><span>המוצר מחכה בבית כשהשורש חוזר</span></div><div class="sub"><span class="subNum">9</span><span>פתרון לשגרה עמוסה</span></div><div class="sub"><span class="subNum">10</span><span>10 דקות כחלק משגרת הטיפוח — רק אם ההוראות מאומתות</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-covered" id="economics" data-search="כלכלת המספרה · כמה עולה השורש משפחה חזקה היסטורית; נשמרת במפה כדי לא ליצור שוב בטעות את אותו מסר. מחיר ביקור מול מחיר בבית עלות חודשית עלות שנתית עלות לסנטימטר שורש ₪300+ בשביל שורשים תור + נסיעה + מחיר עלות לבקבוק עלות לריענון מה אפשר לעשות עם הכסף שנחסך החשבון שהופך את ההרגל לגלוי">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">13</span>
+        <div>
+          <h2>כלכלת המספרה · כמה עולה השורש</h2>
+          <div class="metaRow"><span class="status">כבר נוסה/רץ</span><span class="chip">חשבון</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחה חזקה היסטורית; נשמרת במפה כדי לא ליצור שוב בטעות את אותו מסר.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>מחיר ביקור מול מחיר בבית</span></div><div class="sub"><span class="subNum">2</span><span>עלות חודשית</span></div><div class="sub"><span class="subNum">3</span><span>עלות שנתית</span></div><div class="sub"><span class="subNum">4</span><span>עלות לסנטימטר שורש</span></div><div class="sub"><span class="subNum">5</span><span>₪300+ בשביל שורשים</span></div><div class="sub"><span class="subNum">6</span><span>תור + נסיעה + מחיר</span></div><div class="sub"><span class="subNum">7</span><span>עלות לבקבוק</span></div><div class="sub"><span class="subNum">8</span><span>עלות לריענון</span></div><div class="sub"><span class="subNum">9</span><span>מה אפשר לעשות עם הכסף שנחסך</span></div><div class="sub"><span class="subNum">10</span><span>החשבון שהופך את ההרגל לגלוי</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="occasion" data-search="אירוע, צילום ויציאה · אני רוצה להרגיש מסודרת משפחה של occasions. לא מבטיחים הגעה מהירה; מדברים על היערכות או על מי שכבר מחזיקה מוצר בבית. לפני אירוע משפחתי לפני חופשה לפני צילום או יום הולדת לפני חג לפני מפגש עבודה חשוב לפני דייט לפני חתונה כאורחת לפני סוף שבוע שמתכננים מראש לפני נסיעה ארוכה להחזיק בבית כדי לא להיות מופתעת מהשורש">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">14</span>
+        <div>
+          <h2>אירוע, צילום ויציאה · אני רוצה להרגיש מסודרת</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תובנות קריאייטיב</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחה של occasions. לא מבטיחים הגעה מהירה; מדברים על היערכות או על מי שכבר מחזיקה מוצר בבית.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>לפני אירוע משפחתי</span></div><div class="sub"><span class="subNum">2</span><span>לפני חופשה</span></div><div class="sub"><span class="subNum">3</span><span>לפני צילום או יום הולדת</span></div><div class="sub"><span class="subNum">4</span><span>לפני חג</span></div><div class="sub"><span class="subNum">5</span><span>לפני מפגש עבודה חשוב</span></div><div class="sub"><span class="subNum">6</span><span>לפני דייט</span></div><div class="sub"><span class="subNum">7</span><span>לפני חתונה כאורחת</span></div><div class="sub"><span class="subNum">8</span><span>לפני סוף שבוע שמתכננים מראש</span></div><div class="sub"><span class="subNum">9</span><span>לפני נסיעה ארוכה</span></div><div class="sub"><span class="subNum">10</span><span>להחזיק בבית כדי לא להיות מופתעת מהשורש</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-covered" id="offer" data-search="הצעה וערך · למה המארז משתלם Direct response קלאסי שכבר עבד; נשמר כדי להבדיל בינו לבין קונספטים חדשים. 4 בקבוקים ב־₪239 ₪59.75 לבקבוק +₪50 = עוד 2 בקבוקים ערכת צביעה בשווי ₪79 במתנה מעל 50% הנחה — רק אם החשבון תקף מה בדיוק כלול במארז 2 מול 4 בקבוקים ערך כולל ולא רק מחיר מוצר מתנה בכל רכישה מלאי מוגבל / עד גמר המלאי — רק אם אמיתי">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">15</span>
+        <div>
+          <h2>הצעה וערך · למה המארז משתלם</h2>
+          <div class="metaRow"><span class="status">כבר נוסה/רץ</span><span class="chip">חשבון</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">Direct response קלאסי שכבר עבד; נשמר כדי להבדיל בינו לבין קונספטים חדשים.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>4 בקבוקים ב־₪239</span></div><div class="sub"><span class="subNum">2</span><span>₪59.75 לבקבוק</span></div><div class="sub"><span class="subNum">3</span><span>+₪50 = עוד 2 בקבוקים</span></div><div class="sub"><span class="subNum">4</span><span>ערכת צביעה בשווי ₪79 במתנה</span></div><div class="sub"><span class="subNum">5</span><span>מעל 50% הנחה — רק אם החשבון תקף</span></div><div class="sub"><span class="subNum">6</span><span>מה בדיוק כלול במארז</span></div><div class="sub"><span class="subNum">7</span><span>2 מול 4 בקבוקים</span></div><div class="sub"><span class="subNum">8</span><span>ערך כולל ולא רק מחיר מוצר</span></div><div class="sub"><span class="subNum">9</span><span>מתנה בכל רכישה</span></div><div class="sub"><span class="subNum">10</span><span>מלאי מוגבל / עד גמר המלאי — רק אם אמיתי</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="flex" data-search="גמישות בקנייה · לא כולן צריכות אותו מארז לא 'יותר זה יותר טוב', אלא התאמה לכמות, לגוונים ולרמת המחויבות שהלקוחה רוצה. מארז 2 למי שרוצה להתחיל קטן מארז 4 למי שרוצה יותר מלאי שילוב גוונים בכל מארז שני בקבוקים משני גוונים שונים ארבעה בקבוקים בכמה גוונים בחירת החבילה לפי תדירות שימוש לא חייבים לבחור אותו גוון לכל הבקבוקים התלבטות בין שני גוונים? חלקי ביניהם מארז קטן מול מארז משתלם איך לבחור כמות בלי לקנות סתם">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">16</span>
+        <div>
+          <h2>גמישות בקנייה · לא כולן צריכות אותו מארז</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תגובות</span><span class="chip">אתר</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">לא 'יותר זה יותר טוב', אלא התאמה לכמות, לגוונים ולרמת המחויבות שהלקוחה רוצה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>מארז 2 למי שרוצה להתחיל קטן</span></div><div class="sub"><span class="subNum">2</span><span>מארז 4 למי שרוצה יותר מלאי</span></div><div class="sub"><span class="subNum">3</span><span>שילוב גוונים בכל מארז</span></div><div class="sub"><span class="subNum">4</span><span>שני בקבוקים משני גוונים שונים</span></div><div class="sub"><span class="subNum">5</span><span>ארבעה בקבוקים בכמה גוונים</span></div><div class="sub"><span class="subNum">6</span><span>בחירת החבילה לפי תדירות שימוש</span></div><div class="sub"><span class="subNum">7</span><span>לא חייבים לבחור אותו גוון לכל הבקבוקים</span></div><div class="sub"><span class="subNum">8</span><span>התלבטות בין שני גוונים? חלקי ביניהם</span></div><div class="sub"><span class="subNum">9</span><span>מארז קטן מול מארז משתלם</span></div><div class="sub"><span class="subNum">10</span><span>איך לבחור כמות בלי לקנות סתם</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="shipping" data-search="משלוח ומעקב · איפה החבילה שלי אחד הנושאים החוזרים בשירות. מתאים במיוחד למודעות שקיפות ולרימרקטינג. כמה זמן משלוח באמת טווח 2–3 שבועות — רק כשעדכני נקודת איסוף מול עד הבית מה קורה מהרגע שהזמנת מתי מתקבל מספר מעקב איך עוקבים אחרי החבילה מה עושים כשהמעקב לא זז מי חברת המשלוחים בישראל למה משלוח מחו״ל לוקח זמן שקיפות משלוח בלי 'מהיר' ובלי הפתעות">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">17</span>
+        <div>
+          <h2>משלוח ומעקב · איפה החבילה שלי</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">שירות</span><span class="chip">תגובות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">אחד הנושאים החוזרים בשירות. מתאים במיוחד למודעות שקיפות ולרימרקטינג.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>כמה זמן משלוח באמת</span></div><div class="sub"><span class="subNum">2</span><span>טווח 2–3 שבועות — רק כשעדכני</span></div><div class="sub"><span class="subNum">3</span><span>נקודת איסוף מול עד הבית</span></div><div class="sub"><span class="subNum">4</span><span>מה קורה מהרגע שהזמנת</span></div><div class="sub"><span class="subNum">5</span><span>מתי מתקבל מספר מעקב</span></div><div class="sub"><span class="subNum">6</span><span>איך עוקבים אחרי החבילה</span></div><div class="sub"><span class="subNum">7</span><span>מה עושים כשהמעקב לא זז</span></div><div class="sub"><span class="subNum">8</span><span>מי חברת המשלוחים בישראל</span></div><div class="sub"><span class="subNum">9</span><span>למה משלוח מחו״ל לוקח זמן</span></div><div class="sub"><span class="subNum">10</span><span>שקיפות משלוח בלי 'מהיר' ובלי הפתעות</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="checkout" data-search="תשלום וקופה · פחד לפני לחיצה על Pay משפחה שמטפלת בחששות של הרגע האחרון: תשלום, קבלה, סך הכול, ואישור הזמנה. אילו אמצעי תשלום זמינים מה קורה מיד אחרי התשלום מתי מתקבל אישור הזמנה מה המחיר הסופי בקופה משלוח חינם מול משלוח עד הבית בתוספת למה אין מזומן לשליח — אם עדיין נכון מה עושים אם PayPal לא ממשיך האם התשלום מאובטח — רק עם ראיה מתאימה איפה רואים את ההנחה לפני תשלום מה עושים אם לא התקבלה קבלה">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">18</span>
+        <div>
+          <h2>תשלום וקופה · פחד לפני לחיצה על Pay</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">שירות</span><span class="chip">פאנל</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">משפחה שמטפלת בחששות של הרגע האחרון: תשלום, קבלה, סך הכול, ואישור הזמנה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>אילו אמצעי תשלום זמינים</span></div><div class="sub"><span class="subNum">2</span><span>מה קורה מיד אחרי התשלום</span></div><div class="sub"><span class="subNum">3</span><span>מתי מתקבל אישור הזמנה</span></div><div class="sub"><span class="subNum">4</span><span>מה המחיר הסופי בקופה</span></div><div class="sub"><span class="subNum">5</span><span>משלוח חינם מול משלוח עד הבית בתוספת</span></div><div class="sub"><span class="subNum">6</span><span>למה אין מזומן לשליח — אם עדיין נכון</span></div><div class="sub"><span class="subNum">7</span><span>מה עושים אם PayPal לא ממשיך</span></div><div class="sub"><span class="subNum">8</span><span>האם התשלום מאובטח — רק עם ראיה מתאימה</span></div><div class="sub"><span class="subNum">9</span><span>איפה רואים את ההנחה לפני תשלום</span></div><div class="sub"><span class="subNum">10</span><span>מה עושים אם לא התקבלה קבלה</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-partial" id="service" data-search="שירות אנושי · יש מי שעוזר באמת הופך את השירות עצמו למוצר: עזרה בגוון, מענה, פתרון בעיות וליווי. שלחי תמונה ונעזור לבחור גוון מענה בעברית לפני ההזמנה עזרה אחרי שהחבילה הגיעה פתרון במקרה של גוון לא מתאים עזרה בשימוש הראשון מענה במקרה של משלוח מתעכב הודעת תודה על היחס והמענה שירות בוואטסאפ ולא רק טופס שאלת לקוחה אמיתית + תשובה אמיתית מה קורה כשלקוחה לא מרוצה">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">19</span>
+        <div>
+          <h2>שירות אנושי · יש מי שעוזר באמת</h2>
+          <div class="metaRow"><span class="status">כיסוי חלקי</span><span class="chip">WhatsApp</span><span class="chip">שירות</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">הופך את השירות עצמו למוצר: עזרה בגוון, מענה, פתרון בעיות וליווי.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>שלחי תמונה ונעזור לבחור גוון</span></div><div class="sub"><span class="subNum">2</span><span>מענה בעברית לפני ההזמנה</span></div><div class="sub"><span class="subNum">3</span><span>עזרה אחרי שהחבילה הגיעה</span></div><div class="sub"><span class="subNum">4</span><span>פתרון במקרה של גוון לא מתאים</span></div><div class="sub"><span class="subNum">5</span><span>עזרה בשימוש הראשון</span></div><div class="sub"><span class="subNum">6</span><span>מענה במקרה של משלוח מתעכב</span></div><div class="sub"><span class="subNum">7</span><span>הודעת תודה על היחס והמענה</span></div><div class="sub"><span class="subNum">8</span><span>שירות בוואטסאפ ולא רק טופס</span></div><div class="sub"><span class="subNum">9</span><span>שאלת לקוחה אמיתית + תשובה אמיתית</span></div><div class="sub"><span class="subNum">10</span><span>מה קורה כשלקוחה לא מרוצה</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="family tone-fresh" id="honesty" data-search="שקיפות בלי הייפ · למי זה מתאים ולמי פחות Anti-ad angle: במקום להבטיח שהכול מושלם, לענות מראש על המקומות שבהם נשים חוששות שהפרסומת מגזימה. זה לא מתאים לכל אחת מתי צריך צביעה מלאה ולא רק ריענון התוצאות משתנות לפי צבע הבסיס העמידות משתנה לפי תדירות חפיפה אם את רוצה שינוי דרמטי — זה לא אותו צורך גוון בתמונה לא נראה זהה בכל מסך ושיער משלוח לוקח זמן — אומרים מראש הוראות שימוש חשובות לתוצאה לא כל ביקורת היא 'מושלם' לפני שקונים: 3 דברים שאנחנו מעדיפים שתדעי">
+    <button class="familyHead" aria-expanded="false">
+      <div class="familyMeta">
+        <span class="bigNum">20</span>
+        <div>
+          <h2>שקיפות בלי הייפ · למי זה מתאים ולמי פחות</h2>
+          <div class="metaRow"><span class="status">חדש יחסית</span><span class="chip">תגובות</span><span class="chip">שירות</span><span class="chip">מתחרים</span></div>
+        </div>
+      </div>
+      <span class="chev">+</span>
+    </button>
+    <div class="familyBody ">
+      <p class="desc">Anti-ad angle: במקום להבטיח שהכול מושלם, לענות מראש על המקומות שבהם נשים חוששות שהפרסומת מגזימה.</p>
+      <div class="subgrid">
+        <div class="sub"><span class="subNum">1</span><span>זה לא מתאים לכל אחת</span></div><div class="sub"><span class="subNum">2</span><span>מתי צריך צביעה מלאה ולא רק ריענון</span></div><div class="sub"><span class="subNum">3</span><span>התוצאות משתנות לפי צבע הבסיס</span></div><div class="sub"><span class="subNum">4</span><span>העמידות משתנה לפי תדירות חפיפה</span></div><div class="sub"><span class="subNum">5</span><span>אם את רוצה שינוי דרמטי — זה לא אותו צורך</span></div><div class="sub"><span class="subNum">6</span><span>גוון בתמונה לא נראה זהה בכל מסך ושיער</span></div><div class="sub"><span class="subNum">7</span><span>משלוח לוקח זמן — אומרים מראש</span></div><div class="sub"><span class="subNum">8</span><span>הוראות שימוש חשובות לתוצאה</span></div><div class="sub"><span class="subNum">9</span><span>לא כל ביקורת היא 'מושלם'</span></div><div class="sub"><span class="subNum">10</span><span>לפני שקונים: 3 דברים שאנחנו מעדיפים שתדעי</span></div>
+      </div>
+    </div>
+  </section></div>
+    <div id="empty" class="empty">לא נמצאו קונספטים שמתאימים לחיפוש.</div>
+  </div>
+  <div class="foot">התגיות מתארות את כיסוי הטריטוריה בחשבון, לא תחזית ביצועים. אין כאן הבטחה שכל תת־קונספט יגיע לקהל חדש.</div>
+</main>
+<script>
+const heads=[...document.querySelectorAll('.familyHead')];
+heads.forEach(h=>h.addEventListener('click',()=>{
+  const b=h.parentElement.querySelector('.familyBody');
+  b.classList.toggle('open');
+  h.querySelector('.chev').textContent=b.classList.contains('open')?'−':'+';
+}));
+document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.jump);
+  const body=el.querySelector('.familyBody');
+  body.classList.add('open'); el.querySelector('.chev').textContent='−';
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}));
+let active='all';
+const search=document.getElementById('search');
+function apply(){
+  const q=search.value.trim().toLowerCase();
+  let shown=0;
+  document.querySelectorAll('.family').forEach(el=>{
+    const tone=[...el.classList].find(x=>x.startsWith('tone-'))?.replace('tone-','');
+    const okTone=active==='all'||tone===active;
+    const okQ=!q||el.dataset.search.toLowerCase().includes(q);
+    el.style.display=okTone&&okQ?'block':'none';
+    if(okTone&&okQ){shown++; if(q){el.querySelector('.familyBody').classList.add('open');el.querySelector('.chev').textContent='−';}}
+  });
+  document.getElementById('empty').style.display=shown?'none':'block';
+}
+search.addEventListener('input',apply);
+document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active'); active=btn.dataset.filter; apply();
+}));
+</script>
+</body>
+</html>
