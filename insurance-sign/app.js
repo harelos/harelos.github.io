@@ -124,9 +124,23 @@
         const firstSize = firstPage.getViewport({scale:1});
         const preset = PRESETS.find(p => p.test.test(file.name)) || null;
         let placement = preset && !preset.noPreset && !preset.block && pdfView.numPages >= preset.page ? {page:preset.page,x:preset.x,y:preset.y,w:preset.w,h:preset.h,source:"preset"} : null;
+        // A filename alone is not enough. Confirm the applicant-signature wording on
+        // the EXPECTED PDF page before trusting an automatic stamp location.
+        if (placement) {
+          const required = {allianz:/applicant.{0,12}signature/i,vumi:/firma\s+del\s+solicitante\s+principal/i,foyer:/signature\s+of\s+the\s+main\s+applicant/i,img:/policyholder\s+signature/i};
+          try {
+            const pg=await pdfView.getPage(preset.page);
+            const items=await pg.getTextContent();
+            const wording=items.items.map(x=>x.str||"").join(" ").replace(/\s+/g," ");
+            if(!required[preset.key]?.test(wording))placement=null;
+          } catch(e) {placement=null;}
+        }
         const doc = { id: `doc-${Date.now()}-${Math.random().toString(36).slice(2,8)}`, file, bytes, pdfView, pages:pdfView.numPages, previewPage:placement?placement.page:1, placement,
-          datePlacement:null, approved:false, include:!!placement, preset, dimensions:{width:firstSize.width,height:firstSize.height}, error:null, reviewRequired:!!preset?.block };
-        state.docs.push(doc); if(!state.currentId)state.currentId=doc.id;
+          datePlacement:null, approved:!!placement, include:!!placement, preset, dimensions:{width:firstSize.width,height:firstSize.height}, error:null, reviewRequired:!!preset?.block };
+        state.docs.push(doc);
+        // AXA's payment mandate and other excluded PDFs must NEVER be the first
+        // document to land users on. Start with the first safe known applicant field.
+        if(!state.currentId || (placement && !currentDoc()?.placement))state.currentId=doc.id;
         cleanOutputs(); renderFileList(); updateReady();
       }catch(err){console.error(err);notify(`לא הצלחתי לקרוא את ${file.name}: ${String(err.message||err).slice(0,150)}`, "error");}
     }
@@ -155,7 +169,7 @@
   function renderFileList(){
     ui.count.textContent=`${state.docs.length} קבצים`;
     ui.list.innerHTML=state.docs.map(d=>{
-      const label=d.preset?.block?"טופס התחלת כיסוי — חסום":d.preset?.key==="axa"?"AXA: הרשאת חיוב — לא ניתן לחתום אוטומטית":d.placement?(d.approved?"מיקום אושר":"מיקום חתימה זוהה מראש"):"נדרש מיקום חתימה ידני";
+      const label=d.preset?.block?"לא נכלל · התחלת כיסוי":d.preset?.key==="axa"?"לא נכלל · הרשאת חיוב":d.placement?"✓ מיקום חתימת מבקש זוהה אוטומטית":"לא נכלל אוטומטית · מיקום לא מאומת";
       return `<div class="file-item ${d.id===state.currentId?'selected':''}" data-doc="${esc(d.id)}"><input type="checkbox" class="include-doc" data-id="${esc(d.id)}" ${d.include?'checked':''} ${(d.preset?.block || d.preset?.key==="axa")?'disabled':''} aria-label="כלול ${esc(d.file.name)}"/><div><div class="file-name">${esc(d.file.name)}</div><div class="file-sub">${d.pages} עמודים · ${(d.file.size/1024).toFixed(0)} KB</div><div class="file-status ${d.approved?'ok':''}">${esc(label)}</div></div><button type="button" class="edit-doc" data-id="${esc(d.id)}">בדיקה</button></div>`;
     }).join("");
     ui.current.innerHTML = state.docs.map(d=>`<option value="${esc(d.id)}" ${d.id===state.currentId?'selected':''}>${esc(d.file.name)}</option>`).join("");
@@ -165,7 +179,7 @@
   async function selectDoc(id){ state.currentId=id;state.placementMode="none";updatePositionControls();renderFileList();await renderPreview();}
   ui.current.addEventListener("change",e=>selectDoc(e.target.value));
   function updatePositionControls(){ui.move.classList.toggle("activated",state.placementMode==="signature"); ui.placeDate.classList.toggle("activated",state.placementMode==="date");ui.stage.classList.toggle("placing",state.placementMode!=="none");ui.help.textContent=state.placementMode==="signature"?"לחצ/י על המקום הרצוי לחתימה בתוך עמוד ה-PDF.":state.placementMode==="date"?"לחצ/י על המקום שבו רוצים למקם תאריך; לא מתווסף אוטומטית.":"לשינוי מיקום: בחר/י 'הזז חתימה', ואז לחץ/י על המיקום בעמוד.";}
-  function warningFor(d){if(!d)return"";if(d.preset?.block)return"המסמך נראה כמו אישור לתחילת כיסוי/קבלת תנאים. האפליקציה חוסמת חתימה אוטומטית עליו.";if(d.preset?.key==="axa")return"AXA: בעמוד 8 יש חתימה להרשאת Direct Debit בנקאית — חסום לחתימה בכלי. בעמודי הצהרה אחרים אין שדה חתימה מזוהה; יש לבחור מיקום ידנית רק אחרי בדיקת הסעיף.";if(d.preset?.key==="cigna")return"Cigna עשויה לדרוש Adobe Sign הרשמי; תמונה ב-PDF אינה מחליפה אותו.";if(d.placement?.source==="preset")return"מיקום החתימה זוהה לפי תבנית המסמך, אך חובה לוודא בעין שהוא אכן שדה חתימת המבקש.";if(!d.placement)return"אין מיקום אוטומטי מאומת למסמך הזה. בחר/י עמוד, לחץ/י על 'הזז חתימה', וסמן/י מיקום ידנית.";return"";}
+  function warningFor(d){if(!d)return"";if(d.preset?.block)return"המסמך נראה כמו אישור לתחילת כיסוי/קבלת תנאים. האפליקציה חוסמת חתימה אוטומטית עליו.";if(d.preset?.key==="axa")return"AXA: בעמוד 8 יש חתימה להרשאת Direct Debit בנקאית — חסום לחתימה בכלי. בעמודי הצהרה אחרים אין שדה חתימה מזוהה; יש לבחור מיקום ידנית רק אחרי בדיקת הסעיף.";if(d.preset?.key==="cigna")return"Cigna עשויה לדרוש Adobe Sign הרשמי; תמונה ב-PDF אינה מחליפה אותו.";if(d.placement?.source==="preset")return"";if(!d.placement)return"לא זוהה שדה חתימת מבקש מאומת — הטופס הזה אינו נכלל בהחתמה האוטומטית.";return"";}
   let renderGeneration=0;
   async function renderPreview(){
     const d=currentDoc();ui.previewEmpty.hidden=!!d;ui.previewArea.hidden=!d;if(!d){ui.pdf.width=1;ui.pdf.height=1;ui.stamp.hidden=true;ui.dateStamp.hidden=true;ui.warning.hidden=true;updateReady();return;}
@@ -220,17 +234,22 @@
   function updateReady(){
     const selected=state.docs.filter(d=>d.include);
     const errors=[]; if(!selected.length)errors.push("יש לבחור לפחות מסמך אחד");if(!signatureIsReady())errors.push("חסרה חתימה");
-    if(selected.some(d=>!d.placement||!d.approved||d.preset?.block||d.preset?.key==="axa"))errors.push("נדרש אישור מיקום והצהרות לכל מסמך נבחר");
-    if(!ui.finalConsent.checked)errors.push("נדרש אישור מסכם לשימוש החתימה");
-    ui.approveAll.disabled=!selected.some(d=>d.placement && !d.approved && !d.preset?.block && d.preset?.key!=="axa");
+    if(selected.some(d=>!d.placement||!d.approved||d.preset?.block||d.preset?.key==="axa"))errors.push("יש מסמך שנבחר ללא מיקום חתימה מאומת");
+    // No separate consent checkbox: deliberate activation of the clearly-labelled
+    // "I confirm accuracy and sign" button is the user's one affirmative act.
+    ui.approveAll.disabled=true;
     const okay=!errors.length&&!state.generating;
-    ui.generate.disabled=!okay; ui.ready.textContent=okay?`מוכן ליצירת ${selected.length} קובצי PDF חתומים.`:errors.join(" · ");
+    ui.generate.disabled=!okay;
+    ui.generate.textContent=`אני מאשר/ת את ההצהרות וחותם/ת על ${selected.length} טפסים`;
+    ui.ready.textContent=okay?`${selected.length} טפסים נבחרו מראש ומיקום החתימה נקבע אוטומטית.`:errors.length===1 && errors[0]==="חסרה חתימה"?`חתום/י פעם אחת למעלה כדי ליצור ${selected.length} קובצים.`:errors.join(" · ");
   }
   function setProgress(n){ui.progress.hidden=false;ui.fill.style.width=`${Math.min(100,Math.max(0,n))}%`;}
   ui.generate.addEventListener("click", async()=>{
     if(!requireLibs()||state.generating)return;
     const docs=state.docs.filter(d=>d.include);
-    if(!signatureIsReady()||!docs.length||!ui.finalConsent.checked||docs.some(d=>!d.approved||!d.placement||d.preset?.block||d.preset?.key==="axa"))return notify("נדרש אישור מפורש של כל המסמכים לפני החתמה", "error");
+    // Clicking the explicit "I confirm accuracy and sign" action is the only
+    // consolidated authorization; never silently attest to medical facts.
+    if(!signatureIsReady()||!docs.length||docs.some(d=>!d.approved||!d.placement||d.preset?.block||d.preset?.key==="axa"))return notify("אין מספיק מסמכים כשירים או חסרה חתימה", "error");
     state.generating=true;updateReady();cleanOutputs();setProgress(1);
     try{
       const png=imageBytes();
