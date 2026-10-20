@@ -2,7 +2,7 @@
 "use strict";
 (function () {
   const $ = (id) => document.getElementById(id);
-  const state = {docs: [], active: -1, markMode: false, signatureReady: false, signatureMode: "draw", renderToken: 0, outputs: [], generating: false};
+  const state = {docs: [], active: -1, markMode: false, extraMode: false, signatureReady: false, signatureMode: "draw", renderToken: 0, outputs: [], generating: false};
   const MAX_BYTES = 24 * 1024 * 1024;
   const MAX_FILES = 12;
   const pdfLib = () => window.PDFLib;
@@ -264,9 +264,12 @@
   $("add-extra").onclick=()=>{
     const d=state.docs[state.active];if(!d)return;
     if(!d.spot){toast("קודם יש להגדיר חתימה ראשית","error");return;}
-    d.additionalSpots.push({...d.spot});
-    d.reviewed=false;$("confirm-doc").checked=false;renderDocList();renderPreview();resetReview();
-    toast("נוסף מיקום חתימה שני באותו מקום. לחץ 'מיקום חדש' כדי להזיז, או הסר דרך ביטול ובחירה מחדש.");
+    if(d.template?.id==="axa"){toast("אין להוסיף חתימות אוטומטיות ל-AXA בלי הנחיה על מיקומן","error");return;}
+    state.extraMode=true;state.markMode=true;
+    $("position-mode").classList.add("active");
+    $("preview-wrap").classList.add("placing");
+    $("position-mode").textContent="הקש למיקום חתימה נוספת";
+    toast("הקש על המיקום הנוסף בדף. חתימה שנייה תתווסף רק לאחר בחירה מפורשת.");
   };
   $("preview-wrap").onclick=function(e){
     if(!state.markMode)return;
@@ -276,8 +279,9 @@
     const px=(e.clientX-rect.left)/viewportScale;
     const py=(e.clientY-rect.top)/viewportScale;
     const w=Math.min(185,currentPdf.viewW*.37),h=43;
-    d.spot={page:d.page,x:Math.max(8,Math.min(currentPdf.viewW-w-8,px-w/2)),y:Math.max(8,Math.min(currentPdf.viewH-h-8,py-h/2)),w:w,h:h,verified:false};
-    d.selected=true;d.reviewed=false;state.markMode=false;
+    const spot={page:d.page,x:Math.max(8,Math.min(currentPdf.viewW-w-8,px-w/2)),y:Math.max(8,Math.min(currentPdf.viewH-h-8,py-h/2)),w:w,h:h,verified:false};
+    if(state.extraMode){d.additionalSpots.push(spot);}else{d.spot=spot;}
+    d.selected=true;d.reviewed=false;state.markMode=false;state.extraMode=false;
     $("position-mode").classList.remove("active");$("preview-wrap").classList.remove("placing");
     $("current-include").checked=true;$("confirm-doc").checked=false;
     $("position-mode").textContent="מיקום חדש בקליק על הדף";
