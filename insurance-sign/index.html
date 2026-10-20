@@ -6,12 +6,12 @@
   <meta name="color-scheme" content="light" />
   <meta name="theme-color" content="#18263a" />
   <meta name="referrer" content="no-referrer" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self'; img-src 'self' data: blob:; font-src 'self' blob: data:; connect-src 'self' blob: data:; worker-src 'self' blob: https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob: data: https://cdnjs.cloudflare.com; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'" />
   <title>Sign Once — חתימה אחת לטפסי PDF</title>
   <meta name="description" content="Create visibly signed copies of your PDFs with one signature, processed in your browser. No uploads, no accounts." />
   <link rel="stylesheet" href="./style.css" />
-  <script defer src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" integrity="sha512-z8IYLHO8bTgFqj+yrPyIJnzBDf7DDhWwiEsk4sY+Oe6J2M+WQequeGS7qioI5vT6rXgVRb4K1UVQC5ER7MKzKQ== sha512-PovnT1BQYCJsV3Cqsozb9JpTTxijVHkRNPJ+Rlj3gR7lZG3C5UC1SpTCxF+9umR9JhsOZEMDU+gzOH0DwEJoqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-q+4liFwdPC/bNdhUpZx6aXDx/h77yEQtn4I1slHydcbZK34nLaR3cAeYSJshoxIOq3mjEf7xJE8YWIUHMn+oCQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script defer src="./app.js"></script>
 </head>
 <body>
@@ -24,22 +24,23 @@
   <main class="container">
     <section class="hero">
       <p class="eyebrow">PDF SIGNATURE WORKSPACE</p>
-      <h1>חותמים פעם אחת.<br/><span>מכינים את כל הטפסים.</span></h1>
-      <p class="lead">מעלים כמה טפסי PDF ביחד, מציירים חתימה אחת, בודקים היכן היא תופיע ומורידים קבצים חתומים בנפרד.</p>
-      <div class="hero-tags"><span>בלי העלאת מסמכים לשרת</span><span>בלי חשבון</span><span>מותאם לנייד</span></div>
+      <h1>הטפסים כבר כאן.<br/><span>רק חתימה אחת.</span></h1>
+      <p class="lead">הטפסים המוצפנים נטענים אוטומטית מהקישור האישי שלך. בלי להעלות אותם ובלי לחפש קבצים. חותמים פעם אחת, בודקים ומורידים.</p>
+      <div class="hero-tags"><span>מוצפן · AES-256</span><span>אין העלאת מסמכים</span><span>חתימה בדפדפן</span></div>
     </section>
-    <section class="steps" aria-label="שלבי עבודה"><div><b>01</b><span>טוענים קבצים</span></div><div><b>02</b><span>חותמים פעם אחת</span></div><div><b>03</b><span>מאשרים מיקום</span></div><div><b>04</b><span>מורידים כל PDF</span></div></section>
+    <section class="steps" aria-label="שלבי עבודה"><div><b>01</b><span>הקבצים נטענים לבד</span></div><div><b>02</b><span>חותמים פעם אחת</span></div><div><b>03</b><span>מאשרים מיקום</span></div><div><b>04</b><span>מורידים כל PDF</span></div></section>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
     <div class="work-grid">
       <div class="main-column">
         <section class="panel" aria-labelledby="files-heading">
-          <div class="panel-head"><div><div class="section-number">שלב 1</div><h2 id="files-heading">קובצי ה-PDF שלך</h2><p>אפשר להעלות 1–10 טפסים יחד — לא צריך לפתוח כל אחד בנפרד.</p></div><span id="files-count" class="count">0 קבצים</span></div>
-          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="בחר כמה קבצי PDF ביחד"><div class="upload-icon" aria-hidden="true">⇧</div><strong>לחצו לבחירת קבצים או גררו לכאן</strong><span>PDF בלבד · כל העיבוד מקומי</span><input id="file-input" type="file" accept=".pdf,application/pdf" multiple aria-label="בחר טפסי PDF" /></div>
+          <div class="panel-head"><div><div class="section-number">שלב 1 · אוטומטי</div><h2 id="files-heading">הטפסים מוכנים כאן</h2><p>המערכת תציג את הטפסים שהצליחו להיפתח מהמפתח האישי. אין צורך להעלות קבצים.</p></div><span id="files-count" class="count">0 קבצים</span></div>
+          <div id="bundle-state" class="bundle-state"><div class="bundle-spinner" aria-hidden="true"></div><div><strong id="bundle-title">פותח את התיק המוצפן שלך...</strong><p id="bundle-detail">הקבצים נפתחים בזיכרון הדפדפן בלבד</p></div></div>
+          <details class="optional-upload"><summary>אפשרות גיבוי: הוספת טופס נוסף מהמכשיר</summary><div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="בחר כמה קבצי PDF ביחד"><div class="upload-icon" aria-hidden="true">⇧</div><strong>הוסף טופס יחיד אם הוא לא מופיע ברשימה</strong><span>PDF בלבד · כל העיבוד מקומי</span><input id="file-input" type="file" accept=".pdf,application/pdf" multiple aria-label="בחר טפסי PDF" /></div></details>
           <div class="demo-bar"><button id="demo" type="button" class="text-btn">נסו עם מסמך הדגמה לא אישי ↗</button><button id="reset" type="button" class="text-btn muted">נקה הכול</button></div>
           <div id="file-list" class="file-list" aria-live="polite"></div>
         </section>
         <section class="panel" aria-labelledby="preview-heading">
-          <div class="panel-head"><div><div class="section-number">שלב 3</div><h2 id="preview-heading">בדיקת מיקום החתימה</h2><p>יש לבדוק כל מסמך לפני הכנת עותק חתום. אפשר להזיז את החתימה בלחיצה.</p></div></div>
+          <div class="panel-head"><div><div class="section-number">שלב 3</div><h2 id="preview-heading">בדיקת מיקום החתימה</h2><p>מיקומים מוצעים אוטומטית. כדאי לבדוק אותם לפני האישור המרוכז.</p></div></div>
           <div id="empty-preview" class="empty-preview">לא נטען עדיין מסמך. התחילו מבחירת קובצי PDF או מסמך הדגמה.</div>
           <div id="preview-area" hidden>
             <div class="preview-toolbar"><div class="file-select-wrap"><label for="current-file">טופס לבדיקה</label><select id="current-file"></select></div><div class="page-buttons"><button type="button" id="page-prev" aria-label="עמוד קודם">❮</button><span id="page-counter" dir="ltr">1 / 1</span><button type="button" id="page-next" aria-label="עמוד הבא">❯</button></div></div>
@@ -59,11 +60,11 @@
           <div id="signature-state" class="signature-state">טרם נוספה חתימה</div>
           <div class="field-row"><label for="sign-date">תאריך (לא יתווסף אלא אם תבחר/י למקם אותו)</label><input type="date" id="sign-date" /></div>
         </section>
-        <section class="panel final-panel" aria-labelledby="final-heading"><div class="section-number">שלב 4</div><h2 id="final-heading">הכנת עותקים חתומים</h2><p id="ready-status">יש לטעון מסמכים וליצור חתימה.</p><label class="checkline final-check"><input type="checkbox" id="final-consent" /><span>אני מאשר/ת מרצוני שימוש חוזר בחתימה שלי **רק** במסמכים שסימנתי לאחר בדיקת תוכנם.</span></label><button type="button" id="generate" class="primary-btn" disabled>אשר והכן מסמכים חתומים</button><div id="progress" class="progress" hidden><div id="progress-fill"></div></div><div id="result-list" class="result-list"></div></section>
-        <section class="info-panel"><h3>חשוב לדעת לפני החתימה</h3><p>חתימת תמונה על PDF אינה שווה בהכרח לחתימה קריפטוגרפית / Adobe Sign. ייתכן שמבטח ידרוש חתימה בשירות שלו. אין חתימה אוטומטית על הרשאות חיוב בנקאיות, רכישת פוליסה או טפסים שאינם מזוהים כחתימת מבקש.</p><p>אם יש תוצאות בדיקות ממתינות, שדות לא מלאים או פרטים רפואיים שהשתנו — אל תאשרו הצהרה לא מדויקת.</p></section>
+        <section class="panel final-panel" aria-labelledby="final-heading"><div class="section-number">שלב 4</div><h2 id="final-heading">הכנת עותקים חתומים</h2><p id="ready-status">מחפש את המסמכים המוצפנים...</p><button type="button" id="approve-all" class="soft-btn full" disabled>אישור מרוכז לכל הטפסים שנבחרו</button><p class="hint">יש ללחוץ אחרי שבדקת שההצהרות נכונות. טפסים עם מיקום לא בטוח לא ייכללו.</p><label class="checkline final-check"><input type="checkbox" id="final-consent" /><span>בדקתי את תוכן כל הטפסים הנבחרים ואני מאשר/ת במפורש להוסיף את החתימה שלי רק בשדות חתימת המבקש שאושרו.</span></label><button type="button" id="generate" class="primary-btn" disabled>אשר והכן מסמכים חתומים</button><button type="button" id="share-all" class="soft-btn full share-button" hidden>שלח את כל קובצי ה-PDF יחד למכשיר / לשיתוף ↗</button><div id="progress" class="progress" hidden><div id="progress-fill"></div></div><div id="result-list" class="result-list"></div></section>
+        <section class="info-panel"><h3>חשוב לדעת לפני החתימה</h3><p>חתימת תמונה על PDF אינה שווה בהכרח לחתימה קריפטוגרפית / Adobe Sign. ייתכן שמבטח ידרוש חתימה בשירות שלו. אין חתימה אוטומטית על הרשאות חיוב בנקאיות, רכישת פוליסה או טפסים שאינם מזוהים כחתימת מבקש.</p><p>אין לחתום על הצהרה רפואית לא מדויקת או חלקית. תוצאות בדיקות ממתינות וסטטוס רפואי לא ידוע חייבים לעבור בדיקה אישית לפני חתימה.</p><p>זהו קישור פרטי: כל מי שמקבל אותו יכול לפתוח את הטפסים, לכן אין להעביר אותו לאחרים.</p></section>
       </aside>
     </div>
-    <footer><span>Sign Once · מקומי בדפדפן · ללא שרת לשמירת מסמכים</span><span>קוד כללי פתוח ב-GitHub Pages</span></footer>
+    <footer><span>Sign Once · מקומי בדפדפן · ללא שליחה של תוכן המסמכים</span><span>קוד כללי פתוח ב-GitHub Pages</span></footer>
   </main>
 </body>
 </html>

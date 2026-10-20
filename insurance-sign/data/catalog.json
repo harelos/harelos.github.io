@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "cipher": "AES-256-GCM",
+  "compression": "gzip",
+  "source": "encrypted prefilled PDF drafts; public repository contains ciphertext only",
+  "documents": [
+    {
+      "id": "axa",
+      "label": "AXA Global",
+      "file": "AXA_MEDICAL_PREFILLED_REVIEW_UNSIGNED.pdf",
+      "src": "data/axa.enc",
+      "mode": "manualOnly"
+    },
+    {
+      "id": "allianz",
+      "label": "Allianz Care",
+      "file": "ALLIANZ_MEDICAL_PREFILLED_REVIEW_UNSIGNED.pdf",
+      "src": null,
+      "mode": "unavailable"
+    },
+    {
+      "id": "vumi",
+      "label": "VUMI",
+      "file": "VUMI_MEDICAL_PREFILLED_REVIEW_UNSIGNED.pdf",
+      "src": "data/vumi.enc"
+    },
+    {
+      "id": "foyer_extensive",
+      "label": "Foyer Extensive",
+      "file": "FOYER_EXTENSIVE_MEDICAL_PREFILLED_REVIEW_UNSIGNED.pdf",
+      "src": "data/foyer_extensive.enc"
+    },
+    {
+      "id": "foyer_basic",
+      "label": "Foyer Basic",
+      "file": "FOYER_BASIC_MEDICAL_PREFILLED_REVIEW_UNSIGNED.pdf",
+      "src": "data/foyer_basic.enc"
+    },
+    {
+      "id": "img",
+      "label": "LUMA / IMG",
+      "file": "IMG_LUMA_MEDICAL_PREFILLED_REVIEW_UNSIGNED.pdf",
+      "src": "data/img.enc"
+    }
+  ]
+}
