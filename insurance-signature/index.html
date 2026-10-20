@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#0a2638">
+  <title>חתימה אחת לכל טפסי ה-PDF | Batch PDF Signer</title>
+  <meta name="description" content="חתימה אחת לטפסים מרובים, בדיקת מיקום ואישור אישי לכל מסמך. כל העיבוד נעשה בדפדפן בלבד, בלי העלאה לשרת.">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand"><span class="brand-dot"></span>חתימה אחת <span style="font-weight:400;color:#b8d7d7">/ Batch PDF Signer</span></div>
+      <div class="top-caption">פרטי · בדפדפן שלך · ללא העלאת מסמכים לשרת</div>
+    </div>
+  </header>
+  <main class="container">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">מסמכי ביטוח · חתימה מרוכזת</div>
+        <h1>חותמים פעם אחת.<br>מכינים את כל הטפסים.</h1>
+        <p>טען כמה קובצי PDF יחד, צייר או בחר חתימה אחת, בדוק היכן היא תופיע והכן לכל טופס קובץ חתום בנפרד. בלי לחתום מחדש בכל מסמך.</p>
+      </div>
+      <div class="hero-stamp">
+        <div class="seal" aria-hidden="true">✍</div>
+        <div><strong>מסמכים נשארים אצלך</strong><span>הקבצים והחתימה מעובדים בזיכרון הדפדפן. אין העלאה לשרת, חשבון משתמש או שמירה בענן.</span></div>
+      </div>
+    </div>
+    <div class="notice" role="note">
+      <b>⚠ לפני שמאשרים הצהרה רפואית</b>
+      אם יש תוצאות בדיקה חדשות, סטנט שהוצא או שינוי במצב הבריאותי, יש לוודא שהם משתקפים במלואם בתשובות. אין לחתום על תשובות שגויות או חסרות. תמונת חתימה על PDF אינה חתימה קריפטוגרפית ואינה מחליפה Adobe Sign או פורטל רשמי של מבטח כשאלה נדרשים.
+    </div>
+    <div class="steps" aria-label="שלבי התהליך">
+      <span><strong>1</strong> טוענים PDFים יחד</span>
+      <span><strong>2</strong> חותמים פעם אחת</span>
+      <span><strong>3</strong> בודקים מיקום ואמיתות ההצהרות</span>
+      <span><strong>4</strong> מורידים מסמכים נפרדים</span>
+    </div>
+
+    <section class="panel" aria-labelledby="upload-title">
+      <div class="panel-heading">
+        <div class="heading-group"><span class="step-num">1</span><div><h2 id="upload-title">טען את הטפסים</h2><p>אפשר לבחור מספר קובצי PDF בבת אחת מתוך Files או לגרור לכאן.</p></div></div>
+      </div>
+      <div class="drop" id="drop-area">
+        <div class="drop-icon" aria-hidden="true">▧</div>
+        <h3>כל הטפסים בטעינה אחת</h3>
+        <p>מקסימום 12 קבצים, עד 24MB לקובץ. שום דבר לא מועלה לשרת.</p>
+        <div class="action-line">
+          <input id="file-input" class="sr-only" type="file" accept=".pdf,application/pdf" multiple aria-label="בחר קובצי PDF">
+          <button class="btn primary" id="choose-files" type="button">בחר קובצי PDF</button>
+          <button class="btn outline" id="demo-btn" type="button">בדוק עם טופס לדוגמה</button>
+        </div>
+      </div>
+      <p class="small-muted" id="load-state" aria-live="polite">קבצים לא נשמרים באתר. טען PDFים לצורך חתימה.</p>
+      <div id="empty-docs">עדיין לא נוספו מסמכים. אפשר להתחיל בטופס לדוגמה כדי לבדוק שהמערכת פועלת.</div>
+      <div id="doc-workspace" hidden>
+        <div class="workspace">
+          <div>
+            <div class="panel-heading" style="margin-bottom:10px">
+              <h3 style="margin:0;font-size:15px">קבצים שנטענו (<span id="total-num">0</span>)</h3>
+            </div>
+            <div id="doc-list" class="doc-list"></div>
+            <p class="small-muted">המערכת מסמנת רק חתימות מבקש מוכרות. מיקום עם שינוי במספר עמודים מחייב בדיקה ידנית.</p>
+          </div>
+          <div class="preview-box" id="preview-box">
+            <div class="preview-top">
+              <div class="preview-title"><h3 id="current-title">מסמך לבדיקה</h3><p id="current-file">—</p></div>
+              <div class="page-buttons">
+                <button type="button" id="page-prev" aria-label="עמוד קודם">›</button>
+                <span>עמוד <strong id="page-num">1</strong> <span id="page-count">מתוך 1</span></span>
+                <button type="button" id="page-next" aria-label="עמוד הבא">‹</button>
+              </div>
+            </div>
+            <div id="current-warning" class="warning" hidden></div>
+            <div class="preview-scroller">
+              <div class="preview-wrap" id="preview-wrap">
+                <canvas id="pdf-canvas" aria-label="תצוגת PDF"></canvas>
+                <div id="mark-layer" aria-hidden="true"></div>
+              </div>
+            </div>
+            <p id="preview-state" aria-live="polite">טוען תצוגה...</p>
+            <div class="review-actions">
+              <button class="btn outline small" id="position-mode" type="button">מיקום חדש בקליק על הדף</button>
+              <button class="btn ghost small" id="remove-spot" type="button">הסר סימון חתימה</button>
+              <button class="btn ghost small" id="add-extra" type="button">הוסף חתימה נוספת</button>
+            </div>
+            <label class="review-check"><input type="checkbox" id="current-include">אני רוצה להחתים את המסמך הזה</label>
+            <label class="review-check" style="margin-top:9px"><input type="checkbox" id="confirm-doc"><span>קראתי ואישרתי את נכונות כל ההצהרות והפרטים בטופס הזה ואת מיקום חתימת המבקש. אני מאשר/ת יצירת עותק עם חתימתי במסמך זה.</span></label>
+            <p class="review-note">אין לחתום על הרשאת חיוב או מסמך שמפעיל פוליסה רק לצורך חיתום רפואי. ב-AXA עמוד 8 חסום לחתימה אוטומטית.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="sig-title">
+      <div class="panel-heading">
+        <div class="heading-group"><span class="step-num">2</span><div><h2 id="sig-title">החתימה שלך — פעם אחת</h2><p>בחר דרך אחת. החתימה תוחל רק על המסמכים שבחרת ואישרת.</p></div></div>
+      </div>
+      <div class="signature-layout">
+        <div>
+          <div class="pill-tabs" role="group" aria-label="סוג החתימה">
+            <button type="button" id="mode-draw" class="active">✍ חתימה עם האצבע</button>
+            <button type="button" id="mode-type">⌨ חתימה מוקלדת</button>
+          </div>
+          <canvas id="signature-pad" width="940" height="235" aria-label="משטח לציור חתימה"></canvas>
+          <div id="typed-wrap" hidden>
+            <label for="typed-name">הקלד/י את צורת החתימה הרצויה</label>
+            <input type="text" id="typed-name" maxlength="70" autocomplete="off" placeholder="למשל RL Filiba">
+            <p class="small-muted">זו חתימה מוקלדת, לא חתימה בכתב יד. בחר/י בה רק אם זו הבחירה האישית שלך.</p>
+          </div>
+          <div class="action-line" style="margin-top:10px">
+            <button type="button" class="btn outline small" id="clear-signature">נקה חתימה</button>
+            <span class="small-muted">בציור: אפשר לחתום עם האצבע על מסך מגע.</span>
+          </div>
+        </div>
+        <div>
+          <div class="small-muted" style="font-weight:750;margin-bottom:6px">כך תיראה החתימה במסמכים</div>
+          <div id="signature-preview" class="preview-sign">החתימה שלך תופיע כאן</div>
+          <div id="signature-status" class="sign-status" aria-live="polite">נדרשת חתימה לפני יצירת מסמכים</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="make-title">
+      <div class="panel-heading">
+        <div class="heading-group"><span class="step-num">3</span><div><h2 id="make-title">אישור והכנת PDFים</h2><p>בדוק תאריך, בחירת המסמכים והצהרות החיתום.</p></div></div>
+      </div>
+      <div class="form-line">
+        <label class="field" for="sign-date">תאריך חתימה <input type="date" id="sign-date"></label>
+        <label class="check-toggle" style="font-size:13px"><input type="checkbox" id="stamp-date" checked> הכנס תאריך אוטומטית בטפסים עם שדה תאריך שזוהה בוודאות</label>
+      </div>
+      <div class="counter">
+        <span>נטענו <strong id="selected-count-total"><span id="selected-num">0</span></strong> לחתימה</span>
+        <span>נבדקו ואושרו <strong id="reviewed-num">0</strong></span>
+        <span>חתימה נדרשת לכל עותק, אבל מצוירת פעם אחת בלבד</span>
+      </div>
+      <label class="consent-main">
+        <input type="checkbox" id="final-consent">
+        <span>אני המבקש/ת, קראתי את המסמכים שסימנתי, אישרתי בנפרד את ההצהרות והמיקומים, ואני מסכים/ה להחיל את החתימה שבחרתי על אותם PDFים. אני מבין/ה שהכלי אינו שולח אותם לחברות ביטוח או מפעיל פוליסה.</span>
+      </label>
+      <p id="ready-explain" aria-live="polite">צייר חתימה אחת או בחר חתימה מוקלדת.</p>
+      <button class="btn primary" id="create-signed" type="button" disabled style="width:100%;font-size:16px;min-height:53px">אשר והכן <span id="generate-count">0</span> קובצי PDF חתומים</button>
+      <p id="process-status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel results-panel" id="result-section" aria-labelledby="result-title" hidden>
+      <div class="panel-heading">
+        <div class="heading-group"><span class="step-num">✓</span><div><h2 id="result-title">המסמכים שלך מוכנים</h2><p>נוצרו <span id="result-count">0</span> קובצי PDF. הורד כל מסמך בנפרד, בלי ZIP.</p></div></div>
+      </div>
+      <div id="results"></div>
+      <div class="action-line" style="margin-top:14px">
+        <button type="button" class="btn outline" id="combine-all">הורד עותק אחד מאוחד (רק לנוחות)</button>
+        <button type="button" class="btn danger" id="reset-all">נקה מסמכים וחתימה</button>
+      </div>
+      <p class="small-muted">שים לב: חתימה שנצרבה כתמונה אינה מאשרת שימוש בחשבון Adobe Sign ואינה חתימה דיגיטלית קריפטוגרפית. בדוק עם כל מבטח אם הוא מקבל PDF חתום בדרך זו, לפני הגשה.</p>
+    </section>
+    <details class="details">
+      <summary>איך עובדים עם הטפסים שכבר קיבלת במייל?</summary>
+      <p>פתח את המיילים המקוריים עם טופסי ה-PDF, שמור את הקבצים לתיקייה במכשיר, ואז בחר את כולם יחד באמצעות כפתור "בחר קובצי PDF" למעלה. אפשר לצרף טפסים מוכנים לבדיקה מכמה חברות.</p>
+      <p>קישורים לעמודי Gmail, לאישור רפואי או למערכת Adobe Sign אינם מיובאים לכאן אוטומטית. הדבר מונע גישה של האתר לחשבון המייל ולמידע רפואי שלא בחרת במפורש.</p>
+    </details>
+    <details class="details">
+      <summary>מה הכלי לא עושה?</summary>
+      <ul>
+        <li>לא ממלא בעצמו שאלות רפואיות שטרם אושרו ולא ממציא תוצאות בדיקות.</li>
+        <li>לא מעתיק חתימה להרשאת חיוב בנקאי, מסמך קניית פוליסה או טופס אחר שלא אישרת.</li>
+        <li>לא שולח מסמכים בדוא"ל ולא נותן אישור רכישה או תשלום.</li>
+        <li>לא מחליף חתימה דיגיטלית מאומתת של ספק כמו Adobe Sign או פורטל ביטוח.</li>
+      </ul>
+    </details>
+    <footer class="footer">
+      כלי פרטי ללא שרת מסמכים — מקור הטפסים נשאר אצלך · ספריות PDF חיצוניות נטענות בעת פתיחת הדף בלבד; תוכן המסמכים והחתימה נשארים בדפדפן.<br>
+      <span id="lib-check">ממתין לטעינת מנוע PDF...</span>
+    </footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
