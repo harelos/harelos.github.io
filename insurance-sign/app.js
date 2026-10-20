@@ -27,6 +27,10 @@
   };
 
   const signCtx = ui.signCanvas.getContext("2d");
+  ui.signCanvas.style.touchAction="none";
+  ui.signCanvas.style.userSelect="none";
+  ui.signCanvas.style.webkitUserSelect="none";
+  document.documentElement.style.overflowX="hidden";
   signCtx.strokeStyle = "#12273e";
   signCtx.fillStyle = "#12273e";
   signCtx.lineWidth = 5;
@@ -37,6 +41,7 @@
     ui.toast.textContent = text;
     ui.toast.className = "toast " + (type === "error" ? "error" : type === "good" ? "good" : "");
     ui.toast.hidden = false;
+    if(type==="error" && /מיקום חתימה/.test(text)) ui.toast.style.opacity="0.95";
     if (state.toastTimeout) clearTimeout(state.toastTimeout);
     state.toastTimeout = setTimeout(() => { ui.toast.hidden = true; }, 8500);
   }
@@ -69,11 +74,12 @@
   function updateSignatureState() { const okay = signatureIsReady(); ui.signState.textContent = okay ? "✓ חתימה קיימת — ניתן להשתמש בה במסמכים שתאשר/י" : "טרם נוספה חתימה"; ui.signState.className = "signature-state" + (okay ? " signed" : ""); updateReady(); }
   ui.signCanvas.addEventListener("pointerdown", e => {
     if (state.mode !== "draw") return;
-    e.preventDefault(); state.drawing = true; ui.signCanvas.setPointerCapture(e.pointerId); const p = xy(e);
+    e.preventDefault(); state.drawing = true; try { ui.signCanvas.setPointerCapture(e.pointerId); } catch (_) {} const p = xy(e);
     signCtx.beginPath(); signCtx.moveTo(p.x, p.y); signCtx.lineTo(p.x + .1, p.y + .1); signCtx.stroke(); state.drawn = true; updateSignatureState();
   });
   ui.signCanvas.addEventListener("pointermove", e => { if (!state.drawing || state.mode !== "draw") return; e.preventDefault(); const p = xy(e); signCtx.lineTo(p.x, p.y); signCtx.stroke(); });
   for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) ui.signCanvas.addEventListener(event, () => { if (state.drawing) { state.drawing = false; signCtx.closePath(); } });
+  for(const name of ["touchstart","touchmove","touchend"]){ui.signCanvas.addEventListener(name,e=>{if(e.cancelable)e.preventDefault();},{passive:false});}
   ui.clear.addEventListener("click", () => { signCtx.clearRect(0, 0, ui.signCanvas.width, ui.signCanvas.height); state.drawn = false; updateSignatureState(); cleanOutputs(); });
   function switchMode(mode) {
     state.mode = mode;
@@ -149,7 +155,7 @@
   function renderFileList(){
     ui.count.textContent=`${state.docs.length} קבצים`;
     ui.list.innerHTML=state.docs.map(d=>{
-      const label=d.preset?.block?"טופס התחלת כיסוי — חסום":d.preset?.key==="axa"?"AXA: חסום להחתמה אוטומטית (הרשאת חיוב)":d.placement?(d.approved?"מוכן לאחר אישור":"נמצא מיקום מוצע; יש לאשר"):"דרוש מיקום חתימה ידני";
+      const label=d.preset?.block?"טופס התחלת כיסוי — חסום":d.preset?.key==="axa"?"AXA: הרשאת חיוב — לא ניתן לחתום אוטומטית":d.placement?(d.approved?"מיקום אושר":"מיקום חתימה זוהה מראש"):"נדרש מיקום חתימה ידני";
       return `<div class="file-item ${d.id===state.currentId?'selected':''}" data-doc="${esc(d.id)}"><input type="checkbox" class="include-doc" data-id="${esc(d.id)}" ${d.include?'checked':''} ${(d.preset?.block || d.preset?.key==="axa")?'disabled':''} aria-label="כלול ${esc(d.file.name)}"/><div><div class="file-name">${esc(d.file.name)}</div><div class="file-sub">${d.pages} עמודים · ${(d.file.size/1024).toFixed(0)} KB</div><div class="file-status ${d.approved?'ok':''}">${esc(label)}</div></div><button type="button" class="edit-doc" data-id="${esc(d.id)}">בדיקה</button></div>`;
     }).join("");
     ui.current.innerHTML = state.docs.map(d=>`<option value="${esc(d.id)}" ${d.id===state.currentId?'selected':''}>${esc(d.file.name)}</option>`).join("");
