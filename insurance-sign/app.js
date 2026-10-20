@@ -22,7 +22,7 @@
     move: $("move-signature"), placeDate: $("place-date"), remove: $("remove-position"), help: $("position-help"), approve: $("approve-doc"),
     signCanvas: $("signature-canvas"), modeDraw: $("mode-draw"), modeType: $("mode-type"), drawPanel: $("draw-mode"), typePanel: $("type-mode"),
     clear: $("clear-signature"), typed: $("signature-text"), useType: $("use-type"), signState: $("signature-state"), signDate: $("sign-date"),
-    finalConsent: $("final-consent"), generate: $("generate"), ready: $("ready-status"), result: $("result-list"), progress: $("progress"), fill: $("progress-fill"),
+    finalConsent: $("final-consent"), generate: $("generate"), share: $("share-all"), ready: $("ready-status"), result: $("result-list"), progress: $("progress"), fill: $("progress-fill"),
     toast: $("toast"), bundle: $("bundle-state"), bundleTitle: $("bundle-title"), bundleDetail: $("bundle-detail"), approveAll: $("approve-all"),
   };
 
@@ -58,7 +58,7 @@
   }
   const libsReady = () => !!(window.PDFLib && window.pdfjsLib);
   function requireLibs() { if (!libsReady()) { notify("ספריות ה-PDF לא נטענו. בדוק/י חיבור לאינטרנט ורענן/י את העמוד. המסמכים לא נשלחו לשום שרת.", "error"); return false; } return true; }
-  function cleanOutputs() { for (const o of state.outputs) URL.revokeObjectURL(o.url); state.outputs = []; ui.result.innerHTML = ""; }
+  function cleanOutputs() { for (const o of state.outputs) URL.revokeObjectURL(o.url); state.outputs = []; ui.result.innerHTML = ""; ui.share.hidden=true; }
   function currentDoc() { return state.docs.find(d => d.id === state.currentId) || null; }
   function setToday() { const d = new Date(); const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); ui.signDate.value = local; }
   setToday();
@@ -241,10 +241,10 @@
         if(d.datePlacement){const q=d.datePlacement,dp=pdf.getPage(q.page-1),size=dp.getSize();if(q.x>=0&&q.y>=0&&q.x+q.w<=size.width&&q.y+q.h<=size.height){const font=await pdf.embedFont(window.PDFLib.StandardFonts.Helvetica);dp.drawText(ui.signDate.value||"",{x:q.x+2,y:size.height-q.y-13,size:10,font,color:window.PDFLib.rgb(.10,.16,.25)});}}
         const final=await pdf.save({updateFieldAppearances:false});const outputBlob=new Blob([final],{type:"application/pdf"}),url=URL.createObjectURL(outputBlob);
         const base=d.file.name.replace(/\.pdf$/i,"");const name=(base.slice(0,85)||`document-${i+1}`)+"-VISUALLY-SIGNED.pdf";
-        state.outputs.push({name,url,size:final.length});setProgress((i+1)/docs.length*100);
+        state.outputs.push({name,url,size:final.length,blob:outputBlob});setProgress((i+1)/docs.length*100);
       }
       ui.result.innerHTML=state.outputs.map(o=>`<div class="result-item"><strong>${esc(o.name)}</strong><a class="download-link" href="${o.url}" download="${esc(o.name)}">הורד/י PDF חתום בנפרד ↓</a></div>`).join("");
-      notify(`${state.outputs.length} קבצים מוכנים להורדה בנפרד. לא נשלחו למבטחים.`,"good");
+      ui.share.hidden=false;notify(`${state.outputs.length} קבצים מוכנים להורדה או לשיתוף יחד. לא נשלחו למבטחים.`,"good");
     }catch(err){console.error(err);notify("לא הצלחתי ליצור מסמכים חתומים: "+String(err.message||err),"error");cleanOutputs();}
     finally{state.generating=false;ui.progress.hidden=true;updateReady();}
   });
@@ -298,6 +298,17 @@
       await loadEncryptedBundle();
     }catch(err){console.error("Secure preloaded forms:",err);setBundleStatus("לא ניתן לפתוח את המסמכים",String(err.message||err),"error");notify(String(err.message||err),"error");}
   }
+  ui.share.addEventListener("click",async()=>{
+    if(!state.outputs.length)return;
+    try{
+      const files=state.outputs.map(o=>new File([o.blob],o.name,{type:"application/pdf"}));
+      if(navigator.canShare?.({files}) && navigator.share) {
+        await navigator.share({title:"טפסים חתומים — לבדיקה ושליחה אישית",text:"קובצי PDF חתומים ויזואלית; עדיין נדרש אישור חברת הביטוח.",files});
+      } else {
+        notify("הדפדפן שלך לא תומך בשיתוף כמה PDFs במקביל. השתמש/י בכפתורי ההורדה הנפרדים שמתחת.","error");
+      }
+    }catch(err){if(err.name!=="AbortError")notify("שיתוף הקבצים לא הצליח. אפשר להוריד כל PDF בנפרד.","error");}
+  });
   updateSignatureState();renderFileList();renderPreview();
   bootSecure();
 })();
