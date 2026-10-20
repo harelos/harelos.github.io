@@ -22,7 +22,7 @@
     move: $("move-signature"), placeDate: $("place-date"), remove: $("remove-position"), help: $("position-help"), approve: $("approve-doc"),
     signCanvas: $("signature-canvas"), modeDraw: $("mode-draw"), modeType: $("mode-type"), drawPanel: $("draw-mode"), typePanel: $("type-mode"),
     clear: $("clear-signature"), typed: $("signature-text"), useType: $("use-type"), signState: $("signature-state"), signDate: $("sign-date"),
-    finalConsent: $("final-consent"), generate: $("generate"), share: $("share-all"), ready: $("ready-status"), result: $("result-list"), progress: $("progress"), fill: $("progress-fill"),
+    finalConsent: $("final-consent"), generate: $("generate"), share: $("share-all"), sharePanel: $("sharing-panel"), combinedDownload: $("combined-download"), ready: $("ready-status"), result: $("result-list"), progress: $("progress"), fill: $("progress-fill"),
     toast: $("toast"), bundle: $("bundle-state"), bundleTitle: $("bundle-title"), bundleDetail: $("bundle-detail"), approveAll: $("approve-all"),
   };
 
@@ -63,7 +63,7 @@
   }
   const libsReady = () => !!(window.PDFLib && window.pdfjsLib);
   function requireLibs() { if (!libsReady()) { notify("ספריות ה-PDF לא נטענו. בדוק/י חיבור לאינטרנט ורענן/י את העמוד. המסמכים לא נשלחו לשום שרת.", "error"); return false; } return true; }
-  function cleanOutputs() { for (const o of state.outputs) URL.revokeObjectURL(o.url); state.outputs = []; ui.result.innerHTML = ""; ui.share.hidden=true; }
+  function cleanOutputs() { for (const o of state.outputs) URL.revokeObjectURL(o.url); state.outputs = []; if (state.combinedURL) URL.revokeObjectURL(state.combinedURL); state.combinedURL=null; ui.result.innerHTML=""; ui.sharePanel.hidden=true; ui.combinedDownload.hidden=true; }
   function currentDoc() { return state.docs.find(d => d.id === state.currentId) || null; }
   function setToday() { const d = new Date(); const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); ui.signDate.value = local; }
   setToday();
@@ -269,7 +269,7 @@
         state.outputs.push({name,url,size:final.length,blob:outputBlob});setProgress((i+1)/docs.length*100);
       }
       ui.result.innerHTML=state.outputs.map(o=>`<div class="result-item"><strong>${esc(o.name)}</strong><a class="download-link" href="${o.url}" download="${esc(o.name)}">הורד/י PDF חתום בנפרד ↓</a></div>`).join("");
-      ui.share.hidden=false;notify(`${state.outputs.length} קבצים מוכנים להורדה או לשיתוף יחד. לא נשלחו למבטחים.`,"good");
+      ui.sharePanel.hidden=false;ui.share.hidden=false;ui.share.scrollIntoView({behavior:"smooth",block:"center"});notify(`${state.outputs.length} מסמכים חתומים מוכנים — לחץ/י על "שתף את כל הטפסים" כדי לשלוח הכול במייל אחד.`,`good`);
     }catch(err){console.error(err);notify("לא הצלחתי ליצור מסמכים חתומים: "+String(err.message||err),"error");cleanOutputs();}
     finally{state.generating=false;ui.progress.hidden=true;updateReady();}
   });
@@ -323,16 +323,67 @@
       await loadEncryptedBundle();
     }catch(err){console.error("Secure preloaded forms:",err);setBundleStatus("לא ניתן לפתוח את המסמכים",String(err.message||err),"error");notify(String(err.message||err),"error");}
   }
+  async function createSingleCombinedPdf() {
+    if(state.combinedBlob)return state.combinedBlob;
+    const merged=await window.PDFLib.PDFDocument.create();
+    for(const signed of state.outputs){
+      const source=await window.PDFLib.PDFDocument.load(await signed.blob.arrayBuffer());
+      const pages=await merged.copyPages(source,source.getPageIndices());
+      pages.forEach(page=>merged.addPage(page));
+    }
+    state.combinedBlob=new Blob([await merged.save()],{type:"application/pdf"});
+    return state.combinedBlob;
+  }
+  async function prepareOneFileFallback(){
+    try {
+      const b=await createSingleCombinedPdf();
+      if(state.combinedURL)URL.revokeObjectURL(state.combinedURL);
+      state.combinedURL=URL.createObjectURL(b);
+      ui.combinedDownload.href=state.combinedURL;
+      ui.combinedDownload.download="Insurance_Forms_SIGNED_COMBINED.pdf";
+      ui.combinedDownload.hidden=false;
+      return new File([b],"Insurance_Forms_SIGNED_COMBINED.pdf",{type:"application/pdf"});
+    }catch(e){
+      console.error("Could not combine signed PDFs",e);
+      notify("לא ניתן ליצור קובץ משולב — אפשר להשתמש בקישורי ה-PDF הנפרדים.","error");
+      return null;
+    }
+  }
   ui.share.addEventListener("click",async()=>{
-    if(!state.outputs.length)return;
-    try{
-      const files=state.outputs.map(o=>new File([o.blob],o.name,{type:"application/pdf"}));
-      if(navigator.canShare?.({files}) && navigator.share) {
-        await navigator.share({title:"טפסים חתומים — לבדיקה ושליחה אישית",text:"קובצי PDF חתומים ויזואלית; עדיין נדרש אישור חברת הביטוח.",files});
-      } else {
-        notify("הדפדפן שלך לא תומך בשיתוף כמה PDFs במקביל. השתמש/י בכפתורי ההורדה הנפרדים שמתחת.","error");
+    if(!state.outputs.length)return notify("עדיין אין קבצים חתומים מוכנים.","error");
+    const files=state.outputs.map(o=>new File([o.blob],o.name,{type:"application/pdf"}));
+    const title="IPMI_SIGNED_DOCS_REVIEW";
+    const text="IPMI_SIGNED_DOCS_REVIEW — Please send the attached signed PDF application forms to your own PERSONAL Gmail account. The forms will then be available for review and submission to the insurance brokers. This is not a purchase or payment authorization.";
+    if(typeof navigator.share==="function"){
+      let canShareMany=false;
+      try {canShareMany=typeof navigator.canShare!=="function" || navigator.canShare({files});}catch(_){}
+      if(canShareMany){
+        try{
+          await navigator.share({title,text,files});
+          notify("תפריט השיתוף נסגר. ודא/י שבחרת Gmail/Mail ושלחת את הקבצים למייל האישי שלך; האתר אינו יכול לוודא משלוח.","good");
+          return;
+        }catch(e){
+          if(e.name==="AbortError")return;
+          console.warn("Batch share failed",e);
+        }
       }
-    }catch(err){if(err.name!=="AbortError")notify("שיתוף הקבצים לא הצליח. אפשר להוריד כל PDF בנפרד.","error");}
+      // Some in-app browsers do not support multi-file sharing.
+      // A single merged file can be shared or attached in one action.
+      notify("הדפדפן לא איפשר שיתוף של כמה קבצים. מכין קובץ PDF משולב אחד.","error");
+      const single=await prepareOneFileFallback();
+      if(single){
+        let allowed=false;try{allowed=typeof navigator.canShare!=="function"||navigator.canShare({files:[single]});}catch(_){}
+        if(allowed)try {
+          await navigator.share({title,text:text+" The PDFs are combined into one attachment.",files:[single]});
+          notify("תפריט השיתוף נסגר. ודא/י שהמייל עם הקובץ המשולב נשלח לחשבון האישי.","good");
+          return;
+        }catch(e){if(e.name==="AbortError")return;}
+      }
+    }
+    // The page cannot attach files automatically to a message without a
+    // user-approved recipient and an authenticated email provider.
+    await prepareOneFileFallback();
+    notify("לא ניתן לפתוח כאן את חלון השיתוף. מוצג קישור לקובץ משולב יחיד כגיבוי; ניתן לצרף אותו למייל אחד.","error");
   });
   updateSignatureState();renderFileList();renderPreview();
   bootSecure();
