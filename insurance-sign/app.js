@@ -63,7 +63,7 @@
   }
   const libsReady = () => !!(window.PDFLib && window.pdfjsLib);
   function requireLibs() { if (!libsReady()) { notify("ספריות ה-PDF לא נטענו. בדוק/י חיבור לאינטרנט ורענן/י את העמוד. המסמכים לא נשלחו לשום שרת.", "error"); return false; } return true; }
-  function cleanOutputs() { for (const o of state.outputs) URL.revokeObjectURL(o.url); state.outputs = []; if (state.combinedURL) URL.revokeObjectURL(state.combinedURL); state.combinedURL=null; ui.result.innerHTML=""; ui.sharePanel.hidden=true; ui.combinedDownload.hidden=true; }
+  function cleanOutputs() { for (const o of state.outputs) URL.revokeObjectURL(o.url); state.outputs = []; if (state.combinedURL) URL.revokeObjectURL(state.combinedURL); state.combinedURL=null; state.combinedBlob=null; state.combinedFile=null; ui.result.innerHTML=""; ui.sharePanel.hidden=true; ui.combinedDownload.hidden=true; ui.share.textContent="שתף את כל הטפסים החתומים יחד ↗"; }
   function currentDoc() { return state.docs.find(d => d.id === state.currentId) || null; }
   function setToday() { const d = new Date(); const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); ui.signDate.value = local; }
   setToday();
@@ -342,7 +342,9 @@
       ui.combinedDownload.href=state.combinedURL;
       ui.combinedDownload.download="Insurance_Forms_SIGNED_COMBINED.pdf";
       ui.combinedDownload.hidden=false;
-      return new File([b],"Insurance_Forms_SIGNED_COMBINED.pdf",{type:"application/pdf"});
+      state.combinedFile=new File([b],"Insurance_Forms_SIGNED_COMBINED.pdf",{type:"application/pdf"});
+      ui.share.textContent="שתף את הקובץ המשולב במייל אחד ↗";
+      return state.combinedFile;
     }catch(e){
       console.error("Could not combine signed PDFs",e);
       notify("לא ניתן ליצור קובץ משולב — אפשר להשתמש בקישורי ה-PDF הנפרדים.","error");
@@ -351,6 +353,12 @@
   }
   ui.share.addEventListener("click",async()=>{
     if(!state.outputs.length)return notify("עדיין אין קבצים חתומים מוכנים.","error");
+    if(state.combinedFile&&typeof navigator.share==="function"){
+      try{
+        await navigator.share({title:"IPMI_SIGNED_DOCS_REVIEW",text:"Please email the attached combined signed insurance forms to your own PERSONAL Gmail account for review. This is not a payment authorization.",files:[state.combinedFile]});
+        notify("תפריט השיתוף נסגר. ודא/י שהקובץ נשלח למייל האישי שלך.","good");return;
+      }catch(e){if(e.name==="AbortError")return;}
+    }
     const files=state.outputs.map(o=>new File([o.blob],o.name,{type:"application/pdf"}));
     const title="IPMI_SIGNED_DOCS_REVIEW";
     const text="IPMI_SIGNED_DOCS_REVIEW — Please send the attached signed PDF application forms to your own PERSONAL Gmail account. The forms will then be available for review and submission to the insurance brokers. This is not a purchase or payment authorization.";
