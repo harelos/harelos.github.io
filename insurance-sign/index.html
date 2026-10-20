@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#18263a" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob: data:; worker-src 'self' blob: https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <title>Sign Once — חתימה אחת לטפסי PDF</title>
+  <meta name="description" content="Create visibly signed copies of your PDFs with one signature, processed in your browser. No uploads, no accounts." />
+  <link rel="stylesheet" href="./style.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container top-inner">
+      <div class="brand"><div class="brand-symbol" aria-hidden="true">✍</div><div><div class="brand-title">SIGN ONCE</div><div class="brand-sub">חתימה אחת · כמה קבצים</div></div></div>
+      <span class="privacy"><span class="dot"></span> עובד בדפדפן שלך</span>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">PDF SIGNATURE WORKSPACE</p>
+      <h1>חותמים פעם אחת.<br/><span>מכינים את כל הטפסים.</span></h1>
+      <p class="lead">מעלים כמה טפסי PDF ביחד, מציירים חתימה אחת, בודקים היכן היא תופיע ומורידים קבצים חתומים בנפרד.</p>
+      <div class="hero-tags"><span>בלי העלאת מסמכים לשרת</span><span>בלי חשבון</span><span>מותאם לנייד</span></div>
+    </section>
+    <section class="steps" aria-label="שלבי עבודה"><div><b>01</b><span>טוענים קבצים</span></div><div><b>02</b><span>חותמים פעם אחת</span></div><div><b>03</b><span>מאשרים מיקום</span></div><div><b>04</b><span>מורידים כל PDF</span></div></section>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div class="work-grid">
+      <div class="main-column">
+        <section class="panel" aria-labelledby="files-heading">
+          <div class="panel-head"><div><div class="section-number">שלב 1</div><h2 id="files-heading">קובצי ה-PDF שלך</h2><p>אפשר להעלות 1–10 טפסים יחד — לא צריך לפתוח כל אחד בנפרד.</p></div><span id="files-count" class="count">0 קבצים</span></div>
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="בחר כמה קבצי PDF ביחד"><div class="upload-icon" aria-hidden="true">⇧</div><strong>לחצו לבחירת קבצים או גררו לכאן</strong><span>PDF בלבד · כל העיבוד מקומי</span><input id="file-input" type="file" accept=".pdf,application/pdf" multiple aria-label="בחר טפסי PDF" /></div>
+          <div class="demo-bar"><button id="demo" type="button" class="text-btn">נסו עם מסמך הדגמה לא אישי ↗</button><button id="reset" type="button" class="text-btn muted">נקה הכול</button></div>
+          <div id="file-list" class="file-list" aria-live="polite"></div>
+        </section>
+        <section class="panel" aria-labelledby="preview-heading">
+          <div class="panel-head"><div><div class="section-number">שלב 3</div><h2 id="preview-heading">בדיקת מיקום החתימה</h2><p>יש לבדוק כל מסמך לפני הכנת עותק חתום. אפשר להזיז את החתימה בלחיצה.</p></div></div>
+          <div id="empty-preview" class="empty-preview">לא נטען עדיין מסמך. התחילו מבחירת קובצי PDF או מסמך הדגמה.</div>
+          <div id="preview-area" hidden>
+            <div class="preview-toolbar"><div class="file-select-wrap"><label for="current-file">טופס לבדיקה</label><select id="current-file"></select></div><div class="page-buttons"><button type="button" id="page-prev" aria-label="עמוד קודם">❮</button><span id="page-counter" dir="ltr">1 / 1</span><button type="button" id="page-next" aria-label="עמוד הבא">❯</button></div></div>
+            <div id="preview-warning" class="warning-inline" hidden></div>
+            <div class="pdf-stage"><div id="pdf-stage-inner" class="pdf-stage-inner"><canvas id="pdf-preview" aria-label="תצוגת עמוד PDF"></canvas><div id="stamp-preview" class="stamp-preview" hidden>חתימה כאן</div><div id="manual-date-preview" class="date-preview" hidden>תאריך כאן</div></div></div>
+            <div class="position-controls"><button type="button" id="move-signature" class="soft-btn">הזז חתימה בעמוד</button><button type="button" id="place-date" class="soft-btn">מקם תאריך (אופציונלי)</button><button type="button" id="remove-position" class="soft-btn danger-text">הסר מיקום</button></div>
+            <p id="position-help" class="hint">לחץ על "הזז חתימה" ואז על המקום הרצוי בעמוד.</p>
+            <div class="review-line"><label class="checkline"><input type="checkbox" id="approve-doc" /> <span>קראתי את הטופס הזה, אימתתי את ההצהרות ואני מאשר/ת להוסיף את החתימה שלי במיקום המסומן.</span></label></div>
+          </div>
+        </section>
+      </div>
+      <aside class="side-column">
+        <section class="panel signature-panel" aria-labelledby="sign-heading"><div class="section-number">שלב 2</div><h2 id="sign-heading">החתימה שלך</h2><p>מציירים פעם אחת — אותה חתימה תשמש במסמכים שתאשר/י.</p>
+          <div class="tabs" role="group" aria-label="דרך יצירת חתימה"><button type="button" id="mode-draw" class="tab active" aria-pressed="true">ציור באצבע / עכבר</button><button type="button" id="mode-type" class="tab" aria-pressed="false">חתימה מוקלדת</button></div>
+          <div id="draw-mode"><div class="signature-paper"><canvas id="signature-canvas" width="1000" height="320" aria-label="משטח ציור חתימה"></canvas><span class="baseline" aria-hidden="true"></span></div><div class="sig-footer"><span>חתום/י בתוך המסגרת</span><button type="button" id="clear-signature" class="text-btn">מחק חתימה</button></div></div>
+          <div id="type-mode" hidden><label for="signature-text" class="field-label">השם שיופיע בכתב יד דיגיטלי</label><input type="text" id="signature-text" maxlength="85" placeholder="Your signature" autocomplete="off" /><button type="button" class="soft-btn full" id="use-type">השתמש בחתימה המוקלדת</button><p class="hint">החתימה המוקלדת אינה חתימה דיגיטלית מאומתת.</p></div>
+          <div id="signature-state" class="signature-state">טרם נוספה חתימה</div>
+          <div class="field-row"><label for="sign-date">תאריך (לא יתווסף אלא אם תבחר/י למקם אותו)</label><input type="date" id="sign-date" /></div>
+        </section>
+        <section class="panel final-panel" aria-labelledby="final-heading"><div class="section-number">שלב 4</div><h2 id="final-heading">הכנת עותקים חתומים</h2><p id="ready-status">יש לטעון מסמכים וליצור חתימה.</p><label class="checkline final-check"><input type="checkbox" id="final-consent" /><span>אני מאשר/ת מרצוני שימוש חוזר בחתימה שלי **רק** במסמכים שסימנתי לאחר בדיקת תוכנם.</span></label><button type="button" id="generate" class="primary-btn" disabled>אשר והכן מסמכים חתומים</button><div id="progress" class="progress" hidden><div id="progress-fill"></div></div><div id="result-list" class="result-list"></div></section>
+        <section class="info-panel"><h3>חשוב לדעת לפני החתימה</h3><p>חתימת תמונה על PDF אינה שווה בהכרח לחתימה קריפטוגרפית / Adobe Sign. ייתכן שמבטח ידרוש חתימה בשירות שלו. אין חתימה אוטומטית על הרשאות חיוב בנקאיות, רכישת פוליסה או טפסים שאינם מזוהים כחתימת מבקש.</p><p>אם יש תוצאות בדיקות ממתינות, שדות לא מלאים או פרטים רפואיים שהשתנו — אל תאשרו הצהרה לא מדויקת.</p></section>
+      </aside>
+    </div>
+    <footer><span>Sign Once · מקומי בדפדפן · ללא שרת לשמירת מסמכים</span><span>קוד כללי פתוח ב-GitHub Pages</span></footer>
+  </main>
+</body>
+</html>
