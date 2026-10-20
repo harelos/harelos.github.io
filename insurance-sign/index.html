@@ -25,10 +25,10 @@
     <section class="hero">
       <p class="eyebrow">PDF SIGNATURE WORKSPACE</p>
       <h1>הטפסים כבר כאן.<br/><span>רק חתימה אחת.</span></h1>
-      <p class="lead">הטפסים המוצפנים נטענים אוטומטית מהקישור האישי שלך. בלי להעלות אותם ובלי לחפש קבצים. חותמים פעם אחת, בודקים ומורידים.</p>
+      <p class="lead">הטפסים כבר נטענים אוטומטית. חותמים פעם אחת ולוחצים על כפתור ההחתמה. המיקום ידוע מראש — בלי לבחור עמוד ובלי לסמן כל טופס.</p>
       <div class="hero-tags"><span>מוצפן · AES-256</span><span>אין העלאת מסמכים</span><span>חתימה בדפדפן</span></div>
     </section>
-    <section class="steps" aria-label="שלבי עבודה"><div><b>01</b><span>הקבצים נטענים לבד</span></div><div><b>02</b><span>חותמים פעם אחת</span></div><div><b>03</b><span>מאשרים מיקום</span></div><div><b>04</b><span>מורידים כל PDF</span></div></section>
+    <section class="steps" aria-label="שלבי עבודה"><div><b>01</b><span>הקבצים נטענים לבד</span></div><div><b>02</b><span>חותמים פעם אחת</span></div><div><b>03</b><span>המיקום נקבע לבד</span></div><div><b>04</b><span>מורידים כל PDF</span></div></section>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
     <div class="work-grid">
       <div class="main-column">
@@ -40,15 +40,15 @@
           <div id="file-list" class="file-list" aria-live="polite"></div>
         </section>
         <section class="panel" aria-labelledby="preview-heading">
-          <div class="panel-head"><div><div class="section-number">שלב 3</div><h2 id="preview-heading">בדיקת מיקום החתימה</h2><p>מיקומים מוצעים אוטומטית. כדאי לבדוק אותם לפני האישור המרוכז.</p></div></div>
+          <div class="panel-head"><div><div class="section-number">תצוגה אופציונלית</div><h2 id="preview-heading">תצוגה מקדימה של המסמכים</h2><p>החתימה כבר ממוקמת אוטומטית בשדה חתימת המבקש. לא צריך לבחור מיקום.</p></div></div>
           <div id="empty-preview" class="empty-preview">לא נטען עדיין מסמך. התחילו מבחירת קובצי PDF או מסמך הדגמה.</div>
           <div id="preview-area" hidden>
             <div class="preview-toolbar"><div class="file-select-wrap"><label for="current-file">טופס לבדיקה</label><select id="current-file"></select></div><div class="page-buttons"><button type="button" id="page-prev" aria-label="עמוד קודם">❮</button><span id="page-counter" dir="ltr">1 / 1</span><button type="button" id="page-next" aria-label="עמוד הבא">❯</button></div></div>
             <div id="preview-warning" class="warning-inline" hidden></div>
             <div class="pdf-stage"><div id="pdf-stage-inner" class="pdf-stage-inner"><canvas id="pdf-preview" aria-label="תצוגת עמוד PDF"></canvas><div id="stamp-preview" class="stamp-preview" hidden>חתימה כאן</div><div id="manual-date-preview" class="date-preview" hidden>תאריך כאן</div></div></div>
-            <div class="position-controls"><button type="button" id="move-signature" class="soft-btn">הזז חתימה בעמוד</button><button type="button" id="place-date" class="soft-btn">מקם תאריך (אופציונלי)</button><button type="button" id="remove-position" class="soft-btn danger-text">הסר מיקום</button></div>
-            <p id="position-help" class="hint">לחץ על "הזז חתימה" ואז על המקום הרצוי בעמוד.</p>
-            <div class="review-line"><label class="checkline"><input type="checkbox" id="approve-doc" /> <span>קראתי את הטופס הזה, אימתתי את ההצהרות ואני מאשר/ת להוסיף את החתימה שלי במיקום המסומן.</span></label></div>
+            <details class="advanced-placement"><summary>אפשרויות מתקדמות בלבד · שינוי מיקום ידני</summary><div class="position-controls"><button type="button" id="move-signature" class="soft-btn">הזז חתימה בעמוד</button><button type="button" id="place-date" class="soft-btn">מקם תאריך (אופציונלי)</button><button type="button" id="remove-position" class="soft-btn danger-text">הסר מיקום</button></div>
+            <p id="position-help" class="hint">רק אם שדה החתימה שגוי: בחר/י "הזז חתימה" ואז נקודה בעמוד.</p></details>
+            <div class="review-line" hidden><label class="checkline"><input type="checkbox" id="approve-doc" /> <span>אימות מיקום ידני (מתקדם בלבד)</span></label></div>
           </div>
         </section>
       </div>
@@ -60,7 +60,7 @@
           <div id="signature-state" class="signature-state">טרם נוספה חתימה</div>
           <div class="field-row"><label for="sign-date">תאריך (לא יתווסף אלא אם תבחר/י למקם אותו)</label><input type="date" id="sign-date" /></div>
         </section>
-        <section class="panel final-panel" aria-labelledby="final-heading"><div class="section-number">שלב 4</div><h2 id="final-heading">הכנת עותקים חתומים</h2><p id="ready-status">מחפש את המסמכים המוצפנים...</p><button type="button" id="approve-all" class="soft-btn full" disabled>אישור מרוכז לכל הטפסים שנבחרו</button><p class="hint">יש ללחוץ אחרי שבדקת שההצהרות נכונות. טפסים עם מיקום לא בטוח לא ייכללו.</p><label class="checkline final-check"><input type="checkbox" id="final-consent" /><span>בדקתי את תוכן כל הטפסים הנבחרים ואני מאשר/ת במפורש להוסיף את החתימה שלי רק בשדות חתימת המבקש שאושרו.</span></label><button type="button" id="generate" class="primary-btn" disabled>אשר והכן מסמכים חתומים</button><button type="button" id="share-all" class="soft-btn full share-button" hidden>שלח את כל קובצי ה-PDF יחד למכשיר / לשיתוף ↗</button><div id="progress" class="progress" hidden><div id="progress-fill"></div></div><div id="result-list" class="result-list"></div></section>
+        <section class="panel final-panel" aria-labelledby="final-heading"><div class="section-number">שלב 4</div><h2 id="final-heading">הכנת עותקים חתומים</h2><p id="ready-status">מחפש את המסמכים המוצפנים...</p><button type="button" id="approve-all" class="soft-btn full" disabled hidden>מיקומים אושרו אוטומטית</button><label class="checkline final-check" hidden><input type="checkbox" id="final-consent" /><span>אישור נפרד (לא נדרש)</span></label><p class="one-click-disclosure">בלחיצה על הכפתור אתה מאשר שבדקת את ההצהרות והפרטים הרפואיים בכל הטפסים שנבחרו ומורה להוסיף אליהם את חתימתך. טפסים עם מיקום לא בטוח או הרשאת חיוב לא ייחתמו.</p><button type="button" id="generate" class="primary-btn" disabled>אני מאשר/ת את ההצהרות וחותם/ת על הטפסים</button><button type="button" id="share-all" class="soft-btn full share-button" hidden>שלח את כל קובצי ה-PDF יחד למכשיר / לשיתוף ↗</button><div id="progress" class="progress" hidden><div id="progress-fill"></div></div><div id="result-list" class="result-list"></div></section>
         <section class="info-panel"><h3>חשוב לדעת לפני החתימה</h3><p>חתימת תמונה על PDF אינה שווה בהכרח לחתימה קריפטוגרפית / Adobe Sign. ייתכן שמבטח ידרוש חתימה בשירות שלו. אין חתימה אוטומטית על הרשאות חיוב בנקאיות, רכישת פוליסה או טפסים שאינם מזוהים כחתימת מבקש.</p><p>אין לחתום על הצהרה רפואית לא מדויקת או חלקית. תוצאות בדיקות ממתינות וסטטוס רפואי לא ידוע חייבים לעבור בדיקה אישית לפני חתימה.</p><p>זהו קישור פרטי: כל מי שמקבל אותו יכול לפתוח את הטפסים, לכן אין להעביר אותו לאחרים.</p></section>
       </aside>
     </div>
