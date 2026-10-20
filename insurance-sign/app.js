@@ -23,7 +23,7 @@
     signCanvas: $("signature-canvas"), modeDraw: $("mode-draw"), modeType: $("mode-type"), drawPanel: $("draw-mode"), typePanel: $("type-mode"),
     clear: $("clear-signature"), typed: $("signature-text"), useType: $("use-type"), signState: $("signature-state"), signDate: $("sign-date"),
     finalConsent: $("final-consent"), generate: $("generate"), ready: $("ready-status"), result: $("result-list"), progress: $("progress"), fill: $("progress-fill"),
-    toast: $("toast"),
+    toast: $("toast"), bundle: $("bundle-state"), bundleTitle: $("bundle-title"), bundleDetail: $("bundle-detail"), approveAll: $("approve-all"),
   };
 
   const signCtx = ui.signCanvas.getContext("2d");
@@ -40,8 +40,21 @@
     if (state.toastTimeout) clearTimeout(state.toastTimeout);
     state.toastTimeout = setTimeout(() => { ui.toast.hidden = true; }, 8500);
   }
-  if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  let verifiedWorkerURL = null;
+  async function verifyPdfWorker() {
+    if (!window.pdfjsLib) throw new Error("ספריית PDF לא נטענה — בדוק חיבור לאינטרנט");
+    const url = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const response = await fetch(url,{mode:"cors",cache:"force-cache",referrerPolicy:"no-referrer"});
+    if(!response.ok) throw Error("טעינת מנוע התצוגה נכשלה");
+    const contents = await response.arrayBuffer();
+    const digest = await crypto.subtle.digest("SHA-512",contents);
+    const bytes=new Uint8Array(digest);
+    const base64=btoa(String.fromCharCode(...bytes));
+    const allowed="BbrZ76UNZq5BhH7LL7pn9A4TKQpQeNCHOo65/akfelcIBbcVvYWOFQKPXIrykE3qZxYjmDX573oa4Ywsc7rpTw==";
+    if(base64!==allowed) throw Error("בדיקת שלמות קוד תצוגת PDF נכשלה — הנתונים לא פוענחו");
+    verifiedWorkerURL=URL.createObjectURL(new Blob([contents],{type:"text/javascript"}));
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc=verifiedWorkerURL;
+    return true;
   }
   const libsReady = () => !!(window.PDFLib && window.pdfjsLib);
   function requireLibs() { if (!libsReady()) { notify("ספריות ה-PDF לא נטענו. בדוק/י חיבור לאינטרנט ורענן/י את העמוד. המסמכים לא נשלחו לשום שרת.", "error"); return false; } return true; }
@@ -136,8 +149,8 @@
   function renderFileList(){
     ui.count.textContent=`${state.docs.length} קבצים`;
     ui.list.innerHTML=state.docs.map(d=>{
-      const label=d.preset?.block?"טופס התחלת כיסוי — חסום":d.preset?.key==="axa"?"AXA: לא נמצאה חתימת מבקש מאומתת":d.placement?(d.approved?"מוכן לאחר אישור":"נמצא מיקום מוצע; יש לאשר"):"דרוש מיקום חתימה ידני";
-      return `<div class="file-item ${d.id===state.currentId?'selected':''}" data-doc="${esc(d.id)}"><input type="checkbox" class="include-doc" data-id="${esc(d.id)}" ${d.include?'checked':''} ${d.preset?.block?'disabled':''} aria-label="כלול ${esc(d.file.name)}"/><div><div class="file-name">${esc(d.file.name)}</div><div class="file-sub">${d.pages} עמודים · ${(d.file.size/1024).toFixed(0)} KB</div><div class="file-status ${d.approved?'ok':''}">${esc(label)}</div></div><button type="button" class="edit-doc" data-id="${esc(d.id)}">בדיקה</button></div>`;
+      const label=d.preset?.block?"טופס התחלת כיסוי — חסום":d.preset?.key==="axa"?"AXA: חסום להחתמה אוטומטית (הרשאת חיוב)":d.placement?(d.approved?"מוכן לאחר אישור":"נמצא מיקום מוצע; יש לאשר"):"דרוש מיקום חתימה ידני";
+      return `<div class="file-item ${d.id===state.currentId?'selected':''}" data-doc="${esc(d.id)}"><input type="checkbox" class="include-doc" data-id="${esc(d.id)}" ${d.include?'checked':''} ${(d.preset?.block || d.preset?.key==="axa")?'disabled':''} aria-label="כלול ${esc(d.file.name)}"/><div><div class="file-name">${esc(d.file.name)}</div><div class="file-sub">${d.pages} עמודים · ${(d.file.size/1024).toFixed(0)} KB</div><div class="file-status ${d.approved?'ok':''}">${esc(label)}</div></div><button type="button" class="edit-doc" data-id="${esc(d.id)}">בדיקה</button></div>`;
     }).join("");
     ui.current.innerHTML = state.docs.map(d=>`<option value="${esc(d.id)}" ${d.id===state.currentId?'selected':''}>${esc(d.file.name)}</option>`).join("");
     ui.list.querySelectorAll(".edit-doc").forEach(b=>b.addEventListener("click",()=>selectDoc(b.dataset.id)));
@@ -175,8 +188,8 @@
   ui.remove.addEventListener("click",()=>{const d=currentDoc();if(d){d.placement=null;d.datePlacement=null;d.approved=false;d.include=false;ui.approve.checked=false;drawOverlay(d);updateReady();renderFileList();}});
   ui.stage.addEventListener("click",e=>{
     const d=currentDoc();if(!d||state.placementMode==="none")return;
-    if(d.preset?.block)return notify("מסמך שמתחיל כיסוי אינו ניתן להחתמה כאן", "error");
-    if(d.preset?.key==="axa" && d.previewPage===8)return notify("עמוד 8 של AXA מיועד להרשאת חיוב — לא ניתן למקם עליו חתימה", "error");
+    if(d.preset?.block || d.preset?.key === "axa")return notify("טופס זה דורש חתימה בערוץ המבטח, ולא אוטומטית בכלי", "error");
+    if(d.preset?.key==="axa")return notify("AXA: זוהתה הרשאת חיוב בנקאי ולכן איננו מאפשרים החתמה אוטומטית של הטופס", "error");
     const dims=d.currentPageDims; if(!dims || dims.rotation!==0)return notify("אין אפשרות למקם חתימה על עמוד מסובב אוטומטית", "error");
     const rect=ui.stage.getBoundingClientRect();const X=(e.clientX-rect.left)/rect.width*dims.width;const Y=(e.clientY-rect.top)/rect.height*dims.height;
     if(X<0||Y<0||X>dims.width||Y>dims.height)return;
@@ -188,13 +201,22 @@
     }
     state.placementMode="none";updatePositionControls();drawOverlay(d);renderFileList();updateReady();notify("המיקום עודכן. בדוק/י וסמן/י אישור עבור הטופס.","good");
   });
-  ui.approve.addEventListener("change",e=>{const d=currentDoc();if(!d)return; if(e.target.checked&&!d.placement){e.target.checked=false;return notify("ראשית יש לבחור מיקום חתימה", "error");}if(e.target.checked&&d.preset?.block){e.target.checked=false;return notify("מסמך זה חסום לחתימה", "error");}d.approved=e.target.checked;renderFileList();updateReady();});
+  ui.approve.addEventListener("change",e=>{const d=currentDoc();if(!d)return; if(e.target.checked&&!d.placement){e.target.checked=false;return notify("ראשית יש לבחור מיקום חתימה", "error");}if(e.target.checked&&(d.preset?.block || d.preset?.key === "axa")){e.target.checked=false;return notify("מסמך זה חסום לחתימה אוטומטית", "error");}d.approved=e.target.checked;renderFileList();updateReady();});
   ui.finalConsent.addEventListener("change",updateReady);
+  ui.approveAll.addEventListener("click",async()=>{
+    const eligible=state.docs.filter(d=>d.include && d.placement && !d.preset?.block && d.preset?.key!=="axa");
+    if(!eligible.length)return notify("אין מסמכים עם שדה חתימת מבקש מזוהה שמוכנים לאישור מרוכז", "error");
+    const names=eligible.map(d=>d.file.name.replace(/_MEDICAL_PREFILLED_REVIEW_UNSIGNED\.pdf$/i,"")).join("\n• ");
+    if(!confirm(`אישור מרוכז עבור ${eligible.length} טפסים:\n• ${names}\n\nהאם עיינת בכל הטפסים האלו, אימתת שכל הפרטים וההצהרות הרפואיות נכונים, ומאשר/ת להחתים אותם?`))return;
+    for(const d of eligible)d.approved=true;
+    renderFileList();await renderPreview();updateReady();notify(`${eligible.length} מסמכים אושרו להחתמה לאחר אימותך.`,"good");
+  });
   function updateReady(){
     const selected=state.docs.filter(d=>d.include);
     const errors=[]; if(!selected.length)errors.push("יש לבחור לפחות מסמך אחד");if(!signatureIsReady())errors.push("חסרה חתימה");
-    if(selected.some(d=>!d.placement||!d.approved||d.preset?.block))errors.push("נדרש אישור מיקום והצהרות לכל מסמך נבחר");
+    if(selected.some(d=>!d.placement||!d.approved||d.preset?.block||d.preset?.key==="axa"))errors.push("נדרש אישור מיקום והצהרות לכל מסמך נבחר");
     if(!ui.finalConsent.checked)errors.push("נדרש אישור מסכם לשימוש החתימה");
+    ui.approveAll.disabled=!selected.some(d=>d.placement && !d.approved && !d.preset?.block && d.preset?.key!=="axa");
     const okay=!errors.length&&!state.generating;
     ui.generate.disabled=!okay; ui.ready.textContent=okay?`מוכן ליצירת ${selected.length} קובצי PDF חתומים.`:errors.join(" · ");
   }
@@ -202,7 +224,7 @@
   ui.generate.addEventListener("click", async()=>{
     if(!requireLibs()||state.generating)return;
     const docs=state.docs.filter(d=>d.include);
-    if(!signatureIsReady()||!docs.length||!ui.finalConsent.checked||docs.some(d=>!d.approved||!d.placement||d.preset?.block))return notify("נדרש אישור מפורש של כל המסמכים לפני החתמה", "error");
+    if(!signatureIsReady()||!docs.length||!ui.finalConsent.checked||docs.some(d=>!d.approved||!d.placement||d.preset?.block||d.preset?.key==="axa"))return notify("נדרש אישור מפורש של כל המסמכים לפני החתמה", "error");
     state.generating=true;updateReady();cleanOutputs();setProgress(1);
     try{
       const png=imageBytes();
@@ -226,6 +248,56 @@
     }catch(err){console.error(err);notify("לא הצלחתי ליצור מסמכים חתומים: "+String(err.message||err),"error");cleanOutputs();}
     finally{state.generating=false;ui.progress.hidden=true;updateReady();}
   });
+
+  function keyFromHash() {
+    const frag=location.hash.replace(/^#/,"");
+    const val=new URLSearchParams(frag).get("key");
+    if(!val || !/^[0-9a-f]{64}$/i.test(val))throw Error("כדי לפתוח את הטפסים השתמש/י בקישור האישי עם מפתח הגישה. אין צורך להעלות קבצים.");
+    return Uint8Array.from(val.match(/.{2}/g).map(x=>parseInt(x,16)));
+  }
+  function setBundleStatus(title,detail,tone="loading") {
+    ui.bundle.dataset.status=tone;ui.bundleTitle.textContent=title;ui.bundleDetail.textContent=detail;
+  }
+  async function loadEncryptedBundle(){
+    if(!crypto?.subtle || !window.DecompressionStream)throw Error("הדפדפן אינו תומך בפתיחה מאובטחת. השתמש/י ב-Safari/Chrome מעודכנים.");
+    const keyBytes=keyFromHash();
+    const secretKey=await crypto.subtle.importKey("raw",keyBytes,{name:"AES-GCM"},false,["decrypt"]);
+    keyBytes.fill(0);
+    const res=await fetch("./data/catalog.json",{cache:"no-store",referrerPolicy:"no-referrer"});
+    if(!res.ok)throw Error("לא הצלחנו לטעון את רשימת הטפסים המוצפנים");
+    const catalog=await res.json();
+    if(catalog.version!==2||catalog.cipher!=="AES-256-GCM")throw Error("גרסת התיק אינה נתמכת");
+    const count=catalog.documents.filter(d=>d.src).length;
+    let loaded=0;const bad=[];
+    for (const d of catalog.documents){
+      if(!d.src){bad.push(d.label);continue;}
+      setBundleStatus(`מכין טפסים מאובטחים — ${loaded+1}/${count}`,`פותח עכשיו את ${d.label} (לא שולח נתונים לשום שרת)`,"loading");
+      try{
+        const response=await fetch("./"+d.src,{cache:"force-cache",referrerPolicy:"no-referrer"});
+        if(!response.ok)throw Error("Missing encrypted form");
+        const bytes=new Uint8Array(await response.arrayBuffer());
+        if(bytes.length<30)throw Error("Invalid cipher length");
+        const compressed=await crypto.subtle.decrypt({name:"AES-GCM",iv:bytes.subarray(0,12),additionalData:new TextEncoder().encode(d.id)},secretKey,bytes.subarray(12));
+        const plain=await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
+        const magic=new Uint8Array(plain).subarray(0,4);
+        if(String.fromCharCode(...magic)!=="%PDF")throw Error("Decrypted content is not PDF");
+        const f=new File([plain],d.file,{type:"application/pdf"});
+        await addFiles([f]);
+        loaded++;
+      }catch(err){console.error("Encrypted PDF load failed",d.id,err);bad.push(d.label);}
+    }
+    setBundleStatus(`${loaded} טפסים נטענו אוטומטית`,bad.length?`לא נטענו: ${bad.join(", ")}. אין צורך להעלות את השאר כדי להחתים את הטפסים שנפתחו.`:"כל המסמכים נפתחו בדפדפן בלבד. אפשר לצייר חתימה פעם אחת.",loaded?"ready":"error");
+    if(!loaded)throw Error("אף טופס לא נפתח. בדוק/י את הקישור האישי ונסה/י שוב.");
+    notify(`נמצאו ונפתחו ${loaded} טפסי PDF מוצפנים. אין צורך להעלות קבצים.`,"good");
+  }
+  async function bootSecure() {
+    try{
+      if(!libsReady())throw Error("ספריות PDF לא נטענו (יש צורך באינטרנט בפתיחה הראשונה)");
+      setBundleStatus("מאמת מנוע PDF לפני פענוח מסמכים...","הבדיקה מגנה מפני קוד תצוגה ששונה בדרך.");
+      await verifyPdfWorker();
+      await loadEncryptedBundle();
+    }catch(err){console.error("Secure preloaded forms:",err);setBundleStatus("לא ניתן לפתוח את המסמכים",String(err.message||err),"error");notify(String(err.message||err),"error");}
+  }
   updateSignatureState();renderFileList();renderPreview();
-  if(!libsReady()){window.addEventListener("load",()=>{if(!libsReady())notify("טעינת ספריות PDF נכשלה. כדי לעבד קבצים צריך אינטרנט בעת פתיחת האפליקציה.","error");});}
+  bootSecure();
 })();
