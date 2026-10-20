@@ -435,6 +435,7 @@
   };
   window.addEventListener("beforeunload",()=>{state.outputs.forEach(o=>URL.revokeObjectURL(o.url));state.docs.forEach(d=>{try{d.pdf.destroy();}catch(e){}});});
   function initLibStatus(){
+    if(pdfJs()) pdfJs().GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
     const okay=!!pdfJs()&&!!pdfLib();
     $("lib-check").textContent=okay?"מנוע PDF מוכן · הכל מעובד במכשיר שלך":"ממתין לספריות PDF. דרוש חיבור רשת לטעינה ראשונית.";
     $("lib-check").classList.toggle("ready",okay);
