@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>למה השורשים הלבנים חוזרים כל כך מהר? | NOVA HAIR מגזין השיער</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FCFAF7;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F4EFE6;
+      --text-main: #242724;
+      --text-muted: #5C605C;
+      --cta-green: #163D32;
+      --cta-green-hover: #1F5445;
+      --accent-gold: #C5A059;
+      --border-color: #EAE4D9;
+      --danger-soft: #9E3B33;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+    * {box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html {scroll-behavior:smooth}
+    body {background-color:var(--bg-cream);color:var(--text-main);font-family:'Heebo',-apple-system,BlinkMacSystemFont,sans-serif;font-size:18px;line-height:1.65;font-weight:400;-webkit-font-smoothing:antialiased;padding-bottom:90px}
+    .reading-progress-container{position:fixed;top:0;right:0;left:0;height:4px;background:rgba(234,228,217,.6);z-index:1000}
+    .reading-progress-bar{height:100%;width:0%;background:var(--cta-green);transition:width .1s ease-out}
+    .editorial-header{border-bottom:1px solid var(--border-color);background-color:var(--bg-cream);padding:14px 20px;text-align:center}
+    .editorial-header-inner{max-width:680px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--text-muted)}
+    .brand-Publication{font-weight:700;letter-spacing:.5px;color:var(--text-main)}
+    .ad-disclosure-top{background-color:var(--bg-subtle);padding:3px 10px;border-radius:4px;font-size:13px;font-weight:500}
+    .article-container{max-width:680px;margin:0 auto;padding:28px 20px 40px}
+    h1{font-size:31px;line-height:1.28;font-weight:800;color:var(--text-main);margin-bottom:16px;letter-spacing:-.3px}
+    .subtitle{font-size:19px;line-height:1.55;font-weight:500;color:#3D423D;margin-bottom:24px}
+    h2{font-size:25px;line-height:1.35;font-weight:700;color:var(--text-main);margin-top:38px;margin-bottom:16px}
+    p{margin-bottom:18px}strong{font-weight:700}
+    .section-divider{border:0;height:1px;background-color:var(--border-color);margin:36px 0}
+    .media-block{margin:26px 0}
+    .media-frame{width:100%;border-radius:var(--radius-md);overflow:hidden;background-color:var(--bg-subtle);border:1px solid var(--border-color);position:relative}
+    .media-frame img,.media-frame video{width:100%;height:auto;display:block}
+    .media-placeholder{padding:36px 24px;text-align:center;background:linear-gradient(145deg,#F5F0E6 0%,#EAE3D5 100%);color:var(--text-main);min-height:260px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px}
+    .placeholder-badge{background-color:var(--cta-green);color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.5px}
+    .placeholder-title{font-size:18px;font-weight:700;max-width:90%}
+    .placeholder-desc{font-size:14px;color:var(--text-muted);max-width:480px;line-height:1.5}
+    .media-caption{font-size:14px;color:var(--text-muted);margin-top:8px;text-align:center;line-height:1.4}
+    .mechanism-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;background:var(--bg-card);padding:20px;border-radius:var(--radius-md);border:1px solid var(--border-color)}
+    .mechanism-col{padding:16px;border-radius:var(--radius-sm);text-align:center}
+    .mechanism-col.old-way{background-color:#FDF6F5;border:1px solid #F1D8D6}
+    .mechanism-col.new-way{background-color:#F3F8F6;border:1px solid #CFE3DC}
+    .mechanism-col h4{font-size:16px;font-weight:700;margin-bottom:8px}
+    .mechanism-col p{font-size:14px;line-height:1.45;margin-bottom:0;color:var(--text-muted)}
+    .hair-visual{height:90px;display:flex;justify-content:center;align-items:center;margin:12px 0}
+    .calculator-card{background-color:var(--bg-card);border:2px solid var(--border-color);border-radius:var(--radius-md);padding:24px 20px;margin:28px 0;box-shadow:0 8px 24px rgba(36,39,36,.04)}
+    .calc-header{text-align:center;margin-bottom:20px}
+    .calc-header h3{font-size:21px;font-weight:800;color:var(--text-main);margin-bottom:4px}
+    .calc-header p{font-size:14px;color:var(--text-muted);margin-bottom:0}
+    .calc-group{margin-bottom:18px}
+    .calc-label{display:block;font-size:15px;font-weight:700;margin-bottom:10px;color:var(--text-main)}
+    .chip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .chip-grid.freq-grid{grid-template-columns:repeat(2,1fr)}
+    @media (min-width:520px){.chip-grid.freq-grid{grid-template-columns:repeat(4,1fr)}}
+    .tap-chip{background-color:var(--bg-cream);border:1.5px solid var(--border-color);border-radius:var(--radius-sm);padding:10px 6px;font-family:inherit;font-size:15px;font-weight:600;color:var(--text-main);cursor:pointer;transition:all .15s ease;text-align:center}
+    .tap-chip:hover{border-color:var(--cta-green)}
+    .tap-chip.active{background-color:var(--cta-green);border-color:var(--cta-green);color:#FFFFFF;box-shadow:0 3px 10px rgba(22,61,50,.2)}
+    .calc-result-box{background-color:var(--bg-subtle);border-radius:var(--radius-sm);padding:18px;text-align:center;margin-top:20px;border-right:4px solid var(--cta-green)}
+    .calc-result-title{font-size:14px;font-weight:600;color:var(--text-muted);margin-bottom:4px}
+    .calc-result-number{font-size:32px;font-weight:800;color:var(--danger-soft);line-height:1.2}
+    .calc-result-time{font-size:15px;font-weight:600;color:var(--text-main);margin-top:6px}
+    .benefit-list{list-style:none;margin:20px 0 24px}
+    .benefit-list li{position:relative;padding-right:28px;margin-bottom:14px;font-size:17px}
+    .benefit-list li::before{content:"✓";position:absolute;right:0;top:2px;width:20px;height:20px;background-color:var(--cta-green);color:#fff;border-radius:50%;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .shades-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:20px 0 28px}
+    @media (min-width:520px){.shades-grid{grid-template-columns:repeat(4,1fr)}}
+    .shade-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:14px 10px;text-align:center}
+    .shade-swatch{width:52px;height:52px;border-radius:50%;margin:0 auto 10px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    .swatch-black{background:radial-gradient(circle at 30% 30%,#3a3a3a,#141414)}
+    .swatch-dark-brown{background:radial-gradient(circle at 30% 30%,#593b2b,#2a1911)}
+    .swatch-light-brown{background:radial-gradient(circle at 30% 30%,#8c5c3e,#54341e)}
+    .swatch-red{background:radial-gradient(circle at 30% 30%,#8f322a,#4d1510)}
+    .shade-name{font-size:15px;font-weight:700;color:var(--text-main)}
+    .cta-wrapper{margin:30px 0;text-align:center}
+    .cta-button{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;background-color:var(--cta-green);color:#FFFFFF;font-family:inherit;font-size:19px;font-weight:700;text-decoration:none;border-radius:var(--radius-sm);padding:14px 24px;box-shadow:0 6px 18px rgba(22,61,50,.22);transition:background-color .2s ease,transform .15s ease;gap:10px}
+    .cta-button:hover{background-color:var(--cta-green-hover);transform:translateY(-1px)}
+    .cta-microcopy{font-size:13px;color:var(--text-muted);margin-top:8px;font-weight:500}
+    .ba-gallery{display:flex;flex-direction:column;gap:18px;margin:24px 0}
+    .ba-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);overflow:hidden}
+    .ba-images{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border-color)}
+    .ba-side{padding:28px 14px;text-align:center;position:relative;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+    .ba-side.before{background-color:#F4EFE8;border-left:1px solid var(--border-color)}
+    .ba-side.after{background-color:#EBF2EE}
+    .ba-tag{position:absolute;top:10px;right:10px;background:rgba(36,39,36,.75);color:#fff;font-size:12px;font-weight:600;padding:2px 9px;border-radius:4px}
+    .ba-meta{padding:12px 16px;font-size:14px;color:var(--text-main);display:flex;justify-content:space-between;align-items:center;background-color:var(--bg-card)}
+    .steps-container{display:flex;flex-direction:column;gap:14px;margin:22px 0}
+    .step-item{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+    .step-number{width:32px;height:32px;border-radius:50%;background-color:var(--cta-green);color:#fff;font-weight:700;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px}
+    .step-content h4{font-size:17px;font-weight:700;margin-bottom:4px}
+    .step-content p{font-size:15px;color:var(--text-muted);margin-bottom:0;line-height:1.5}
+    .faq-list{margin:22px 0;border-top:1px solid var(--border-color)}
+    .faq-item{border-bottom:1px solid var(--border-color);background-color:var(--bg-card)}
+    .faq-question{width:100%;background:none;border:none;padding:18px 16px;text-align:right;font-family:inherit;font-size:17px;font-weight:700;color:var(--text-main);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .faq-icon{font-size:22px;font-weight:400;color:var(--cta-green);transition:transform .2s ease;flex-shrink:0}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 16px}
+    .faq-item.open .faq-answer{max-height:300px;padding-bottom:18px}
+    .faq-answer p{font-size:16px;color:var(--text-muted);margin-bottom:0;line-height:1.6}
+    .editorial-footer{max-width:680px;margin:0 auto;padding:24px 20px 40px;border-top:1px solid var(--border-color);font-size:13px;color:var(--text-muted);text-align:center;line-height:1.6}
+    .sticky-cta-bar{position:fixed;bottom:0;right:0;left:0;background-color:rgba(252,250,247,.96);backdrop-filter:blur(8px);border-top:1px solid var(--border-color);padding:10px 16px;z-index:999;transform:translateY(110%);transition:transform .3s cubic-bezier(.16,1,.3,1);box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+    .sticky-cta-bar.visible{transform:translateY(0)}
+    .sticky-cta-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .sticky-text{font-size:14px;line-height:1.3}
+    .sticky-text strong{display:block;font-size:15px;color:var(--text-main)}
+    .sticky-btn{background-color:var(--cta-green);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:11px 18px;border-radius:var(--radius-sm);white-space:nowrap;flex-shrink:0}
+    @media(max-width:480px){h1{font-size:27px}h2{font-size:22px}.mechanism-split{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="reading-progress-container"><div class="reading-progress-bar" id="progressBar"></div></div>
+  <header class="editorial-header">
+    <div class="editorial-header-inner">
+      <span class="brand-Publication">NOVA HAIR | מגזין השיער</span>
+      <span class="ad-disclosure-top">תוכן שיווקי מטעם NOVA HAIR</span>
+    </div>
+  </header>
+  <main class="article-container">
+    <h1>למה השורשים הלבנים חוזרים כל כך מהר — גם כשהצבע בשאר השיער עדיין נראה מצוין?</h1>
+    <p class="subtitle">אם גם את מוצאת את עצמך קובעת תור למספרה רק בגלל "הפס הלבן" בשביל, כדאי שתכירי את השיטה שמאפשרת לחדש את הגוון בבית — בלי קערות, בלי מברשות ובלי ללכלך את המקלחת.</p>
+    <div class="media-block">
+      <div class="media-frame">
+        <div class="media-placeholder">
+          <span class="placeholder-badge">תמונה 1 — HERO (1200×900)</span>
+          <div class="placeholder-title">אישה בגיל 45–60 מול מראת אמבטיה מוארת</div>
+          <div class="placeholder-desc">זווית מעבר לכתף: היד מרימה קבוצת שיער ליד השביל או הרקה וחושפת שורשים לבנים ברורים. צילום טבעי, ללא מוצר וללא טקסט על התמונה.</div>
+        </div>
+      </div>
+      <div class="media-caption">צילום להמחשה · צילום באור טבעי</div>
+    </div>
+    <hr class="section-divider">
+    <p>זה תמיד מתחיל בכמה שערות כסופות ליד השביל.</p>
+    <p>בשבועיים הראשונים אחרי המספרה, הכל נראה מושלם. השיער חיוני, הצבע באורכים עשיר ומבריק, ואת מרגישה בשיא שלך.</p>
+    <p>אבל אז מגיע הרגע הזה מול המראה בתאורה החזקה של חדר הרחצה.</p>
+    <p>קצת לבן בשביל המרכזי. עוד כמה שערות עקשניות ברקות כשאת אוספת את השיער. ופתאום, למרות ש־90% מהשיער שלך עדיין נראה נהדר, הפס הקטן הזה בשורש גורם להכל להיראות פחות מוקפד.</p>
+    <p><strong>וזה החלק הכי מתסכל.</strong></p>
+    <p>אין לך שום סיבה אמיתית לצבוע עכשיו את כל השיער מחדש. כל מה שאת רוצה זה שהשורשים יתמזגו שוב עם הגוון היפה שכבר יש לך.</p>
+    <p>אבל עד היום, עמדו בפנייך רק שתי אפשרויות מתישות:</p>
+    <p>או לשעבד עוד חצי יום למספרה — לתאם תור, לחפש חניה, לשבת שעות עם חומר על הראש ולשלם מאות שקלים על סנטימטר וחצי של צמיחה.</p>
+    <p>או לקנות ערכת צבע מהפארם — ולהפוך את האמבטיה למעבדה עם קערות, מברשות, ריח חריף של חמצן וכתמים עקשניים על המצח והמגבות.</p>
+    <p>ואחרי שלושה שבועות? הסיפור מתחיל מהתחלה.</p>
+    <div class="media-block">
+      <div class="media-frame">
+        <div class="media-placeholder">
+          <span class="placeholder-badge">תמונה 2 — תקריב מאקרו (1000×800)</span>
+          <div class="placeholder-title">תקריב אותנטי של שביל השיער (ללא פנים)</div>
+          <div class="placeholder-desc">הדגשת הניגודיות בין אורך השיער שנראה צבוע ומבריק לבין סנטימטר הצמיחה הלבנה בשורש.</div>
+        </div>
+      </div>
+      <div class="media-caption">„לפעמים כל מה שמפריע הוא סנטימטר אחד ליד השורש.”</div>
+    </div>
+    <hr class="section-divider">
+    <h2>כמה באמת עולה לך "מס השורשים" בכל שנה?</h2>
+    <p>ביקור בודד במספרה לחידוש שורשים אולי מרגיש כמו הוצאה שגרתית. אבל כשהוא חוזר על עצמו כמו שעון בכל 4 עד 5 שבועות, המספרים מצטברים מהר מאוד.</p>
+    <p>לדוגמה: אישה שמשלמת 220 ₪ בלבד על צביעת שורשים וחוזרת למספרה כל ארבעה שבועות, מוציאה <strong>2,860 ₪ בשנה</strong> — רק על תחזוקת השורש.</p>
+    <p>וזה עוד לפני שחישבנו דלק, חניה, ושעות יקרות באמצע השבוע שיכלו להיות מוקדשות לעבודה, למשפחה או פשוט לשקט שלך.</p>
+    <div class="calculator-card" id="salonCalculator">
+      <div class="calc-header">
+        <h3>מחשבון מהיר: כמה עולה לך צביעת השורשים בשנה?</h3>
+        <p>בחרי את המחיר והתדירות שלך כדי לגלות את המספר האמיתי:</p>
+      </div>
+      <div class="calc-group">
+        <span class="calc-label">1. כמה עולה לך ביקור ממוצע במספרה?</span>
+        <div class="chip-grid" id="priceChips">
+          <button type="button" class="tap-chip" data-price="180">180 ₪</button>
+          <button type="button" class="tap-chip active" data-price="220">220 ₪</button>
+          <button type="button" class="tap-chip" data-price="280">280 ₪</button>
+          <button type="button" class="tap-chip" data-price="350">350 ₪</button>
+        </div>
+      </div>
+      <div class="calc-group">
+        <span class="calc-label">2. כל כמה זמן את מחדשת שורשים?</span>
+        <div class="chip-grid freq-grid" id="freqChips">
+          <button type="button" class="tap-chip" data-weeks="3">כל 3 שבועות</button>
+          <button type="button" class="tap-chip active" data-weeks="4">כל 4 שבועות</button>
+          <button type="button" class="tap-chip" data-weeks="5">כל 5 שבועות</button>
+          <button type="button" class="tap-chip" data-weeks="6">כל 6 שבועות</button>
+        </div>
+      </div>
+      <div class="calc-result-box">
+        <div class="calc-result-title">ההוצאה השנתית המוערכת שלך על שורשים:</div>
+        <div class="calc-result-number" id="annualCostOutput">2,860 ₪ בשנה</div>
+        <div class="calc-result-time" id="annualTimeOutput">⏱️ ובזבוז של כ־33 שעות בשנה על נסיעות והמתנה במספרה</div>
+      </div>
+    </div>
+    <p>אבל מעבר לחיסכון הכספי, יש כאן שאלה מהותית הרבה יותר.</p>
+    <hr class="section-divider">
+    <h2>למה להעמיס על כל השיער, אם רק השורשים צמחו?</h2>
+    <p>השיער שלנו צומח בקצב של כסנטימטר עד סנטימטר וחצי בחודש. הצבע שנמצא על אורכי השיער נשאר במקומו, אבל הצמיחה החדשה מהשורש חושפת את השיער הלבן ויוצרת ניגודיות חדה מול שאר השיער.</p>
+    <p>כלומר, הבעיה היא לא הצבע שלך — הבעיה היא הפער שנוצר בשורש.</p>
+    <p>ההבנה הזו בדיוק היא שהובילה לפיתוח של קטגוריה חדשה בעולם הטיפוח הביתי: פתרונות חכמים שמאפשרים לחדש את הגוון ולכסות את הלבן בקלות של חפיפה, בלי הסרבול של צביעה מסורתית.</p>
+    <div class="media-block">
+      <div class="mechanism-split">
+        <div class="mechanism-col old-way">
+          <h4>צביעה מסורתית</h4>
+          <div class="hair-visual"><span style="font-size:36px;">🥣🖌️</span></div>
+          <p>ערבוב קערות, מברשות והעמסת צבע חוזרת על כל השיער רק כדי לכסות 1.5 ס"מ של צמיחה חדשה.</p>
+        </div>
+        <div class="mechanism-col new-way">
+          <h4>חידוש בשמפו צבע</h4>
+          <div class="hair-visual"><span style="font-size:36px;">🧴✨</span></div>
+          <p>פיגמנט מוכן בבקבוק משאבה שמתמזג בקלות עם השורש הלבן ומשתלב עם הצבע הקיים באורכים.</p>
+        </div>
+      </div>
+      <div class="media-caption">הצמיחה החדשה בשורש היא זו שיוצרת את ההבדל בגוון — ושם בדיוק מתמקד החידוש</div>
+    </div>
+    <hr class="section-divider">
+    <h2>לחדש את הגוון באמבטיה — בלי קערות ובלי מברשות</h2>
+    <p>בשנים האחרונות יותר ויותר נשים עוברות לשימוש ב<strong>שמפו צבע לשיער</strong>.</p>
+    <p>חשוב להבהיר: זה לא שמפו רגיל לחפיפה יומיומית. זהו פורמט צביעה מתקדם שמרגיש ומתנהג כמו שמפו, ותוכנן במיוחד כדי להפוך את חידוש הצבע הביתי לפעולה פשוטה, נקייה ומהירה.</p>
+    <p>במקום לערבב שפופרות ובקבוקוני חמצן בקערה ולנסות למרוח עם מברשת מאחורי הראש, הפורמולה מגיעה מוכנה לשימוש בלחיצת משאבה.</p>
+    <p>מרקם השמפו מאפשר לפזר את החומר באופן שווה ונוח עם הידיים (בעזרת כפפות), להתמקד בשורשים הלבנים או לרענן את הגוון כולו, ולשטוף במים.</p>
+    <div class="media-block">
+      <div class="media-frame">
+        <div class="media-placeholder">
+          <span class="placeholder-badge">תמונה 4 — לופ וידאו שקט MP4 / GIF (1000×1200)</span>
+          <div class="placeholder-title">לחיצה נקייה על המשאבה לתוך כף יד עם כפפה ומריחה קלה בשורשים</div>
+          <div class="placeholder-desc">להראות כמה התהליך נקי: בלי קערות, בלי מברשות ובלי טפטופים על המצח.</div>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+    <div id="product-reveal">
+      <h2>הכירו את NOVA HAIR: חידוש שורשים וכיסוי שיער לבן בלחיצת משאבה</h2>
+      <p>אחד המוצרים המובילים בקטגוריה הזו הוא <strong>NOVA HAIR</strong> — שמפו צבע ייעודי לכיסוי שיער לבן ולרענון הגוון בבית.</p>
+      <p>הסוד של NOVA HAIR טמון בבקבוק המשאבה החכם שלו: לחיצה פשוטה מוציאה את המינון המדויק לשימוש מיידי, ללא צורך בהכנות מוקדמות.</p>
+      <ul class="benefit-list">
+        <li><strong>אפס התעסקות ובלגן:</strong> בלי קערות, בלי מברשות ובלי לטפטף צבע על הרצפה או המגבות.</li>
+        <li><strong>מוכן בדיוק כשאת צריכה אותו:</strong> אידיאלי לרגעים שבהם השורשים צצו פתאום לפני אירוע, חג או פגישה חשובה — ואין לך זמן לחכות לתור במספרה.</li>
+        <li><strong>מראה טבעי ומשתלב:</strong> מעניק לשורשים הלבנים פיגמנט עשיר שמשתלב בהרמוניה עם אורכי השיער.</li>
+      </ul>
+      <div class="media-block">
+        <div class="media-frame">
+          <div class="media-placeholder">
+            <span class="placeholder-badge">תמונה 5 — צילום מוצר מקורי (1200×900)</span>
+            <div class="placeholder-title">ארבעת בקבוקי NOVA HAIR המקוריים על רקע שמנת טבעי</div>
+            <div class="placeholder-desc">הדגשה של הפקקים השקופים, המשאבה השחורה, שני הפסים הזהובים והתווית המדויקת עם צל רך.</div>
+          </div>
+        </div>
+      </div>
+      <p><strong>NOVA HAIR פותח ב־4 גוונים קלאסיים שמתאימים לרוב גווני השיער בישראל:</strong></p>
+      <div class="shades-grid">
+        <div class="shade-card"><div class="shade-swatch swatch-black"></div><div class="shade-name">שחור טבעי</div></div>
+        <div class="shade-card"><div class="shade-swatch swatch-dark-brown"></div><div class="shade-name">חום כהה</div></div>
+        <div class="shade-card"><div class="shade-swatch swatch-light-brown"></div><div class="shade-name">חום בהיר</div></div>
+        <div class="shade-card"><div class="shade-swatch swatch-red"></div><div class="shade-name">אדום</div></div>
+      </div>
+      <div class="cta-wrapper">
+        <a href="https://your-offer-page-url.com" class="cta-button js-utm-link"><span>לבדיקת זמינות הגוונים ומארזי החיסכון</span><span>←</span></a>
+        <div class="cta-microcopy">בחירת הגוון מתבצעת בעמוד הבא • מגובה ב־60 ימי אחריות</div>
+      </div>
+    </div>
+    <hr class="section-divider">
+    <h2>אבל השאלה החשובה היא: איך נראית התוצאה על שיער אמיתי?</h2>
+    <p>תמונות של דוגמניות באולפן תמיד נראות טוב, אבל כשמדובר בצביעת שורשים — המבחן האמיתי הוא בתקריב שלפני ואחרי, בתאורה רגילה.</p>
+    <p>כשאת בוחנת את התוצאות, שימי לב לאזור השביל והרקות: איך השיער הלבן קיבל פיגמנט עמוק, ואיך המעבר בין השורש לאורך השיער נראה טבעי ולא "צבוע מדי".</p>
+    <div class="ba-gallery">
+      <div class="ba-card">
+        <div class="ba-images">
+          <div class="ba-side before"><span class="ba-tag">לפני</span><span style="font-size:13px;color:var(--text-muted);">[צילום שורשים לבנים בשביל - לקוחה 1]</span></div>
+          <div class="ba-side after"><span class="ba-tag" style="background:var(--cta-green);">אחרי</span><span style="font-size:13px;color:var(--text-main);">[אותה זווית ותאורה לאחר שימוש אחד]</span></div>
+        </div>
+        <div class="ba-meta"><span><strong>גוון בשימוש:</strong> חום כהה</span><span>שימוש בודד לפי ההוראות</span></div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-images">
+          <div class="ba-side before"><span class="ba-tag">לפני</span><span style="font-size:13px;color:var(--text-muted);">[צילום שורשים לבנים ברקות - לקוחה 2]</span></div>
+          <div class="ba-side after"><span class="ba-tag" style="background:var(--cta-green);">אחרי</span><span style="font-size:13px;color:var(--text-main);">[כיסוי מלא והשתלבות עם האורך]</span></div>
+        </div>
+        <div class="ba-meta"><span><strong>גוון בשימוש:</strong> שחור טבעי</span><span>שימוש בודד לפי ההוראות</span></div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-images">
+          <div class="ba-side before"><span class="ba-tag">לפני</span><span style="font-size:13px;color:var(--text-muted);">[צילום צמיחה לבנה - לקוחה 3]</span></div>
+          <div class="ba-side after"><span class="ba-tag" style="background:var(--cta-green);">אחרי</span><span style="font-size:13px;color:var(--text-main);">[מיזוג אחיד עם גוון הבסיס]</span></div>
+        </div>
+        <div class="ba-meta"><span><strong>גוון בשימוש:</strong> חום בהיר</span><span>שימוש בודד לפי ההוראות</span></div>
+      </div>
+    </div>
+    <p style="font-size:15px;color:var(--text-muted);">*חשוב לזכור: לא כל שיער מגיב לצבע באותה צורה. התוצאה תלויה בגוון הנבחר, בצבע הבסיס הקיים, בכמות השיער הלבן ובהקפדה על זמני ההמתנה לפי ההוראות.</p>
+    <hr class="section-divider">
+    <h2>4 שלבים פשוטים לחידוש הגוון בבית</h2>
+    <p>התהליך תוכנן להיות אינטואיטיבי ופשוט, תוך הקפדה על הוראות השימוש שעל האריזה:</p>
+    <div class="steps-container">
+      <div class="step-item"><div class="step-number">1</div><div class="step-content"><h4>בוחרים גוון מתאים</h4><p>מתאימים את הגוון לצבע הקיים באורכי השיער שלך (ולא רק לשורשים הלבנים), כדי ליצור רצף אחיד.</p></div></div>
+      <div class="step-item"><div class="step-number">2</div><div class="step-content"><h4>מבצעים בדיקת רגישות</h4><p>כמו בכל מוצר צביעה, פועלים בהתאם להוראות הבטיחות שעל גבי האריזה לפני השימוש.</p></div></div>
+      <div class="step-item"><div class="step-number">3</div><div class="step-content"><h4>מורחים כמו שמפו</h4><p>עוטים כפפות, לוחצים על המשאבה ומורחים בהתאם להוראות תוך התמקדות באזורי השורשים שדורשים חידוש.</p></div></div>
+      <div class="step-item"><div class="step-number">4</div><div class="step-content"><h4>ממתינים ושוטפים</h4><p>משאירים על השיער רק למשך הזמן המוגדר בהוראות האריזה, ולאחר מכן שוטפים היטב במים.</p></div></div>
+    </div>
+    <div class="media-block">
+      <div class="media-frame">
+        <div class="media-placeholder" style="min-height:360px;">
+          <span class="placeholder-badge">וידאו מקורי 9:16 (20–35 שניות)</span>
+          <div class="placeholder-title">הדגמת שימוש אמיתית במוצר NOVA HAIR</div>
+          <div class="placeholder-desc">לחיצה על הבקבוק ← מריחה עם כפפות ← המתנה ← שטיפה והצגת התוצאה באור טבעי (ללא פילטרים שמשנים את גוון השיער).</div>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+    <h2>"ומה אם אני מתלבטת איזה גוון לבחור?"</h2>
+    <p>זו אחת השאלות החשובות ביותר לפני שמזמינים צבע לשיער באינטרנט. אף אחת לא רוצה להזמין חום כהה ולקבל תוצאה שנראית שחורה מדי, או לבחור חום בהיר כשצבע הבסיס שלה כהה יותר.</p>
+    <p><strong>הדרך הטובה ביותר להתחיל:</strong> הסתכלי על הגוון הקיים באורך השיער שלך באור יום ובתאורה טבעית. זהו הגוון שאליו כדאי להתאים את השורשים. אם את מתלבטת בין שני גוונים, תמיד אפשר לפנות לשירות הלקוחות של NOVA HAIR עם תמונה ולקבל עזרה בהתאמת הגוון.</p>
+    <div class="media-block"><div class="media-frame"><div class="media-placeholder">
+      <span class="placeholder-badge">תמונה 6 — מניפת שיער אמיתית (1000×800)</span>
+      <div class="placeholder-title">ארבע דוגמאות של קבוצות שיער אמיתיות — אחת לכל גוון</div>
+      <div class="placeholder-desc">שחור טבעי · חום כהה · חום בהיר · אדום (מצולמות בתאורה טבעית, לא קוביות צבע שטוחות של מחשב).</div>
+    </div></div></div>
+    <hr class="section-divider">
+    <h2>לא חייבים לחכות שהשורשים יפריעו לך כדי להכיר את האפשרויות</h2>
+    <p>חלק מהנשים אוהבות את הביקור במספרה, ואין שום סיבה לוותר עליו אם זה מה שמתאים להן. אבל לא כל חידוש שורשים מחייב בהכרח את אותו ביקור ארוך ויקר.</p>
+    <p>בין אם את רוצה להחליף את צביעת השורשים במספרה ובין אם את רק רוצה פתרון חכם וזמין בארון האמבטיה לרגעים שבהם השורשים מפתיעים אותך בין תורים — NOVA HAIR נותן לך שליטה מלאה בזמן שלך.</p>
+    <div class="cta-wrapper">
+      <a href="https://your-offer-page-url.com" class="cta-button js-utm-link"><span>לצפייה בגוונים ובמארזים של NOVA HAIR</span><span>←</span></a>
+      <div class="cta-microcopy">משלוח ישיר לישראל • אחריות ל־60 יום בכפוף לתקנון</div>
+    </div>
+    <hr class="section-divider">
+    <h2>כמה דברים שכדאי לדעת לפני שמזמינים</h2>
+    <div class="faq-list" id="faqAccordion">
+      <div class="faq-item open">
+        <button type="button" class="faq-question"><span>האם NOVA HAIR הוא שמפו רגיל לשימוש יומיומי?</span><span class="faq-icon">+</span></button>
+        <div class="faq-answer"><p>לא. מדובר במוצר צביעת שיער מתקדם בפורמט של שמפו. הוא מיועד לחידוש צבע ולכיסוי שיער לבן לפי הצורך, ולא לשימוש כחפיפה רגילה בכל יום.</p></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question"><span>האם הוא מתאים לכיסוי שיער לבן?</span><span class="faq-icon">+</span></button>
+        <div class="faq-answer"><p>כן, המוצר מיועד לכיסוי שיער לבן ולחידוש שורשים. כמו בכל מוצר צבע, רמת הכיסוי והתוצאה עשויות להשתנות בהתאם לסוג השיער, אחוז השיער הלבן והגוון הנבחר.</p></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question"><span>האם הוא יכול להבהיר שיער כהה?</span><span class="faq-icon">+</span></button>
+        <div class="faq-answer"><p>לא. המוצר מיועד להוספת גוון ולכיסוי שיער לבן, ואינו מיועד להבהרת שיער כהה לגוון בהיר יותר.</p></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question"><span>האם צריך לעשות בדיקת רגישות ולהשתמש בכפפות?</span><span class="faq-icon">+</span></button>
+        <div class="faq-answer"><p>כן. חשוב לבצע בדיקת רגישות לפי הוראות האריזה לפני כל צביעה, ולהשתמש בכפפות בזמן המריחה כדי למנוע הכתמה של הידיים והציפורניים.</p></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question"><span>כמה זמן לוקח למשלוח להגיע?</span><span class="faq-icon">+</span></button>
+        <div class="faq-answer"><p>זמן המשלוח המשוער לישראל הוא 15–27 ימים, בהתאם ליעד ולתנאי המשלוח. מומלץ להזמין מראש כדי שהבקבוק יהיה זמין עבורך בבית בצביעה הבאה.</p></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question"><span>האם קיימת אחריות על ההזמנה?</span><span class="faq-icon">+</span></button>
+        <div class="faq-answer"><p>כן. NOVA HAIR מציעה אחריות ל־60 יום בכפוף לתנאי מדיניות ההחזרים המופיעה באתר הרשמי. מומלץ לקרוא את התנאים לפני ההזמנה.</p></div>
+      </div>
+    </div>
+    <hr class="section-divider">
+    <h2>השורשים הלבנים יחזרו לצמוח. אבל הדרך שבה את בוחרת לחדש את הגוון יכולה להשתנות.</h2>
+    <p>את לא חייבת לשנות את כל שגרת הטיפוח שלך, ולא חייבת לוותר על המספרה.</p>
+    <p>אבל אם מה שמפריע לך בין צביעות הוא בעיקר הפס הלבן בשורשים, שווה להכיר את האפשרות לחדש את הצבע בבית — בקלות, בניקיון ובזמן שנוח לך.</p>
+    <p><strong>NOVA HAIR — שמפו צבע לשיער לבן ולחידוש שורשים.</strong><br>באתר הרשמי אפשר לראות את הגוונים, להשוות בין המארזים ולקרוא את תנאי ההזמנה.</p>
+    <div class="cta-wrapper" id="final-cta">
+      <a href="https://your-offer-page-url.com" class="cta-button js-utm-link"><span>לצפייה בגוונים ובמארזים באתר הרשמי</span><span>←</span></a>
+      <div class="cta-microcopy">מעבר לאתר הרשמי של NOVA HAIR ישראל</div>
+    </div>
+  </main>
+  <footer class="editorial-footer">
+    <p>תוכן שיווקי מטעם NOVA HAIR. התוצאות משתנות מאישה לאישה בהתאם לסוג השיער וגוון הבסיס. יש לפעול לפי הוראות השימוש והבטיחות המופיעות על גבי המוצר.</p>
+  </footer>
+  <div class="sticky-cta-bar" id="stickyCtaBar">
+    <div class="sticky-cta-inner">
+      <div class="sticky-text"><strong>NOVA HAIR — שמפו צבע לשורשים</strong><span>4 גוונים לבחירה • 60 ימי אחריות</span></div>
+      <a href="https://your-offer-page-url.com" class="sticky-btn js-utm-link">לבחירת גוון ←</a>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var selectedPrice=220,selectedWeeks=4;
+    var priceButtons=document.querySelectorAll('#priceChips .tap-chip');
+    var freqButtons=document.querySelectorAll('#freqChips .tap-chip');
+    var costOutput=document.getElementById('annualCostOutput');
+    var timeOutput=document.getElementById('annualTimeOutput');
+    function updateCalculator(){
+      var visitsPerYear=52/selectedWeeks;
+      var annualCost=Math.round(visitsPerYear*selectedPrice);
+      var annualHours=Math.round(visitsPerYear*2.5);
+      costOutput.textContent=annualCost.toLocaleString('he-IL')+' ₪ בשנה';
+      timeOutput.textContent='⏱️ ובזבוז של כ־'+annualHours+' שעות בשנה על נסיעות והמתנה במספרה';
+    }
+    priceButtons.forEach(function(btn){btn.addEventListener('click',function(){
+      priceButtons.forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');selectedPrice=parseInt(btn.getAttribute('data-price'),10);updateCalculator();
+    })});
+    freqButtons.forEach(function(btn){btn.addEventListener('click',function(){
+      freqButtons.forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');selectedWeeks=parseInt(btn.getAttribute('data-weeks'),10);updateCalculator();
+    })});
+    var faqItems=document.querySelectorAll('.faq-item');
+    faqItems.forEach(function(item){var btn=item.querySelector('.faq-question');btn.addEventListener('click',function(){
+      var isOpen=item.classList.contains('open');faqItems.forEach(function(other){other.classList.remove('open')});if(!isOpen){item.classList.add('open')}
+    })});
+    var progressBar=document.getElementById('progressBar');
+    var stickyBar=document.getElementById('stickyCtaBar');
+    var productReveal=document.getElementById('product-reveal');
+    var finalCta=document.getElementById('final-cta');
+    window.addEventListener('scroll',function(){
+      var scrollTop=window.scrollY||document.documentElement.scrollTop;
+      var docHeight=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+      var progress=docHeight>0?(scrollTop/docHeight)*100:0;
+      progressBar.style.width=progress+'%';
+      if(productReveal&&finalCta){
+        var revealRect=productReveal.getBoundingClientRect();
+        var finalRect=finalCta.getBoundingClientRect();
+        if(revealRect.top<window.innerHeight*.4&&finalRect.top>window.innerHeight*.85){stickyBar.classList.add('visible')}
+        else{stickyBar.classList.remove('visible')}
+      }
+    },{passive:true});
+    var currentSearch=window.location.search;
+    if(currentSearch&&currentSearch.length>1){
+      var ctaLinks=document.querySelectorAll('.js-utm-link');
+      ctaLinks.forEach(function(link){try{
+        var url=new URL(link.href,window.location.origin);
+        var params=new URLSearchParams(currentSearch);
+        params.forEach(function(val,key){url.searchParams.set(key,val)});
+        link.href=url.toString();
+      }catch(e){}});
+    }
+  })();
+  </script>
+</body>
+</html>
