@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+  <meta name="robots" content="noindex,nofollow">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>למה השורשים הלבנים חוזרים כל כך מהר? | NOVA HAIR מגזין השיער</title>
@@ -114,8 +115,29 @@
     .sticky-btn{background-color:var(--cta-green);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:11px 18px;border-radius:var(--radius-sm);white-space:nowrap;flex-shrink:0}
     @media(max-width:480px){h1{font-size:27px}h2{font-size:22px}.mechanism-split{grid-template-columns:1fr}}
   </style>
+
+<style>
+
+/* Shared mobile-only image integration and preview controls */
+.preview-switcher{position:sticky;top:4px;z-index:990;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px;background:#f8f6f1;border-bottom:1px solid #e2ddd4;font:600 12px 'Heebo',sans-serif}
+.preview-switcher-title{color:#68746b;white-space:nowrap}
+.preview-choices{display:flex;align-items:center;gap:5px;min-width:0}
+.preview-choices a{border-radius:6px;color:#315045;padding:7px 9px;text-decoration:none;font-size:12px;white-space:nowrap}
+.theme-gemini .preview-choices .preview-a,.theme-editorial .preview-choices .preview-b{background:#173e32;color:white}
+.preview-notice{background:#f3ece1;color:#625a49;padding:8px 14px;text-align:center;font-size:11px;line-height:1.5;margin:0}
+.presell-img{display:block;width:100%;height:auto;object-fit:cover}
+.root-graphic{display:block;margin-bottom:18px;overflow:hidden;border-radius:12px}
+.mechanism-visual{border:1px solid #eae4d9;border-radius:12px}
+.ba-images.image-slots{display:block;border-bottom:1px solid #eae4d9}
+.ba-images.image-slots img{width:100%;height:auto;display:block}
+@media(max-width:480px){.media-frame{border-radius:9px}.media-block{margin:22px 0}.article-container{padding-left:17px;padding-right:17px}.cta-button{font-size:16px;line-height:1.35;text-align:center}.sticky-cta-inner{gap:7px}.sticky-text{font-size:11px}.sticky-text strong{font-size:12px}.sticky-btn{padding:11px 12px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reading-progress-bar,.sticky-cta-bar{transition:none}}
+
+
+</style>
 </head>
-<body>
+<body class="theme-gemini">
+<nav class="preview-switcher" aria-label="מעבר בין גרסאות עיצוב"><span class="preview-switcher-title">תצוגת מובייל</span><div class="preview-choices"><a class="preview-a" href="/novahair-presell-gemini-preview/">ג׳מיני</a><a class="preview-b" href="/novahair-presell-editorial-preview/">עיצוב מתחרה</a></div></nav><p class="preview-notice">דמו עיצובי בלבד · תמונות המוצר והוכחות התוצאה להחלפה בחומרים מקוריים לפני פרסום</p>
   <div class="reading-progress-container"><div class="reading-progress-bar" id="progressBar"></div></div>
   <header class="editorial-header">
     <div class="editorial-header-inner">
@@ -128,11 +150,7 @@
     <p class="subtitle">אם גם את מוצאת את עצמך קובעת תור למספרה רק בגלל "הפס הלבן" בשביל, כדאי שתכירי את השיטה שמאפשרת לחדש את הגוון בבית — בלי קערות, בלי מברשות ובלי ללכלך את המקלחת.</p>
     <div class="media-block">
       <div class="media-frame">
-        <div class="media-placeholder">
-          <span class="placeholder-badge">תמונה 1 — HERO (1200×900)</span>
-          <div class="placeholder-title">אישה בגיל 45–60 מול מראת אמבטיה מוארת</div>
-          <div class="placeholder-desc">זווית מעבר לכתף: היד מרימה קבוצת שיער ליד השביל או הרקה וחושפת שורשים לבנים ברורים. צילום טבעי, ללא מוצר וללא טקסט על התמונה.</div>
-        </div>
+        <img class="presell-img" src="/novahair-presell-assets/01-hero-mobile-1200x750.webp" width="1200" height="750" loading="eager" fetchpriority="high" alt="אישה בוחנת שורשים לבנים מול המראה">
       </div>
       <div class="media-caption">צילום להמחשה · צילום באור טבעי</div>
     </div>
@@ -149,11 +167,7 @@
     <p>ואחרי שלושה שבועות? הסיפור מתחיל מהתחלה.</p>
     <div class="media-block">
       <div class="media-frame">
-        <div class="media-placeholder">
-          <span class="placeholder-badge">תמונה 2 — תקריב מאקרו (1000×800)</span>
-          <div class="placeholder-title">תקריב אותנטי של שביל השיער (ללא פנים)</div>
-          <div class="placeholder-desc">הדגשת הניגודיות בין אורך השיער שנראה צבוע ומבריק לבין סנטימטר הצמיחה הלבנה בשורש.</div>
-        </div>
+        <img class="presell-img" src="/novahair-presell-assets/02-grey-roots-closeup-1200x675.webp" width="1200" height="675" loading="lazy"  alt="תקריב של שורשים לבנים ושיער חום">
       </div>
       <div class="media-caption">„לפעמים כל מה שמפריע הוא סנטימטר אחד ליד השורש.”</div>
     </div>
@@ -198,7 +212,7 @@
     <p>כלומר, הבעיה היא לא הצבע שלך — הבעיה היא הפער שנוצר בשורש.</p>
     <p>ההבנה הזו בדיוק היא שהובילה לפיתוח של קטגוריה חדשה בעולם הטיפוח הביתי: פתרונות חכמים שמאפשרים לחדש את הגוון ולכסות את הלבן בקלות של חפיפה, בלי הסרבול של צביעה מסורתית.</p>
     <div class="media-block">
-      <div class="mechanism-split">
+      <img class="presell-img mechanism-visual" src="/novahair-presell-assets/03-growth-mechanism-1200x675.webp" width="1200" height="675" alt="איור הסבר של צמיחת שורשים לבנים לעומת שיער שכבר נצבע" loading="lazy"><div class="mechanism-split">
         <div class="mechanism-col old-way">
           <h4>צביעה מסורתית</h4>
           <div class="hair-visual"><span style="font-size:36px;">🥣🖌️</span></div>
@@ -220,11 +234,7 @@
     <p>מרקם השמפו מאפשר לפזר את החומר באופן שווה ונוח עם הידיים (בעזרת כפפות), להתמקד בשורשים הלבנים או לרענן את הגוון כולו, ולשטוף במים.</p>
     <div class="media-block">
       <div class="media-frame">
-        <div class="media-placeholder">
-          <span class="placeholder-badge">תמונה 4 — לופ וידאו שקט MP4 / GIF (1000×1200)</span>
-          <div class="placeholder-title">לחיצה נקייה על המשאבה לתוך כף יד עם כפפה ומריחה קלה בשורשים</div>
-          <div class="placeholder-desc">להראות כמה התהליך נקי: בלי קערות, בלי מברשות ובלי טפטופים על המצח.</div>
-        </div>
+        <img class="presell-img" src="/novahair-presell-assets/04-application-1200x675.webp" width="1200" height="675" loading="lazy"  alt="הדמיית מריחת שמפו צבע באזור השורשים בעזרת כפפות">
       </div>
     </div>
     <hr class="section-divider">
@@ -239,11 +249,7 @@
       </ul>
       <div class="media-block">
         <div class="media-frame">
-          <div class="media-placeholder">
-            <span class="placeholder-badge">תמונה 5 — צילום מוצר מקורי (1200×900)</span>
-            <div class="placeholder-title">ארבעת בקבוקי NOVA HAIR המקוריים על רקע שמנת טבעי</div>
-            <div class="placeholder-desc">הדגשה של הפקקים השקופים, המשאבה השחורה, שני הפסים הזהובים והתווית המדויקת עם צל רך.</div>
-          </div>
+          <img class="presell-img" src="/novahair-presell-assets/05-packaging-concept-1200x675.webp" width="1200" height="675" loading="lazy"  alt="הדמיית אריזות NOVA HAIR לאישור מול צילום מוצר מקורי">
         </div>
       </div>
       <p><strong>NOVA HAIR פותח ב־4 גוונים קלאסיים שמתאימים לרוב גווני השיער בישראל:</strong></p>
@@ -254,7 +260,7 @@
         <div class="shade-card"><div class="shade-swatch swatch-red"></div><div class="shade-name">אדום</div></div>
       </div>
       <div class="cta-wrapper">
-        <a href="https://your-offer-page-url.com" class="cta-button js-utm-link"><span>לבדיקת זמינות הגוונים ומארזי החיסכון</span><span>←</span></a>
+        <a href="https://tigerbrandsglobal.com/pages/novahair-offer-t2" class="cta-button js-utm-link"><span>לבדיקת זמינות הגוונים ומארזי החיסכון</span><span>←</span></a>
         <div class="cta-microcopy">בחירת הגוון מתבצעת בעמוד הבא • מגובה ב־60 ימי אחריות</div>
       </div>
     </div>
@@ -264,25 +270,16 @@
     <p>כשאת בוחנת את התוצאות, שימי לב לאזור השביל והרקות: איך השיער הלבן קיבל פיגמנט עמוק, ואיך המעבר בין השורש לאורך השיער נראה טבעי ולא "צבוע מדי".</p>
     <div class="ba-gallery">
       <div class="ba-card">
-        <div class="ba-images">
-          <div class="ba-side before"><span class="ba-tag">לפני</span><span style="font-size:13px;color:var(--text-muted);">[צילום שורשים לבנים בשביל - לקוחה 1]</span></div>
-          <div class="ba-side after"><span class="ba-tag" style="background:var(--cta-green);">אחרי</span><span style="font-size:13px;color:var(--text-main);">[אותה זווית ותאורה לאחר שימוש אחד]</span></div>
-        </div>
-        <div class="ba-meta"><span><strong>גוון בשימוש:</strong> חום כהה</span><span>שימוש בודד לפי ההוראות</span></div>
+        <div class="ba-images image-slots"><img class="presell-img" src="/novahair-presell-assets/07-1-before-after-SLOT-1200x600.webp" width="1200" height="600" loading="lazy" alt="מקום לתמונות לפני ואחרי מאומתות של לקוחה מספר 1"></div>
+<div class="ba-meta"><span><strong>גוון בשימוש:</strong> חום כהה</span><span>שימוש בודד לפי ההוראות</span></div>
       </div>
       <div class="ba-card">
-        <div class="ba-images">
-          <div class="ba-side before"><span class="ba-tag">לפני</span><span style="font-size:13px;color:var(--text-muted);">[צילום שורשים לבנים ברקות - לקוחה 2]</span></div>
-          <div class="ba-side after"><span class="ba-tag" style="background:var(--cta-green);">אחרי</span><span style="font-size:13px;color:var(--text-main);">[כיסוי מלא והשתלבות עם האורך]</span></div>
-        </div>
-        <div class="ba-meta"><span><strong>גוון בשימוש:</strong> שחור טבעי</span><span>שימוש בודד לפי ההוראות</span></div>
+        <div class="ba-images image-slots"><img class="presell-img" src="/novahair-presell-assets/07-2-before-after-SLOT-1200x600.webp" width="1200" height="600" loading="lazy" alt="מקום לתמונות לפני ואחרי מאומתות של לקוחה מספר 2"></div>
+<div class="ba-meta"><span><strong>גוון בשימוש:</strong> שחור טבעי</span><span>שימוש בודד לפי ההוראות</span></div>
       </div>
       <div class="ba-card">
-        <div class="ba-images">
-          <div class="ba-side before"><span class="ba-tag">לפני</span><span style="font-size:13px;color:var(--text-muted);">[צילום צמיחה לבנה - לקוחה 3]</span></div>
-          <div class="ba-side after"><span class="ba-tag" style="background:var(--cta-green);">אחרי</span><span style="font-size:13px;color:var(--text-main);">[מיזוג אחיד עם גוון הבסיס]</span></div>
-        </div>
-        <div class="ba-meta"><span><strong>גוון בשימוש:</strong> חום בהיר</span><span>שימוש בודד לפי ההוראות</span></div>
+        <div class="ba-images image-slots"><img class="presell-img" src="/novahair-presell-assets/07-3-before-after-SLOT-1200x600.webp" width="1200" height="600" loading="lazy" alt="מקום לתמונות לפני ואחרי מאומתות של לקוחה מספר 3"></div>
+<div class="ba-meta"><span><strong>גוון בשימוש:</strong> חום בהיר</span><span>שימוש בודד לפי ההוראות</span></div>
       </div>
     </div>
     <p style="font-size:15px;color:var(--text-muted);">*חשוב לזכור: לא כל שיער מגיב לצבע באותה צורה. התוצאה תלויה בגוון הנבחר, בצבע הבסיס הקיים, בכמות השיער הלבן ובהקפדה על זמני ההמתנה לפי ההוראות.</p>
@@ -297,28 +294,20 @@
     </div>
     <div class="media-block">
       <div class="media-frame">
-        <div class="media-placeholder" style="min-height:360px;">
-          <span class="placeholder-badge">וידאו מקורי 9:16 (20–35 שניות)</span>
-          <div class="placeholder-title">הדגמת שימוש אמיתית במוצר NOVA HAIR</div>
-          <div class="placeholder-desc">לחיצה על הבקבוק ← מריחה עם כפפות ← המתנה ← שטיפה והצגת התוצאה באור טבעי (ללא פילטרים שמשנים את גוון השיער).</div>
-        </div>
+        <img class="presell-img" src="/novahair-presell-assets/08-video-poster-CONCEPT-1200x675.webp" width="1200" height="675" loading="lazy"  alt="תמונת המחשה לסרטון הדגמה עתידי">
       </div>
     </div>
     <hr class="section-divider">
     <h2>"ומה אם אני מתלבטת איזה גוון לבחור?"</h2>
     <p>זו אחת השאלות החשובות ביותר לפני שמזמינים צבע לשיער באינטרנט. אף אחת לא רוצה להזמין חום כהה ולקבל תוצאה שנראית שחורה מדי, או לבחור חום בהיר כשצבע הבסיס שלה כהה יותר.</p>
     <p><strong>הדרך הטובה ביותר להתחיל:</strong> הסתכלי על הגוון הקיים באורך השיער שלך באור יום ובתאורה טבעית. זהו הגוון שאליו כדאי להתאים את השורשים. אם את מתלבטת בין שני גוונים, תמיד אפשר לפנות לשירות הלקוחות של NOVA HAIR עם תמונה ולקבל עזרה בהתאמת הגוון.</p>
-    <div class="media-block"><div class="media-frame"><div class="media-placeholder">
-      <span class="placeholder-badge">תמונה 6 — מניפת שיער אמיתית (1000×800)</span>
-      <div class="placeholder-title">ארבע דוגמאות של קבוצות שיער אמיתיות — אחת לכל גוון</div>
-      <div class="placeholder-desc">שחור טבעי · חום כהה · חום בהיר · אדום (מצולמות בתאורה טבעית, לא קוביות צבע שטוחות של מחשב).</div>
-    </div></div></div>
+    <div class="media-block"><div class="media-frame"><img class="presell-img" src="/novahair-presell-assets/06-hair-shades-2x2-mobile-1200x880.webp" width="1200" height="880" loading="lazy"  alt="ארבע דוגמאות צבע לשיער: שחור חום כהה חום בהיר ואדום"></div></div>
     <hr class="section-divider">
     <h2>לא חייבים לחכות שהשורשים יפריעו לך כדי להכיר את האפשרויות</h2>
     <p>חלק מהנשים אוהבות את הביקור במספרה, ואין שום סיבה לוותר עליו אם זה מה שמתאים להן. אבל לא כל חידוש שורשים מחייב בהכרח את אותו ביקור ארוך ויקר.</p>
     <p>בין אם את רוצה להחליף את צביעת השורשים במספרה ובין אם את רק רוצה פתרון חכם וזמין בארון האמבטיה לרגעים שבהם השורשים מפתיעים אותך בין תורים — NOVA HAIR נותן לך שליטה מלאה בזמן שלך.</p>
     <div class="cta-wrapper">
-      <a href="https://your-offer-page-url.com" class="cta-button js-utm-link"><span>לצפייה בגוונים ובמארזים של NOVA HAIR</span><span>←</span></a>
+      <a href="https://tigerbrandsglobal.com/pages/novahair-offer-t2" class="cta-button js-utm-link"><span>לצפייה בגוונים ובמארזים של NOVA HAIR</span><span>←</span></a>
       <div class="cta-microcopy">משלוח ישיר לישראל • אחריות ל־60 יום בכפוף לתקנון</div>
     </div>
     <hr class="section-divider">
@@ -355,7 +344,7 @@
     <p>אבל אם מה שמפריע לך בין צביעות הוא בעיקר הפס הלבן בשורשים, שווה להכיר את האפשרות לחדש את הצבע בבית — בקלות, בניקיון ובזמן שנוח לך.</p>
     <p><strong>NOVA HAIR — שמפו צבע לשיער לבן ולחידוש שורשים.</strong><br>באתר הרשמי אפשר לראות את הגוונים, להשוות בין המארזים ולקרוא את תנאי ההזמנה.</p>
     <div class="cta-wrapper" id="final-cta">
-      <a href="https://your-offer-page-url.com" class="cta-button js-utm-link"><span>לצפייה בגוונים ובמארזים באתר הרשמי</span><span>←</span></a>
+      <a href="https://tigerbrandsglobal.com/pages/novahair-offer-t2" class="cta-button js-utm-link"><span>לצפייה בגוונים ובמארזים באתר הרשמי</span><span>←</span></a>
       <div class="cta-microcopy">מעבר לאתר הרשמי של NOVA HAIR ישראל</div>
     </div>
   </main>
@@ -365,7 +354,7 @@
   <div class="sticky-cta-bar" id="stickyCtaBar">
     <div class="sticky-cta-inner">
       <div class="sticky-text"><strong>NOVA HAIR — שמפו צבע לשורשים</strong><span>4 גוונים לבחירה • 60 ימי אחריות</span></div>
-      <a href="https://your-offer-page-url.com" class="sticky-btn js-utm-link">לבחירת גוון ←</a>
+      <a href="https://tigerbrandsglobal.com/pages/novahair-offer-t2" class="sticky-btn js-utm-link">לבחירת גוון ←</a>
     </div>
   </div>
   <script>
