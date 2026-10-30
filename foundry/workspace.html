@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://harelos.github.io/foundry/workspace.html">
+  <title>Build a Foundry mission</title>
+  <meta name="description" content="Prepare a structured mission for Foundry Desktop without giving a website access to your computer.">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="planner-body">
+  <nav class="nav planner-nav"><a class="brand" href="./"><span class="brand-mark">F</span><span>Foundry</span></a><div class="nav-links"><a href="./">Back to site</a></div></nav>
+  <main class="planner">
+    <div class="eyebrow">Web mission builder</div>
+    <h1>Plan the next campaign before you install anything.</h1>
+    <p class="planner-lead">This page prepares a local mission file. It cannot read your computer, run commands, or contact Claude or Codex. Your draft stays in this browser until you export it.</p>
+    <form class="planner-form" id="missionForm">
+      <div class="planner-field"><label for="outcome">Pilot outcome</label><select id="outcome"><option value="campaign_review">Ecommerce campaign pack</option></select></div>
+      <div class="planner-field"><label for="projectName">Project name</label><input id="projectName" required placeholder="Acme October campaign"></div>
+      <div class="planner-field"><label for="objective">What campaign decision should this pack help you make?</label><textarea id="objective" required placeholder="Choose a new angle for our current product and offer, with claims we can verify."></textarea></div>
+      <div class="planner-field"><label for="evidence">What evidence and source material do you already have?</label><textarea id="evidence" placeholder="Product facts, current offer, customer research, past campaigns, brand guide, analytics exports…"></textarea></div>
+      <div class="planner-field"><label for="reviewCriteria">What must be true before you accept the result?</label><textarea id="reviewCriteria" maxlength="1250" placeholder="Each factual claim has a named source or is marked open.&#10;The chosen concept matches the current offer.&#10;The page outline answers the ad promise."></textarea><small>One check per line, up to five. Foundry adds its standard campaign checks when you import the file.</small></div>
+      <p class="planner-lead" style="font-size:13px;margin-top:-8px">Need source files? Use the <a href="https://help.shopify.com/en/manual/reports-and-analytics/shopify-reports/report-types/custom-reports/export-reports" target="_blank" rel="noopener noreferrer">Shopify report export guide</a> or open <a href="https://adsmanager.facebook.com/" target="_blank" rel="noopener noreferrer">Meta Ads Manager</a>. This pilot does not connect either account directly.</p>
+      <div class="planner-field"><label for="constraints">What must the team preserve or avoid?</label><textarea id="constraints" placeholder="Keep approved pricing. Do not publish. Do not invent testimonials. Use US English."></textarea></div>
+      <div class="planner-field"><label for="deadline">Review deadline</label><input id="deadline" type="date"></div>
+      <div class="planner-actions"><button class="button" type="submit">Preview mission</button><button class="button secondary" type="button" id="exportBtn" disabled>Export for Foundry Desktop</button><span class="planner-note" id="saveState">Draft saved in this browser</span></div>
+    </form>
+    <section class="preview" id="preview" hidden><div class="eyebrow">Import preview</div><h2>The desktop will ask you to approve this before execution.</h2><pre id="previewText"></pre></section>
+  </main>
+  <script src="./workspace.js"></script>
+</body>
+</html>
